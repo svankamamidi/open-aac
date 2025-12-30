@@ -4,6 +4,7 @@
 <style>
     .keyboard {
         display: grid;
+        grid-template-rows: repeat(5, 1fr);
         gap: 10px;
         padding: 10px;
         background-color: #f9f9f9;
@@ -12,24 +13,30 @@
         max-width: 100%;
         margin: 0 auto;
         box-sizing: border-box;
+        height: 100vh;
+        min-height: 100vh;
+        width: 100vw;
     }
 
     .row {
         display: flex;
         justify-content: center;
         gap: 5px;
+        flex: 1;
     }
 
     .key {
         padding: 15px;
         flex: 1; /* Keys will stretch to fill available space */
-        max-width: 8%; /* Adjust for reasonable width */
-        font-size: 16px;
+        font-size: 24px;
         text-align: center;
         background-color: #e0e0e0;
         border: 1px solid #ccc;
         border-radius: 5px;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .key:hover {
@@ -47,23 +54,15 @@
     /* Adjust layout for smaller screens */
     @media (max-width: 768px) {
         .key {
-            font-size: 14px;
+            font-size: 20px;
             padding: 10px;
-            max-width: 10%; /* Reduce key width for smaller screens */
-        }
-        .key.space-bar {
-            flex: 3; /* Slightly smaller space bar */
         }
     }
 
     @media (max-width: 480px) {
         .key {
-            font-size: 12px;
+            font-size: 18px;
             padding: 8px;
-            max-width: 12%; /* Even smaller keys for very small screens */
-        }
-        .key.space-bar {
-            flex: 2; /* Adjust space bar for very small screens */
         }
     }
 
