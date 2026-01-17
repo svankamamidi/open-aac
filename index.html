@@ -25,6 +25,7 @@
     }
 
     .key {
+		margin: 2px;
         flex: 1;
         min-height: 0;
         font-size: 32px;
@@ -51,7 +52,7 @@
         flex: 1.5;
     }
 
-    /* Adjust layout for smaller screens */
+    /* Adjust layout for smaller screens *//*
     @media (max-width: 768px) {
         .key {
             font-size: 28px;
@@ -62,7 +63,7 @@
         .key {
             font-size: 26px;
         }
-    }
+    }*/
 
   .uppercase-toggle, .enter, .space-bar {
       flex: 2; /* makes the key wider */
@@ -1178,7 +1179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	        <button class="key">8</button>
 	        <button class="key">9</button>
 	        <button class="key">0</button>
-		<button class="key backspace">Backspace</button>
+		<button class="key backspace" style="font-size: 20px">Backspace</button>
 	    </div>
 	    <!-- Alphabet Row 1 -->
 	    <div class="row">
@@ -1217,11 +1218,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	        <button class="key">X</button>
 	        <button class="key">Y</button>
 	        <button class="key">Z</button>
-	        <button class="key enter">Enter</button>
 	    </div>
 	    <!-- Space Row -->
 	    <div class="row">
 	        <button class="key space-bar">Space</button>
+			<button class="key enter">Enter</button>
 	    </div>
 	</div>
 </div>
