@@ -1094,20 +1094,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.keyboard .key').forEach(button => {
         button.addEventListener('click', (event) => {
             const key = event.target.innerText;
+			let keyText = key.toLowerCase();
 			let typedStr = document.getElementById("textareaEle").value?.trim();
 			if (!typedStr){
 				typedText = '';
 			}
-            if (key === "Enter") {
+            if (keyText === "enter") {
                 console.log("Enter Key Pressed"); // For demonstration
                 typedText += "\n"; // Add a newline for Enter
-            } else if (key === "Space") {
+            } else if (keyText === "space") {
                 console.log("Space Bar Pressed"); // For demonstration
                 typedText += " "; // Add a space for Space bar
-            } else if (key ==='Backspace') {
+            } else if (keyText ==='backspace') {
               // Handle Backspace
               typedText = typedText.slice(0, -1);
-            } else if (key !== "Caps") { // Ignore "Caps" key
+            } else if (keyText !== "caps") { // Ignore "Caps" key
                 typedText += key;
             }
 	    document.getElementById("textareaEle").value = typedText;
