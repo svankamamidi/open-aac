@@ -1094,7 +1094,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.keyboard .key').forEach(button => {
         button.addEventListener('click', (event) => {
             const key = event.target.innerText;
-
+			let typedStr = document.getElementById("textareaEle").value?.trim();
+			if (!typedStr){
+				typedText = '';
+			}
             if (key === "Enter") {
                 console.log("Enter Key Pressed"); // For demonstration
                 typedText += "\n"; // Add a newline for Enter
