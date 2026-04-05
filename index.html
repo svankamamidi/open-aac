@@ -909,8 +909,10 @@ value: ())
   function changeTheme(){
 	  if (document.body.style.backgroundColor==="rgb(62, 39, 35)"){
 	    document.body.style.backgroundColor = "";
+		document.getElementById("record-controls").style.color="black";
 	  }else{
-		  document.body.style.backgroundColor = "rgb(62, 39, 35)";
+	    document.body.style.backgroundColor = "rgb(62, 39, 35)";
+		document.getElementById("record-controls").style.color="white";
 	  }
   }
   
@@ -1167,7 +1169,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		<div id="exportDiv" class="" style="display:none; padding-right: 1%">
 		  <a href="#" onclick="exportConfig()">Export</a>
 	  	</div>
-		<div id="importDiv" class="" style="display:none">
+		<div id="importDiv" class="" style="display:none;  padding-right: 1%">
 		  <a href="#" onclick="importDialog()">Import</a>
 	  	</div>
 		<div id="changeThemeDiv" class="" style="display:none">
