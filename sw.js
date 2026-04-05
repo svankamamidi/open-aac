@@ -17,6 +17,7 @@ self.addEventListener('install', (e) => {
     console.log('[Service Worker] Caching all: app shell and content');
     await cache.addAll(appShellFiles);
   })());
+  self.skipWaiting();
 });
 
 // Fetching content using Service Worker
@@ -52,6 +53,14 @@ const deleteOldCaches = async () => {
 };
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(deleteOldCaches());
+  event.waitUntil(
+    (async () => {
+      // 1. Clean up old caches first
+      await deleteOldCaches();
+      
+      // 2. Take control of all open clients (tabs) immediately
+      await self.clients.claim();
+    })()
+  );
 });
 
