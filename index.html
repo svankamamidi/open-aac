@@ -928,7 +928,7 @@ value: ())
 	    document.body.style.backgroundColor = "rgb(62, 39, 35)";
 		document.getElementById("ul-bread-crumbs").style.color="white";
 	  }
-	  aacSettings = aacSettings ? aacSettings : {};
+	  aacSettings = aacSettings ? aacSettings : {"theme": {}};
 	  aacSettings.theme.color = useTheme;
 	  localStorage.setItem("aacSettings", JSON.stringify(aacSettings));
   }
