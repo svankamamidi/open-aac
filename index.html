@@ -218,7 +218,8 @@
       window.location.reload();
     });
     navigator.serviceWorker.register('/open-aac/sw.js');
-  }	
+  }
+  let aacSettings;
   $( function() {
 	var name = $("#name");
 	var addMessageOrFolderDialog = $("#addMessageOrFolderDialog").dialog({
@@ -287,12 +288,12 @@
     //load saved levels & tiles
     var localStorage = window.localStorage;
     var levelItems = localStorage.getItem("ul-level-1");
-	var aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
+	aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
     if(!levelItems){ //if no custom folder structure defined load default one
       var configJson = loadFile("aac-config.json");
       localStorage.setItem("ul-level-1", configJson);
     }
-	changeTheme(aacSettings?.theme?.color);
+	changeTheme(aacSettings?.theme?.color ?? 'rgb(62, 39, 35)');
     loadSavedLevelsFromCache();
   });
   
