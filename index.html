@@ -212,6 +212,11 @@
 <script>
   // Registering Service Worker
   if ('serviceWorker' in navigator) {
+	// Listen for the new service worker taking control
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      // Reload the page to ensure the user sees the latest version
+      window.location.reload();
+    });
     navigator.serviceWorker.register('/open-aac/sw.js');
   }	
   $( function() {
