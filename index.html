@@ -217,7 +217,12 @@
       // Reload the page to ensure the user sees the latest version
       window.location.reload();
     });
-    navigator.serviceWorker.register('/open-aac/sw.js');
+    //navigator.serviceWorker.register('/open-aac/sw.js');
+	window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => console.log('SW Registered', reg))
+        .catch((err) => console.log('SW Registration Failed', err));
+  });
   }
   let aacSettings;
   $( function() {
