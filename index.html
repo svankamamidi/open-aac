@@ -281,11 +281,13 @@
     //Can per page load actions
     //load saved levels & tiles
     var localStorage = window.localStorage;
-    var levelItems = localStorage.getItem("ul-level-1")
+    var levelItems = localStorage.getItem("ul-level-1");
+	var aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
     if(!levelItems){ //if no custom folder structure defined load default one
       var configJson = loadFile("aac-config.json");
       localStorage.setItem("ul-level-1", configJson);
-    }    
+    }
+	changeTheme(aacSettings?.theme?.color);
     loadSavedLevelsFromCache();
   });
   
@@ -906,14 +908,23 @@ value: ())
     playRecordedAudio();
   }
 
-  function changeTheme(){
-	  if (document.body.style.backgroundColor==="rgb(62, 39, 35)"){
+  function changeTheme(theme){
+	  var useTheme;
+	  if (theme){
+	    useTheme = theme;
+	  }else{
+	    useTheme = document.body.style.backgroundColor;
+	  }
+	  if (useTheme === "rgb(62, 39, 35)"){
 	    document.body.style.backgroundColor = "";
 		document.getElementById("ul-bread-crumbs").style.color="black";
 	  }else{
 	    document.body.style.backgroundColor = "rgb(62, 39, 35)";
 		document.getElementById("ul-bread-crumbs").style.color="white";
 	  }
+	  aacSettings = aacSettings ? aacSettings : {};
+	  aacSettings.theme.color = useTheme;
+	  localStorage.setItem("aacSettings", JSON.stringify(aacSettings));
   }
   
   function showSettings(){
