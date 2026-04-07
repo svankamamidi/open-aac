@@ -212,8 +212,19 @@
 <script>
   // Registering Service Worker
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/open-aac/sw.js');
-  }	
+	// Listen for the new service worker taking control
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      // Reload the page to ensure the user sees the latest version
+      window.location.reload();
+    });
+    //navigator.serviceWorker.register('/open-aac/sw.js');
+	window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => console.log('SW Registered', reg))
+        .catch((err) => console.log('SW Registration Failed', err));
+  });
+  }
+  let aacSettings;
   $( function() {
 	var name = $("#name");
 	var addMessageOrFolderDialog = $("#addMessageOrFolderDialog").dialog({
@@ -281,11 +292,13 @@
     //Can per page load actions
     //load saved levels & tiles
     var localStorage = window.localStorage;
-    var levelItems = localStorage.getItem("ul-level-1")
+    var levelItems = localStorage.getItem("ul-level-1");
+	aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
     if(!levelItems){ //if no custom folder structure defined load default one
       var configJson = loadFile("aac-config.json");
       localStorage.setItem("ul-level-1", configJson);
-    }    
+    }
+	changeTheme(aacSettings?.theme?.color ?? 'rgb(62, 39, 35)');
     loadSavedLevelsFromCache();
   });
   
@@ -905,6 +918,25 @@ value: ())
     }    
     playRecordedAudio();
   }
+
+  function changeTheme(theme){
+	  var useTheme;
+	  if (theme){
+	    useTheme = theme;
+	  }else{
+	    useTheme = document.body.style.backgroundColor;
+	  }
+	  if (useTheme === "rgb(62, 39, 35)"){
+	    document.body.style.backgroundColor = "";
+		document.getElementById("ul-bread-crumbs").style.color="black";
+	  }else{
+	    document.body.style.backgroundColor = "rgb(62, 39, 35)";
+		document.getElementById("ul-bread-crumbs").style.color="white";
+	  }
+	  aacSettings = aacSettings ? aacSettings : {"theme": {}};
+	  aacSettings.theme.color = useTheme;
+	  localStorage.setItem("aacSettings", JSON.stringify(aacSettings));
+  }
   
   function showSettings(){
     if (!globalSettings.settingsClickCount){
@@ -919,11 +951,13 @@ value: ())
 		document.getElementById("footer-level-1").style.display="table";
 		document.getElementById("exportDiv").style.display="table";
 		document.getElementById("importDiv").style.display="table";
+		document.getElementById("changeThemeDiv").style.display="table";
 	}else{
 		document.getElementById("addInteractionDiv").style.display="none";
 		document.getElementById("footer-level-1").style.display="none";
 		document.getElementById("exportDiv").style.display="none";
 		document.getElementById("importDiv").style.display="none";
+		document.getElementById("changeThemeDiv").style.display="none";
 	}
 	if (globalSettings.settingsClickCount === 4){
 	  globalSettings.settingsClickCount = 0;
@@ -1157,8 +1191,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		<div id="exportDiv" class="" style="display:none; padding-right: 1%">
 		  <a href="#" onclick="exportConfig()">Export</a>
 	  	</div>
-		<div id="importDiv" class="" style="display:none">
+		<div id="importDiv" class="" style="display:none;  padding-right: 1%">
 		  <a href="#" onclick="importDialog()">Import</a>
+	  	</div>
+		<div id="changeThemeDiv" class="" style="display:none">
+		  <a href="#" onclick="changeTheme()">Change Theme</a>
 	  	</div>
 	</div>
 	<ul id="ul-bread-crumbs" class="breadcrumb-navigation">		
@@ -1234,7 +1271,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- Footer -->
 <div id="footer-level-1" style="display:none">
   </br>	
-  <a href="https://youtu.be/fJvelltfSwo" target="_blank">Demo video</a>	
+  <a href="https://youtu.be/lclafmBfSo0?feature=shared" target="_blank">Demo video</a>	
 </div>
 
 <ul id="item-edit-menu" style="display:none; width: 150px;">
