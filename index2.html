@@ -2,6 +2,12 @@
 <link rel="manifest" href="manifest.json" />
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
 <style>
+	div#delete-word img {
+    	max-width: 100%;
+    	height: auto; /* This is crucial for maintaining aspect ratio */
+    	width: auto; /* Ensure width is also flexible */
+    	object-fit: contain; /* Or 'cover', depending on desired visual */
+	}
     .keyboard {
         display: flex;
         flex-direction: column;
