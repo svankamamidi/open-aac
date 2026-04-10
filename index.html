@@ -224,6 +224,103 @@
         .catch((err) => console.log('SW Registration Failed', err));
   });
   }
+
+const dragAndDropManager = (function() {
+  const ul = document.querySelector('ul#ul-level-1');
+  let items = ul.querySelectorAll('li');
+  let activeItem = null;
+  let ghost = null;
+  let initialY = 0;
+  let ghostInitialTop = 0;
+  let isEnabled = false;
+
+  function handleTouchStart(e) {
+    if (!isEnabled) return;
+    activeItem = e.target.closest('li');
+    if (!activeItem) return;
+
+    const touch = e.touches[0];
+    initialY = touch.clientY;
+    const rect = activeItem.getBoundingClientRect();
+    ghostInitialTop = rect.top;
+
+    ghost = activeItem.cloneNode(true);
+    Object.assign(ghost.style, {
+      position: 'fixed',
+      top: `${rect.top}px`,
+      left: `${rect.left}px`,
+      width: `${rect.width}px`,
+      height: `${rect.height}px`,
+      opacity: '0.9',
+      pointerEvents: 'none',
+      zIndex: '9999',
+      boxShadow: '0 8px 16px rgba(0,0,0,0.4)',
+      margin: '0'
+    });
+    
+    document.body.appendChild(ghost);
+    activeItem.style.visibility = 'hidden';
+  }
+
+  function handleTouchMove(e) {
+    if (!isEnabled || !activeItem || !ghost) return;
+    if (e.cancelable) e.preventDefault();
+
+    const touch = e.touches[0];
+    const deltaY = touch.clientY - initialY;
+    ghost.style.top = `${ghostInitialTop + deltaY}px`;
+
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    const overElement = target?.closest('li');
+    
+    if (overElement && overElement !== activeItem && overElement.parentElement === ul) {
+      const rect = overElement.getBoundingClientRect();
+      const midpoint = rect.top + rect.height / 2;
+      
+      if (touch.clientY < midpoint) {
+        ul.insertBefore(activeItem, overElement);
+      } else {
+        ul.insertBefore(activeItem, overElement.nextSibling);
+      }
+    }
+  }
+
+  function handleTouchEnd() {
+    if (activeItem) activeItem.style.visibility = 'visible';
+    if (ghost) {
+      ghost.remove();
+      ghost = null;
+    }
+    activeItem = null;
+  }
+
+  return {
+    enable: function() {
+      isEnabled = true;
+      items = ul.querySelectorAll('li'); // Re-query items in case list changed
+      items.forEach(item => {
+        item.style.touchAction = 'none'; // Lock scrolling
+        item.addEventListener('touchstart', handleTouchStart, { passive: false });
+        item.addEventListener('touchmove', handleTouchMove, { passive: false });
+        item.addEventListener('touchend', handleTouchEnd);
+        item.addEventListener('touchcancel', handleTouchEnd);
+      });
+      console.log('Mobile Drag and Drop Enabled');
+    },
+    disable: function() {
+      isEnabled = false;
+      items.forEach(item => {
+        item.style.touchAction = ''; // Restore scroll behavior
+        item.removeEventListener('touchstart', handleTouchStart);
+        item.removeEventListener('touchmove', handleTouchMove);
+        item.removeEventListener('touchend', handleTouchEnd);
+        item.removeEventListener('touchcancel', handleTouchEnd);
+      });
+      console.log('Mobile Drag and Drop Disabled');
+    }
+  };
+})();
+	
   let aacSettings;
   $( function() {
 	var name = $("#name");
@@ -947,12 +1044,14 @@ value: ())
     if (globalSettings.settingsClickCount >= 3){
     	globalSettings.adminMode = !globalSettings.adminMode;
 	if (globalSettings.adminMode){
+		dragAndDropManager.enable();
 		document.getElementById("addInteractionDiv").style.display="table";
 		document.getElementById("footer-level-1").style.display="table";
 		document.getElementById("exportDiv").style.display="table";
 		document.getElementById("importDiv").style.display="table";
 		document.getElementById("changeThemeDiv").style.display="table";
 	}else{
+		dragAndDropManager.disable();
 		document.getElementById("addInteractionDiv").style.display="none";
 		document.getElementById("footer-level-1").style.display="none";
 		document.getElementById("exportDiv").style.display="none";
