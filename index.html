@@ -224,7 +224,7 @@
         .catch((err) => console.log('SW Registration Failed', err));
   });
   }
-
+/*
 const dragAndDropManager = (function() {
   const ul = document.querySelector('ul#ul-level-1');
   let items = ul.querySelectorAll('li');
@@ -233,6 +233,19 @@ const dragAndDropManager = (function() {
   let initialY = 0;
   let ghostInitialTop = 0;
   let isEnabled = false;
+
+  // Create a style element for the dynamic CSS
+  const styleEl = document.createElement('style');
+  styleEl.id = 'dnd-mobile-styles';
+  const cssRules = `
+    ul#ul-level-1 li {
+      touch-action: none !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+      cursor: move;
+    }
+  `;
 
   function handleTouchStart(e) {
     if (!isEnabled) return;
@@ -255,7 +268,8 @@ const dragAndDropManager = (function() {
       pointerEvents: 'none',
       zIndex: '9999',
       boxShadow: '0 8px 16px rgba(0,0,0,0.4)',
-      margin: '0'
+      margin: '0',
+      backgroundColor: window.getComputedStyle(activeItem).backgroundColor || 'white'
     });
     
     document.body.appendChild(ghost);
@@ -296,30 +310,41 @@ const dragAndDropManager = (function() {
 
   return {
     enable: function() {
+      if (isEnabled) return;
       isEnabled = true;
-      items = ul.querySelectorAll('li'); // Re-query items in case list changed
+      
+      // Inject the CSS
+      styleEl.innerHTML = cssRules;
+      document.head.appendChild(styleEl);
+
+      items = ul.querySelectorAll('li');
       items.forEach(item => {
-        item.style.touchAction = 'none'; // Lock scrolling
         item.addEventListener('touchstart', handleTouchStart, { passive: false });
         item.addEventListener('touchmove', handleTouchMove, { passive: false });
         item.addEventListener('touchend', handleTouchEnd);
         item.addEventListener('touchcancel', handleTouchEnd);
       });
-      console.log('Mobile Drag and Drop Enabled');
+      console.log('Mobile Drag and Drop Enabled (CSS Applied)');
     },
     disable: function() {
+      if (!isEnabled) return;
       isEnabled = false;
+
+      // Remove the CSS
+      if (styleEl.parentNode) {
+        styleEl.parentNode.removeChild(styleEl);
+      }
+
       items.forEach(item => {
-        item.style.touchAction = ''; // Restore scroll behavior
         item.removeEventListener('touchstart', handleTouchStart);
         item.removeEventListener('touchmove', handleTouchMove);
         item.removeEventListener('touchend', handleTouchEnd);
         item.removeEventListener('touchcancel', handleTouchEnd);
       });
-      console.log('Mobile Drag and Drop Disabled');
+      console.log('Mobile Drag and Drop Disabled (CSS Removed)');
     }
   };
-})();
+})();*/
 	
   let aacSettings;
   $( function() {
