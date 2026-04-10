@@ -231,7 +231,9 @@ const dragAndDropManager = (function() {
   let items = [];
   let activeItem = null;
   let ghost = null;
+  let initialX = 0;
   let initialY = 0;
+  let ghostInitialLeft = 0;
   let ghostInitialTop = 0;
   let isEnabled = false;
   let isWaitingForDOM = false;
@@ -244,7 +246,6 @@ const dragAndDropManager = (function() {
       user-select: none !important;
       -webkit-user-select: none !important;
       -webkit-tap-highlight-color: transparent !important;
-      cursor: move;
     }
   `;
 
@@ -254,8 +255,11 @@ const dragAndDropManager = (function() {
     if (!activeItem) return;
 
     const touch = e.touches[0];
+    initialX = touch.clientX;
     initialY = touch.clientY;
+    
     const rect = activeItem.getBoundingClientRect();
+    ghostInitialLeft = rect.left;
     ghostInitialTop = rect.top;
 
     ghost = activeItem.cloneNode(true);
@@ -282,7 +286,11 @@ const dragAndDropManager = (function() {
     if (e.cancelable) e.preventDefault();
 
     const touch = e.touches[0];
+    const deltaX = touch.clientX - initialX;
     const deltaY = touch.clientY - initialY;
+    
+    // UPDATED: Move ghost in BOTH directions
+    ghost.style.left = `${ghostInitialLeft + deltaX}px`;
     ghost.style.top = `${ghostInitialTop + deltaY}px`;
 
     const target = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -290,9 +298,16 @@ const dragAndDropManager = (function() {
     
     if (overElement && overElement !== activeItem && overElement.parentElement === ul) {
       const rect = overElement.getBoundingClientRect();
-      const midpoint = rect.top + rect.height / 2;
+      const midpointX = rect.left + rect.width / 2;
+      const midpointY = rect.top + rect.height / 2;
       
-      if (touch.clientY < midpoint) {
+      // UPDATED: Logic to handle both rows and columns
+      // If we are significantly above the item, insert before.
+      // If we are in the same row, check if we are before the horizontal midpoint.
+      const isBefore = (touch.clientY < rect.top + rect.height * 0.25) || 
+                       (touch.clientY < rect.bottom && touch.clientX < midpointX);
+
+      if (isBefore) {
         ul.insertBefore(activeItem, overElement);
       } else {
         ul.insertBefore(activeItem, overElement.nextSibling);
@@ -316,7 +331,6 @@ const dragAndDropManager = (function() {
     items = ul.querySelectorAll('li');
     if (items.length === 0) return false;
 
-    // Inject CSS
     styleEl.innerHTML = cssRules;
     document.head.appendChild(styleEl);
 
@@ -332,39 +346,24 @@ const dragAndDropManager = (function() {
   return {
     enable: function() {
       if (isEnabled) return;
-      
-      // Try to initialize immediately
       if (setupListeners()) {
         isEnabled = true;
-        console.log('Mobile Drag and Drop Enabled');
       } else if (!isWaitingForDOM) {
-        // Not ready yet, wait for DOM rendering
         isWaitingForDOM = true;
-        console.log('UL or LIs not found. Waiting for rendering...');
-        
         const observer = new MutationObserver((mutations, obs) => {
           if (setupListeners()) {
             isEnabled = true;
             isWaitingForDOM = false;
-            console.log('Mobile Drag and Drop Enabled (after rendering)');
-            obs.disconnect(); // Found it, stop observing
+            obs.disconnect();
           }
         });
-
-        observer.observe(document.body, {
-          childList: true,
-          subtree: true
-        });
+        observer.observe(document.body, { childList: true, subtree: true });
       }
     },
     disable: function() {
       isEnabled = false;
       isWaitingForDOM = false; 
-
-      if (styleEl.parentNode) {
-        styleEl.parentNode.removeChild(styleEl);
-      }
-
+      if (styleEl.parentNode) styleEl.parentNode.removeChild(styleEl);
       if (items) {
         items.forEach(item => {
           item.removeEventListener('touchstart', handleTouchStart);
@@ -373,7 +372,6 @@ const dragAndDropManager = (function() {
           item.removeEventListener('touchcancel', handleTouchEnd);
         });
       }
-      console.log('Mobile Drag and Drop Disabled');
     }
   };
 })();
