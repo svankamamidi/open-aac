@@ -500,10 +500,14 @@ class Tree {
 	var tempNode = tree.find(key1);
     node1.key = node2.name;
     node1.value.name = node2.name;
-    node1.value.image = node2.image;  
+    node1.value.image = node2.image;
+	node1.value.type = node2.value.type;
+	node1.value.value = node2.value.value;
 	node2.key = tempNode.name;
     node2.value.name = tempNode.name;
     node2.value.image = tempNode.image;
+	node2.value.type = tempNode.value.type;
+	node2.value.value = tempNode.value.value;
   }
 	
   update(key, updatedNode){
@@ -547,7 +551,31 @@ class Tree {
   let mainMenuMap = new Map();
   let ROOT = {};
   ROOT.name = 'root';
-  
+
+function reOrderLevel(node) {
+  if (!node || !node.children) return;
+
+  // 1. Get the current order of text values from the DOM
+  const ul = document.querySelector('ul#ul-level-1');
+  const currentLiOrder = Array.from(ul.querySelectorAll('li')).map(li => li.textContent.trim());
+
+  // 2. Sort the children array based on the index in the currentLiOrder array
+  node.children.sort((a, b) => {
+    const indexA = currentLiOrder.indexOf(a.name.trim());
+    const indexB = currentLiOrder.indexOf(b.name.trim());
+    
+    // Safety check: if an item is not found in the DOM, move it to the end
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    
+    return indexA - indexB;
+  });
+
+  console.log('Tree children reordered:', node.children.map(c => c.name));
+  return node;
+}
+
+	
   function renderTextItem(item){		
     var ul = document.getElementById("ul-level-1");
     var li = createItemLi();
