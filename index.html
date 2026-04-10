@@ -322,7 +322,7 @@ const dragAndDropManager = (function() {
       ghost = null;
     }
     activeItem = null;
-	reOrderLevel();
+	reOrderLevel(tree.find(getParentKey()));
   }
 
   function setupListeners() {
@@ -905,17 +905,9 @@ function reOrderLevel(node) {
 	}
 	return picUploadPromise;
   }
-	
-  function saveInteraction(){	    
-	var newItem = {};
-	newItem.name = $("#name").val();
-	newItem.type = globalSettings.lastAction == InteractionType.Folder ? 'folder' : 'message';
-	  
-	newItem.parent = globalSettings.parentItem && globalSettings.parentItem.name ? globalSettings.parentItem.name : 'root';	
-	return fetchPicBase64('itemPhoto').then((picBase64) => {
-	  newItem.image = picBase64;	  
+
+  function getParentKey(){
 	  var parentLevel = globalSettings.currentLevel - 1;
-	  var parentForTree;
 	  if (globalSettings.currentItem && globalSettings.currentItem.type !== 'message'){
 		  parentForTree = globalSettings.currentItem.name + parentLevel;
 	  }
@@ -924,6 +916,18 @@ function reOrderLevel(node) {
 	  }else{
 		  parentForTree = globalSettings.currentFolder.name + parentLevel;
 	  }
+	  return parentForTree;
+  }
+	
+  function saveInteraction(){	    
+	var newItem = {};
+	newItem.name = $("#name").val();
+	newItem.type = globalSettings.lastAction == InteractionType.Folder ? 'folder' : 'message';
+	  
+	newItem.parent = globalSettings.parentItem && globalSettings.parentItem.name ? globalSettings.parentItem.name : 'root';	
+	return fetchPicBase64('itemPhoto').then((picBase64) => {
+	  newItem.image = picBase64;	  	  
+	  var parentForTree = getParentKey();	  
 	  if(globalSettings.currentAction === 'edit'){	    
 	    var oldName = globalSettings.currentItem.name;
 	    tree.update(globalSettings.currentItem.name + globalSettings.currentLevel, newItem);
