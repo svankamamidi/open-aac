@@ -562,8 +562,8 @@ function reOrderLevel(node) {
 
   // 2. Sort the children array based on the index in the currentLiOrder array
   node.children.sort((a, b) => {
-    const indexA = currentLiOrder.indexOf(a.name.trim());
-    const indexB = currentLiOrder.indexOf(b.name.trim());
+    const indexA = currentLiOrder.indexOf(a.value.name.trim());
+    const indexB = currentLiOrder.indexOf(b.value.name.trim());
     
     // Safety check: if an item is not found in the DOM, move it to the end
     if (indexA === -1) return 1;
