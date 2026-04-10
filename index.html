@@ -323,6 +323,7 @@ const dragAndDropManager = (function() {
     }
     activeItem = null;
 	reOrderLevel(tree.find(getParentKey()));
+	saveFromTree();
   }
 
   function setupListeners() {
