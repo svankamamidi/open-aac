@@ -494,6 +494,18 @@ class Tree {
     yield node;
   }
 
+  swapNodesByKeys(key1, key2){
+	var node1 = tree.find(key1);
+	var node2 = tree.find(key2);
+	var tempNode = tree.find(key1);
+    node1.key = node2.name;
+    node1.value.name = node2.name;
+    node1.value.image = node2.image;  
+	node2.key = tempNode.name;
+    node2.value.name = tempNode.name;
+    node2.value.image = tempNode.image;
+  }
+	
   update(key, updatedNode){
     var currentNode = tree.find(key);
     currentNode.key = updatedNode.name;
