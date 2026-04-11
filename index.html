@@ -217,7 +217,8 @@
     "pubface1@gmail.com",
     "madapu.prashanthi@gmail.com"
   ];
- 
+  var localStorage = window.localStorage;
+	
   async function verifyEmailMatchesGUID(email, providedGUID) {
     const encoder = new TextEncoder();
     const idData = encoder.encode(email.toLowerCase().trim());
@@ -518,7 +519,7 @@ const dragAndDropManager = (function() {
     
     //Can per page load actions
     //load saved levels & tiles
-    var localStorage = window.localStorage;
+    //var localStorage = window.localStorage;
     var levelItems = localStorage.getItem("ul-level-1");
 	aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
 	email = localStorage.getItem("email");
