@@ -213,6 +213,11 @@
 <div id="buttonDiv"></div>
 
 <script>
+  const ALLOWED_EMAILS = [
+    "prashu.sanjith@gmail.com"
+    "pubface1@gmail.com",
+    "madapu.prashanthi@gmail.com"
+  ];
   function handleCredentialResponse(response) {
      // The response.credential is a JSON Web Token (JWT)
      const responsePayload = decodeJwtResponse(response.credential);
@@ -220,6 +225,9 @@
      console.log("ID: " + responsePayload.sub);
      console.log('Full Name: ' + responsePayload.name);
      console.log('Email: ' + responsePayload.email); // Here is your email!
+	 if (ALLOWED_EMAILS.includes(responsePayload.email)){
+	   localStorage.setItem("email", responsePayload.email);
+	 }
 	 document.getElementById("buttonDiv").style.display="none";
   }
 
@@ -261,7 +269,7 @@
         .catch((err) => console.log('SW Registration Failed', err));
   });*/
   }
-
+	
 const dragAndDropManager = (function() {
   const targetSelector = 'ul#ul-level-1';
   let ul = null;
@@ -415,7 +423,7 @@ const dragAndDropManager = (function() {
   };
 })();
 	
-  let aacSettings;
+  let aacSettings, email;
   $( function() {
 	var name = $("#name");
 	var addMessageOrFolderDialog = $("#addMessageOrFolderDialog").dialog({
@@ -485,6 +493,11 @@ const dragAndDropManager = (function() {
     var localStorage = window.localStorage;
     var levelItems = localStorage.getItem("ul-level-1");
 	aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
+	email = localStorage.getItem("email");
+	if (!email){
+		alert("Please register");
+		return;
+	}
     if(!levelItems){ //if no custom folder structure defined load default one
       var configJson = loadFile("aac-config.json");
       localStorage.setItem("ul-level-1", configJson);
