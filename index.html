@@ -256,6 +256,10 @@
   }
 
   window.onload = function () {
+	if (localStorage.getItem("email")){
+		document.getElementById("buttonDiv").style.display="none";
+		return;
+	}
     google.accounts.id.initialize({
       client_id: "1029886723542-98bae3anmud86thbtv130euh5eaulaab.apps.googleusercontent.com",
       callback: handleCredentialResponse
