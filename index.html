@@ -251,11 +251,11 @@
 		 const isValid = await verifyEmailMatchesGUID(responsePayload.email, providedGuid);
 		 if (isValid){
 			 localStorage.setItem("email", responsePayload.email);
+			 document.getElementById("buttonDiv").style.display="none";
 		 }else{
 			 alert("Verification failed, try again with registered email");
 		 }
 	 }
-	 document.getElementById("buttonDiv").style.display="none";
   }
 
   window.onload = function () {
