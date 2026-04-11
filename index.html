@@ -251,6 +251,8 @@
 		 const isValid = await verifyEmailMatchesGUID(responsePayload.email, providedGuid);
 		 if (isValid){
 			 localStorage.setItem("email", responsePayload.email);
+		 }else{
+			 alert("Verification failed, try again with registered email");
 		 }
 	 }
 	 document.getElementById("buttonDiv").style.display="none";
