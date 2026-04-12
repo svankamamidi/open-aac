@@ -210,7 +210,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<div id="buttonDiv"></div>
+<div id="signInButtonDiv"></div>
 
 <script>
   const ALLOWED_EMAILS = [
@@ -251,17 +251,18 @@
 		 const isValid = await verifyEmailMatchesGUID(responsePayload.email, providedGuid);
 		 if (isValid){
 			 localStorage.setItem("email", responsePayload.email);
-			 document.getElementById("buttonDiv").style.display="none";
+			 document.getElementById("signInButtonDiv").style.display="none";
 			 location.reload();
 		 }else{
 			 alert("Verification failed, try again with registered email");
+			 document.getElementById("signInButtonDiv").style.display="table";
 		 }
 	 }
   }
 
   window.onload = function () {
 	if (localStorage.getItem("email")){
-		document.getElementById("buttonDiv").style.display="none";
+		document.getElementById("signInButtonDiv").style.display="none";
 		return;
 	}
     google.accounts.id.initialize({
@@ -269,7 +270,7 @@
       callback: handleCredentialResponse
     });
     google.accounts.id.renderButton(
-      document.getElementById("buttonDiv"),
+      document.getElementById("signInButtonDiv"),
       { theme: "outline", size: "large" }  // customization attributes
     );
     google.accounts.id.prompt(); // also display the One Tap dialog
@@ -528,6 +529,7 @@ const dragAndDropManager = (function() {
 	email = localStorage.getItem("email");
 	if (!email){
 		alert("Please register");
+		document.getElementById("signInButtonDiv").style.display="table";
 		return;
 	}
     if(!levelItems){ //if no custom folder structure defined load default one
