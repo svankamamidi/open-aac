@@ -530,7 +530,7 @@ const dragAndDropManager = (function() {
 	if (!email){
 		alert("Please register");
 		document.getElementById("signInButtonDiv").style.display="table";
-		freeUsageCount = localStorage.getItem("freeUsageCount") ? localStorage.getItem("freeUsageCount") : 0;
+		freeUsageCount = localStorage.getItem("freeUsageCount") ? Number(localStorage.getItem("freeUsageCount")) : 0;
 		localStorage.setItem("freeUsageCount", freeUsageCount+1);
 		if (freeUsageCount > 5){
 			return;
