@@ -217,6 +217,9 @@
     "pubface1@gmail.com","vshivasanjith@gmail.com",
     "madapu.prashanthi@gmail.com"
   ];
+  const BUY_TEXT = "You have exceeded the free trial attempts, click OK to visit our website for purchase",
+    BUY_LINK = "https://www.desirpm.com/category/aac";
+  
   var localStorage = window.localStorage;
 	
   async function verifyEmailMatchesGUID(email, providedGUID) {
@@ -247,7 +250,7 @@
 	 if (ALLOWED_EMAILS.includes(responsePayload.email)){
 	   localStorage.setItem("email", responsePayload.email);
 	 }else{
-		 let providedGuid = prompt("Please enter registration guid:");
+		 let providedGuid = prompt("Please enter your guid:");
 		 const isValid = await verifyEmailMatchesGUID(responsePayload.email, providedGuid);
 		 if (isValid){
 			 localStorage.setItem("email", responsePayload.email);
@@ -528,7 +531,9 @@ const dragAndDropManager = (function() {
 	aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
 	email = localStorage.getItem("email");
 	if (!email){
-		alert("Please register");
+		if (confirm(BUY_TEXT)) {
+          window.location.href = BUY_LINK;
+        }
 		document.getElementById("signInButtonDiv").style.display="table";
 		freeUsageCount = localStorage.getItem("freeUsageCount") ? Number(localStorage.getItem("freeUsageCount")) : 0;
 		localStorage.setItem("freeUsageCount", freeUsageCount+1);
