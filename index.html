@@ -217,7 +217,8 @@
     "pubface1@gmail.com","vshivasanjith@gmail.com",
     "madapu.prashanthi@gmail.com"
   ];
-  const BUY_TEXT = "You have exceeded the free trial attempts, click OK to visit our website https://www.desirpm.com for purchase",
+  const WARN_TEXT = "You are using trial version and usage is limited.",
+	BUY_TEXT = "You have exceeded the free trial attempts, click OK to visit our website https://www.desirpm.com for purchase",
     BUY_LINK = "https://www.desirpm.com/category/aac";
   
   var localStorage = window.localStorage;
@@ -531,13 +532,14 @@ const dragAndDropManager = (function() {
 	aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
 	email = localStorage.getItem("email");
 	if (!email){
-		if (confirm(BUY_TEXT)) {
-          window.location.href = BUY_LINK;
-        }
+		alert(WARN_TEXT);
 		document.getElementById("signInButtonDiv").style.display="table";
 		freeUsageCount = localStorage.getItem("freeUsageCount") ? Number(localStorage.getItem("freeUsageCount")) : 0;
 		localStorage.setItem("freeUsageCount", freeUsageCount+1);
 		if (freeUsageCount > 5){
+			if (confirm(BUY_TEXT)) {
+              window.location.href = BUY_LINK;
+            }
 			return;
 		}
 	}
