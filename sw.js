@@ -7,8 +7,7 @@ const appShellFiles = [
   '/open-aac/icons/aac.png',
   'https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css',
   'https://code.jquery.com/jquery-3.6.0.js',
-  'https://code.jquery.com/ui/1.13.0/jquery-ui.js',
-  'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css'
+  'https://code.jquery.com/ui/1.13.0/jquery-ui.js'
 ];
 
 // Installing Service Worker
@@ -17,7 +16,17 @@ self.addEventListener('install', (e) => {
   e.waitUntil((async () => {
     const cache = await caches.open(cacheName);
     console.log('[Service Worker] Caching all: app shell and content');
-    await cache.addAll(appShellFiles);
+    
+    // Cache each file individually with error handling
+    for (const file of appShellFiles) {
+      try {
+        await cache.add(file);
+        console.log(`[Service Worker] Successfully cached: ${file}`);
+      } catch (error) {
+        console.warn(`[Service Worker] Failed to cache ${file}:`, error);
+        // Continue to next file instead of halting
+      }
+    }
   })());
   self.skipWaiting();
 });
@@ -65,4 +74,3 @@ self.addEventListener("activate", (event) => {
     })()
   );
 });
-
