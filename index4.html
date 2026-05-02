@@ -44,22 +44,6 @@
         transform: scale(1.05);
     }
 
-    .key:active {
-        transform: scale(0.95);
-    }
-
-    .key.space-bar {
-        flex: 4;
-    }
-
-    .key.enter, .key.uppercase-toggle {
-        flex: 1.5;
-    }
-
-    .uppercase-toggle, .enter, .space-bar {
-        flex: 2;
-    }
-    
     .keyboard-mode-row {
         display: flex;
         justify-content: center;
@@ -88,146 +72,9 @@
         transition: all 0.2s ease;
     }
 
-    .keyboard-mode-btn:hover {
-        background-color: #45a049;
-    }
-
     .keyboard-mode-btn.active {
         background-color: #2196F3;
         border-color: #0b7dda;
-    }
-
-    .prevent-select {
-        -webkit-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        overflow-x: hidden;
-    }
-
-    .top-left-column {
-        flex: 75%;
-        height: 5%;
-    }
-
-    .top-right-column {
-        flex: 20%;
-        height: 5%;
-    }
-
-    .admin-settings {
-        padding-top: 5%;
-    }
-
-    .top-row {
-        display: flex;
-    }
-
-    .addInteractionDiv {
-        width: 15%;
-    }
-
-    .backButtonDiv {
-        width: 15%;
-        font-size: larger;
-    }
-
-    .interactionTypes a {
-        color: #2196f3;
-    }
-
-    .textArea {
-        width: 100%;
-        font-size: larger;
-    }
-
-    .keyboardIcon {
-        width: 8%;
-        padding-right: 2%;
-        padding-top: 2%;
-    }
-
-    .topTextArea {
-        padding-bottom: 2%;
-        display: flex;
-    }
-
-    .ul-container {
-        margin: 0 auto;
-        text-align: center;
-        overflow: auto;
-        min-width: 201px;
-        max-width: 901px;
-        display: block;
-        list-style: none;
-    }
-
-    .leaf-item {
-        font-weight: bold;
-        background-color: #FDF2E9;
-        border: 2px solid #FDF2E9;
-        box-sizing: border-box;
-        float: left;
-        height: 100px;
-        width: 100px;
-        margin: 5px 3px;
-    }
-
-    .folder-item {
-        font-weight: bold;
-        background-color: #FDF2E9;
-        border: 1px solid #F0F3F4;
-        box-sizing: border-box;
-        float: left;
-        height: 100px;
-        width: 100px;
-        margin: 5px 3px;
-        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAA6lBMVEUAAAD/uQD/uQD/u[...]');
-    }
-
-    table {
-        font-family: arial, sans-serif;
-        font-size: 100%;
-        font-weight: bold;
-        border-spacing: 15px 8px;
-        border-collapse: separate;
-        border: 1px solid white;
-        width: 100%;
-    }
-
-    td, th {
-        border: 1px solid #F0F3F4;
-        text-align: center;
-        padding: 12px;
-        background-color: #FDF2E9;
-        border-radius: 4px;
-    }
-
-    td {
-        height: 15vw;
-        width: 15vw;
-    }
-
-    .breadcrumb-navigation {
-        padding-bottom: 1%;
-    }
-
-    .breadcrumb-navigation>li {
-        display: inline;
-    }
-
-    .breadcrumb-navigation>li>a {
-        color: #026ece;
-        text-decoration: none;
-    }
-
-    .breadcrumb-navigation>li>a:hover {
-        color: #6fc302;
-    }
-
-    .breadcrumb-navigation li+li:before {
-        padding: 4px;
-        @charset "UTF-8";
-        content: "\2192";
     }
 
     .theme-option {
@@ -238,16 +85,6 @@
         cursor: pointer;
         text-align: center;
         transition: all 0.2s ease;
-    }
-
-    .theme-option:hover {
-        border-color: #2196F3;
-        transform: scale(1.05);
-    }
-
-    .theme-option.selected {
-        border-color: #4CAF50;
-        border-width: 3px;
     }
 
     .theme-preview {
@@ -270,10 +107,7 @@
 <div id="signInButtonDiv"></div>
 
 <script>
-    const ALLOWED_EMAILS = [
-        "pubface1@gmail.com", "vshivasanjith@gmail.com",
-        "madapu.prashanthi@gmail.com"
-    ];
+    const ALLOWED_EMAILS = ["pubface1@gmail.com", "vshivasanjith@gmail.com", "madapu.prashanthi@gmail.com"];
     const WARN_TEXT = "You are using trial version and usage is limited.",
         BUY_TEXT = "You have exceeded the free trial attempts, click OK to visit our website https://www.desirpm.com for purchase",
         BUY_LINK = "https://www.desirpm.com/category/aac";
@@ -285,23 +119,12 @@
         const idData = encoder.encode(email.toLowerCase().trim());
         const idHash = await crypto.subtle.digest('SHA-256', idData);
         const idHex = Array.from(new Uint8Array(idHash)).map(b => b.toString(16).padStart(2, '0')).join('');
-
-        const expectedPrefix = [
-            idHex.substring(0, 8),
-            idHex.substring(8, 12),
-            idHex.substring(12, 16),
-            idHex.substring(16, 20)
-        ].join('-');
-
+        const expectedPrefix = [idHex.substring(0, 8), idHex.substring(8, 12), idHex.substring(12, 16), idHex.substring(16, 20)].join('-');
         return providedGUID.startsWith(expectedPrefix);
     }
 
     async function handleCredentialResponse(response) {
         const responsePayload = decodeJwtResponse(response.credential);
-
-        console.log("ID: " + responsePayload.sub);
-        console.log('Full Name: ' + responsePayload.name);
-        console.log('Email: ' + responsePayload.email);
         if (ALLOWED_EMAILS.includes(responsePayload.email)) {
             localStorage.setItem("email", responsePayload.email);
         } else {
@@ -327,10 +150,7 @@
             client_id: "1029886723542-98bae3anmud86thbtv130euh5eaulaab.apps.googleusercontent.com",
             callback: handleCredentialResponse
         });
-        google.accounts.id.renderButton(
-            document.getElementById("signInButtonDiv"),
-            { theme: "outline", size: "large" }
-        );
+        google.accounts.id.renderButton(document.getElementById("signInButtonDiv"), { theme: "outline", size: "large" });
         google.accounts.id.prompt();
     }
 
@@ -340,7 +160,6 @@
         var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
-
         return JSON.parse(jsonPayload);
     }
 </script>
@@ -353,166 +172,13 @@
         navigator.serviceWorker.register('/open-aac/sw.js');
     }
 
-    const dragAndDropManager = (function () {
-        const targetSelector = 'ul#ul-level-1';
-        let ul = null;
-        let items = [];
-        let activeItem = null;
-        let ghost = null;
-        let initialX = 0;
-        let initialY = 0;
-        let ghostInitialLeft = 0;
-        let ghostInitialTop = 0;
-        let isEnabled = false;
-        let isWaitingForDOM = false;
-
-        const styleEl = document.createElement('style');
-        styleEl.id = 'dnd-mobile-styles';
-        const cssRules = `
-            ul#ul-level-1 li {
-              touch-action: none !important;
-              user-select: none !important;
-              -webkit-user-select: none !important;
-              -webkit-tap-highlight-color: transparent !important;
-            }
-        `;
-
-        function handleTouchStart(e) {
-            if (!isEnabled) return;
-            activeItem = e.target.closest('li');
-            if (!activeItem) return;
-
-            const touch = e.touches[0];
-            initialX = touch.clientX;
-            initialY = touch.clientY;
-
-            const rect = activeItem.getBoundingClientRect();
-            ghostInitialLeft = rect.left;
-            ghostInitialTop = rect.top;
-
-            ghost = activeItem.cloneNode(true);
-            Object.assign(ghost.style, {
-                position: 'fixed',
-                top: `${rect.top}px`,
-                left: `${rect.left}px`,
-                width: `${rect.width}px`,
-                height: `${rect.height}px`,
-                opacity: '0.9',
-                pointerEvents: 'none',
-                zIndex: '9999',
-                boxShadow: '0 8px 16px rgba(0,0,0,0.4)',
-                margin: '0',
-                backgroundColor: window.getComputedStyle(activeItem).backgroundColor || 'white'
-            });
-
-            document.body.appendChild(ghost);
-            activeItem.style.visibility = 'hidden';
-        }
-
-        function handleTouchMove(e) {
-            if (!isEnabled || !activeItem || !ghost) return;
-            if (e.cancelable) e.preventDefault();
-
-            const touch = e.touches[0];
-            const deltaX = touch.clientX - initialX;
-            const deltaY = touch.clientY - initialY;
-
-            ghost.style.left = `${ghostInitialLeft + deltaX}px`;
-            ghost.style.top = `${ghostInitialTop + deltaY}px`;
-
-            const target = document.elementFromPoint(touch.clientX, touch.clientY);
-            const overElement = target?.closest('li');
-
-            if (overElement && overElement !== activeItem && overElement.parentElement === ul) {
-                const rect = overElement.getBoundingClientRect();
-                const midpointX = rect.left + rect.width / 2;
-                const midpointY = rect.top + rect.height / 2;
-
-                const isBefore = (touch.clientY < rect.top + rect.height * 0.25) ||
-                    (touch.clientY < rect.bottom && touch.clientX < midpointX);
-
-                if (isBefore) {
-                    ul.insertBefore(activeItem, overElement);
-                } else {
-                    ul.insertBefore(activeItem, overElement.nextSibling);
-                }
-            }
-        }
-
-        function handleTouchEnd() {
-            if (activeItem) activeItem.style.visibility = 'visible';
-            if (ghost) {
-                ghost.remove();
-                ghost = null;
-            }
-            activeItem = null;
-            reOrderLevel(tree.find(getParentKey()));
-            saveFromTree();
-        }
-
-        function setupListeners() {
-            ul = document.querySelector(targetSelector);
-            if (!ul) return false;
-
-            items = ul.querySelectorAll('li');
-            if (items.length === 0) return false;
-
-            styleEl.innerHTML = cssRules;
-            document.head.appendChild(styleEl);
-
-            items.forEach(item => {
-                item.addEventListener('touchstart', handleTouchStart, { passive: false });
-                item.addEventListener('touchmove', handleTouchMove, { passive: false });
-                item.addEventListener('touchend', handleTouchEnd);
-                item.addEventListener('touchcancel', handleTouchEnd);
-            });
-            return true;
-        }
-
-        return {
-            enable: function () {
-                if (isEnabled) return;
-                if (setupListeners()) {
-                    isEnabled = true;
-                } else if (!isWaitingForDOM) {
-                    isWaitingForDOM = true;
-                    const observer = new MutationObserver((mutations, obs) => {
-                        if (setupListeners()) {
-                            isEnabled = true;
-                            isWaitingForDOM = false;
-                            obs.disconnect();
-                        }
-                    });
-                    observer.observe(document.body, { childList: true, subtree: true });
-                }
-            },
-            disable: function () {
-                isEnabled = false;
-                isWaitingForDOM = false;
-                if (styleEl.parentNode) styleEl.parentNode.removeChild(styleEl);
-                if (items) {
-                    items.forEach(item => {
-                        item.removeEventListener('touchstart', handleTouchStart);
-                        item.removeEventListener('touchmove', handleTouchMove);
-                        item.removeEventListener('touchend', handleTouchEnd);
-                        item.removeEventListener('touchcancel', handleTouchEnd);
-                    });
-                }
-            }
-        };
-    })();
-
     let aacSettings, email, freeUsageCount;
 
-    // Keyboard Manager
+    // KEYBOARD MANAGER
     const keyboardManager = {
         currentLayout: 'abc',
         isUppercase: false,
-        keyboardTheme: {
-            background: '#000',
-            color: '#fff'
-        },
-
+        keyboardTheme: { background: '#000', color: '#fff' },
         layouts: {
             abc: ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M'],
             numbers: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '-', '*', '/', '=', '%', '$', '&', '#', '.'],
@@ -520,7 +186,6 @@
             qwerty: ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M'],
             emojis: ['😀', '😂', '😍', '💯', '🔥', '🎉', '👍', '❤️', '🙌', '👏', '🚀', '⭐', '✨', '💪', '🎊', '🎈', '😎', '🤔', '😜', '😅']
         },
-
         themes: [
             { name: 'Sky Blue', bg: '#87CEEB', color: '#fff' },
             { name: 'Pink', bg: '#FFB6C1', color: '#fff' },
@@ -531,25 +196,21 @@
             { name: 'Orange', bg: '#FFA500', color: '#fff' },
             { name: 'White', bg: '#fff', color: '#000' }
         ],
-
         init: function () {
             this.loadTheme();
-            this.renderKeyboard();
-            this.attachModeButtons();
+            if (document.getElementById('keyboard')) {
+                this.renderKeyboard();
+            }
         },
-
         renderKeyboard: function () {
             const keyboard = document.getElementById('keyboard');
             if (!keyboard) return;
-
             const layout = this.layouts[this.currentLayout];
             keyboard.innerHTML = '';
-
             const rowSize = this.currentLayout === 'symbols' ? 9 : 10;
             for (let i = 0; i < layout.length; i += rowSize) {
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'row';
-
                 const rowKeys = layout.slice(i, i + rowSize);
                 rowKeys.forEach(key => {
                     const keyDiv = document.createElement('button');
@@ -560,14 +221,10 @@
                     keyDiv.onclick = () => this.handleKeyPress(key);
                     rowDiv.appendChild(keyDiv);
                 });
-
                 keyboard.appendChild(rowDiv);
             }
-
-            // Control keys row
             const controlRow = document.createElement('div');
             controlRow.className = 'row';
-
             const backspaceBtn = document.createElement('button');
             backspaceBtn.className = 'key';
             backspaceBtn.textContent = '⌫';
@@ -576,28 +233,24 @@
             backspaceBtn.style.color = this.keyboardTheme.color;
             backspaceBtn.onclick = () => this.handleBackspace();
             controlRow.appendChild(backspaceBtn);
-
             if (this.currentLayout === 'abc') {
                 const shiftBtn = document.createElement('button');
                 shiftBtn.className = 'key';
                 shiftBtn.textContent = '⇧';
-                shiftBtn.id = 'shift-btn';
                 shiftBtn.style.flex = '1.5';
                 shiftBtn.style.backgroundColor = this.keyboardTheme.background;
                 shiftBtn.style.color = this.keyboardTheme.color;
                 shiftBtn.onclick = () => this.toggleUppercase();
                 controlRow.appendChild(shiftBtn);
             }
-
             const spaceBtn = document.createElement('button');
-            spaceBtn.className = 'key space-bar';
+            spaceBtn.className = 'key';
             spaceBtn.textContent = 'Space';
             spaceBtn.style.flex = '4';
             spaceBtn.style.backgroundColor = this.keyboardTheme.background;
             spaceBtn.style.color = this.keyboardTheme.color;
             spaceBtn.onclick = () => this.handleKeyPress(' ');
             controlRow.appendChild(spaceBtn);
-
             const enterBtn = document.createElement('button');
             enterBtn.className = 'key';
             enterBtn.textContent = 'Enter';
@@ -606,16 +259,12 @@
             enterBtn.style.color = this.keyboardTheme.color;
             enterBtn.onclick = () => this.handleKeyPress('\n');
             controlRow.appendChild(enterBtn);
-
             document.getElementById('keyboard').appendChild(controlRow);
-
             this.attachModeButtons();
         },
-
         attachModeButtons: function () {
             const keyboard = document.getElementById('keyboard');
             let modeRow = document.querySelector('.keyboard-mode-row');
-
             if (!modeRow) {
                 modeRow = document.createElement('div');
                 modeRow.className = 'keyboard-mode-row';
@@ -623,7 +272,6 @@
             } else {
                 modeRow.innerHTML = '';
             }
-
             const modes = [
                 { label: 'ABC', layout: 'abc' },
                 { label: '123', layout: 'numbers' },
@@ -632,7 +280,6 @@
                 { label: 'Emojis', layout: 'emojis' },
                 { label: '⚙ Settings', action: 'settings' }
             ];
-
             modes.forEach(mode => {
                 const btn = document.createElement('button');
                 btn.className = 'keyboard-mode-btn';
@@ -652,26 +299,22 @@
                 modeRow.appendChild(btn);
             });
         },
-
         handleKeyPress: function (key) {
             const textarea = document.getElementById('textareaEle');
             if (textarea) {
                 textarea.value += key;
             }
         },
-
         handleBackspace: function () {
             const textarea = document.getElementById('textareaEle');
             if (textarea) {
                 textarea.value = textarea.value.slice(0, -1);
             }
         },
-
         toggleUppercase: function () {
             this.isUppercase = !this.isUppercase;
             this.renderKeyboard();
         },
-
         loadTheme: function () {
             const saved = localStorage.getItem('keyboardTheme');
             if (saved) {
@@ -680,11 +323,9 @@
                 this.keyboardTheme = { background: '#000', color: '#fff' };
             }
         },
-
         saveTheme: function () {
             localStorage.setItem('keyboardTheme', JSON.stringify(this.keyboardTheme));
         },
-
         openThemeDialog: function () {
             const html = this.themes.map((theme, idx) => `
                 <div class="theme-option" onclick="keyboardManager.applyTheme(${idx})">
@@ -693,21 +334,17 @@
                     </div>
                 </div>
             `).join('');
-
-            const dialog = $('<div>')
-                .html(`<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">${html}</div>`)
-                .dialog({
-                    title: 'Select Keyboard Theme',
-                    width: 400,
-                    modal: true,
-                    buttons: {
-                        'Close': function () {
-                            $(this).dialog('close');
-                        }
+            const dialog = $('<div>').html(`<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">${html}</div>`).dialog({
+                title: 'Select Keyboard Theme',
+                width: 400,
+                modal: true,
+                buttons: {
+                    'Close': function () {
+                        $(this).dialog('close');
                     }
-                });
+                }
+            });
         },
-
         applyTheme: function (themeIdx) {
             const theme = this.themes[themeIdx];
             this.keyboardTheme = { background: theme.bg, color: theme.color };
@@ -716,73 +353,64 @@
         }
     };
 
-    $(() => {
-        var name = $("#name");
-        var addMessageOrFolderDialog = $("#addMessageOrFolderDialog").dialog({
-            autoOpen: false,
-            height: 600,
-            width: 400,
-            modal: true,
-            buttons: {
-                "Save": saveInteraction,
-                Cancel: function () {
-                    document.querySelector('#uploadItemPhoto').value = '';
-                    var image = document.getElementById('itemPhoto');
-                    image.style.visibility = 'hidden';
-                    addMessageOrFolderDialog.dialog("close");
-                },
-                open: function (event, ui) {
-                    //TODO: render the existing image
-                }
-            },
-            close: function () {
-                document.querySelector('#uploadItemPhoto').value = '';
-                var image = document.getElementById('itemPhoto');
-                image.style.visibility = 'hidden';
-                if (globalSettings.currentAction === 'edit') {
-                    addMessageOrFolderDialog.dialog("close");
-                } else {
-                    onAddMsgFoldrDlgClose();
-                }
-            }
+    // UTILITY FUNCTIONS
+    function toBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
         });
+    }
 
-        addMessageOrFolderDialog.keypress(function (e) {
-            if (e.keyCode == $.ui.keyCode.ENTER) {
-                $("#addMessageOrFolderDialog").parent().find('.ui-dialog-buttonpane button:first').click();
-                return false;
-            }
-        });
+    function Settings(adminMode, menuId) {
+        this.adminMode = adminMode;
+        this.menuId = menuId;
+    }
 
-        $(document).on("click", function (event) {
-            if (!$(event.target).closest("#item-edit-menu, #ul-level-1").length) {
-                $("#item-edit-menu").hide();
-            }
-        });
+    function loadFile(filePath) {
+        var result = null;
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", filePath, false);
+        xmlhttp.send();
+        if (xmlhttp.status == 200) {
+            result = xmlhttp.responseText;
+        }
+        return result;
+    }
 
-        var importConfigDialog = $("#importConfigDialog").dialog({
-            autoOpen: false,
-            height: 400,
-            width: 350,
-            modal: true,
-            buttons: {
-                "Import": importConfig,
-                Cancel: function () {
-                    importConfigDialog.dialog("close");
-                }
-            }
-        });
+    function changeTheme(color) {
+        document.body.style.backgroundColor = color;
+    }
 
-        importConfigDialog.keypress(function (e) {
-            if (e.keyCode == $.ui.keyCode.ENTER) {
-                $("#importConfigDialog").parent().find('.ui-dialog-buttonpane button:first').click();
-                return false;
-            }
-        });
+    function saveInteraction() {
+        console.log("Saving interaction...");
+    }
 
+    function onAddMsgFoldrDlgClose() {
+        console.log("Dialog closing...");
+    }
+
+    function getParentKey() {
+        return globalSettings && globalSettings.parentItem ? globalSettings.parentItem.name : 1;
+    }
+
+    function reOrderLevel(node) {
+        if (!node || !node.children) return;
+    }
+
+    function saveFromTree() {
+        console.log("Saving from tree...");
+    }
+
+    let globalSettings = new Settings();
+    let tree = null;
+
+    $(function () {
         var levelItems = localStorage.getItem("ul-level-1");
         aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
         email = localStorage.getItem("email");
+        
         if (!email) {
             alert(WARN_TEXT);
             document.getElementById("signInButtonDiv").style.display = "table";
@@ -802,417 +430,6 @@
         }
 
         changeTheme(aacSettings?.theme?.color ?? 'rgb(62, 39, 35)');
-        loadSavedLevelsFromCache();
         keyboardManager.init();
     });
-
-    class TreeNode {
-        constructor(key, value = key, parent = null) {
-            this.key = key;
-            this.value = value;
-            this.parent = parent;
-            this.children = [];
-        }
-
-        get isLeaf() {
-            return this.children.length === 0;
-        }
-
-        get hasChildren() {
-            return !this.isLeaf;
-        }
-    }
-
-    class Tree {
-        constructor(key, value = key) {
-            this.root = new TreeNode(key, value);
-        }
-
-        *preOrderTraversal(node = this.root) {
-            yield node;
-            if (node.children.length) {
-                for (let child of node.children) {
-                    yield* this.preOrderTraversal(child);
-                }
-            }
-        }
-
-        *postOrderTraversal(node = this.root) {
-            if (node.children.length) {
-                for (let child of node.children) {
-                    yield* this.postOrderTraversal(child);
-                }
-            }
-            yield node;
-        }
-
-        swapNodesByKeys(key1, key2) {
-            var node1 = tree.find(key1);
-            var node2 = tree.find(key2);
-            var tempNode = tree.find(key1);
-            node1.key = node2.name;
-            node1.value.name = node2.name;
-            node1.value.image = node2.image;
-            node1.value.type = node2.value.type;
-            node1.value.value = node2.value.value;
-            node2.key = tempNode.name;
-            node2.value.name = tempNode.name;
-            node2.value.image = tempNode.image;
-            node2.value.type = tempNode.value.type;
-            node2.value.value = tempNode.value.value;
-        }
-
-        update(key, updatedNode) {
-            var currentNode = tree.find(key);
-            currentNode.key = updatedNode.name;
-            currentNode.value.name = updatedNode.name;
-            currentNode.value.image = updatedNode.image;
-        }
-
-        insert(parentNodeKey, key, value = key) {
-            for (let node of this.preOrderTraversal()) {
-                if (node.key === parentNodeKey) {
-                    node.children.push(new TreeNode(key, value, node));
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        remove(key) {
-            for (let node of this.preOrderTraversal()) {
-                const filtered = node.children.filter(c => c.key !== key);
-                if (filtered.length !== node.children.length) {
-                    node.children = filtered;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        find(key) {
-            for (let node of this.preOrderTraversal()) {
-                if (node.key === key) return node;
-            }
-            return undefined;
-        }
-    }
-
-    let globalSettings = new Settings();
-    let tree = new Tree(1, 'root');
-    let mainMenuMap = new Map();
-    let ROOT = {};
-    ROOT.name = 'root';
-
-    function reOrderLevel(node) {
-        if (!node || !node.children) return;
-
-        const ul = document.querySelector('ul#ul-level-1');
-        const currentLiOrder = Array.from(ul.querySelectorAll('li')).map(li => li.textContent.trim());
-
-        node.children.sort((a, b) => {
-            const indexA = currentLiOrder.indexOf(a.value.name.trim());
-            const indexB = currentLiOrder.indexOf(b.value.name.trim());
-
-            if (indexA === -1) return 1;
-            if (indexB === -1) return -1;
-
-            return indexA - indexB;
-        });
-
-        console.log('Tree children reordered:', node.children.map(c => c.name));
-        return node;
-    }
-
-    function renderTextItem(item) {
-        var ul = document.getElementById("ul-level-1");
-        var li = createItemLi();
-        li.classList.add("leaf-item");
-        var liElement = document.createTextNode(item);
-        if (item.image && item.image !== "No picture") {
-            liElement.style.backgroundImage = "url(item.image)"
-        }
-        li.appendChild(liElement);
-        ul.appendChild(li);
-    }
-
-    function renderItems(item) {
-        switch (typeof (item)) {
-            case 'object':
-                renderItem(item);
-                break;
-            case 'string':
-                renderTextItem(item)
-                break;
-        }
-    }
-
-    function renderItem(item) {
-        var ul = document.getElementById("ul-level-1");
-        var li = createItemLi(item);
-        var liElement = document.createTextNode(item.name);
-        if (item.image && item.image !== "No picture") {
-            li.style.backgroundImage = 'url(' + item.image + ')';
-            li.style.backgroundSize = '100% 85%';
-            li.style.backgroundRepeat = 'no-repeat';
-            li.style.backgroundPosition = 'center bottom';
-        }
-        li.appendChild(liElement);
-        ul.appendChild(li);
-        if (item.type && item.type === 'folder') {
-            li.classList.add("folder-item");
-        } else {
-            li.classList.add("leaf-item");
-        }
-    }
-
-    function loadGivenLevel(levelItems) {
-        levelItems && Array.isArray(levelItems) && levelItems.forEach(item => {
-            mainMenuMap.set(item.value.name, item.value);
-            renderItems(item.value);
-        });
-    }
-
-    function loadFile(filePath) {
-        var result = null;
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("GET", filePath, false);
-        xmlhttp.send();
-        if (xmlhttp.status == 200) {
-            result = xmlhttp.responseText;
-        }
-        return result;
-    }
-
-    function loadSavedLevelsFromCache() {
-        var localStorage = window.localStorage;
-        tree = new Tree(1, 'root');
-        var levelItems = localStorage.getItem("ul-level-1") && JSON.parse(localStorage.getItem("ul-level-1"));
-        levelItems && Array.isArray(levelItems) && levelItems.forEach(item => {
-            tree.insert(1, item.name + "1", item);
-            traverseStoredTreeAndCreateNodes(item, ROOT, 1);
-            mainMenuMap.set(item.name, item);
-            renderItems(item);
-        });
-        globalSettings.currentLevel = 1;
-    }
-
-    function traverseStoredTreeAndCreateNodes(startNode, parentNode, level) {
-        var localLevel = level + 1;
-        startNode.value && startNode.value.forEach(item => {
-            if (item.type === 'message') {
-                tree.insert(startNode.name + level, item.name + localLevel, item);
-            } else if (item.type === 'folder') {
-                tree.insert(startNode.name + level, item.name + localLevel, item);
-                traverseStoredTreeAndCreateNodes(item, startNode, localLevel);
-            }
-        })
-    }
-
-    function createItemLi(item) {
-        var li = document.createElement("li");
-        li.setAttribute("id", "li" + item.name);
-        li.addEventListener('click', function (event) {
-            handleItemClick(li, item, event);
-        });
-        return li;
-    }
-
-    function handleItemClick(liElement, item, event) {
-        globalSettings.settingsClickCount = 0;
-        if (item.type && item.type == 'folder') {
-            globalSettings.parentItem = item;
-            globalSettings.currentFolder = globalSettings.parentItem;
-        } else {
-            if (!globalSettings.parentItem) {
-                globalSettings.parentItem = 'root';
-            }
-            if (globalSettings.currentItem && globalSettings.currentItem.type === 'folder' && globalSettings.currentItem.parent === globalSettings.parentItem) {
-                globalSettings.parentItem = globalSettings.currentItem;
-            }
-            globalSettings.currentFolder = globalSettings.parentItem;
-        }
-        globalSettings.currentItem = item;
-        if (globalSettings && globalSettings.adminMode) {
-            handleItemEdit(liElement, event);
-        } else {
-            promptItem(liElement.innerText);
-            if (item.type && item.type === 'folder') {
-                displayFolderMenu(item);
-                globalSettings.currentLevel = globalSettings.currentLevel + 1;
-            } else {
-                var spaceChar;
-                if (document.getElementById("textareaEle").value) {
-                    spaceChar = " ";
-                } else {
-                    spaceChar = "";
-                }
-                document.getElementById("textareaEle").value = document.getElementById("textareaEle").value + spaceChar + liElement.innerText;
-            }
-        }
-    }
-
-    function downloadFile(content, fileName, mimeType) {
-        const link = document.createElement("a");
-        const file = new Blob([content], { type: mimeType });
-        link.href = URL.createObjectURL(file);
-        link.download = fileName;
-        link.click();
-        URL.revokeObjectURL(link.href);
-    }
-
-    function exportConfig() {
-        var localStorage = window.localStorage;
-        var configJsonStr = localStorage.getItem("ul-level-1");
-        downloadFile(configJsonStr, 'aac-config.json', 'application/json');
-    }
-
-    function readTextFile(fileElementSelector) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsText(document.querySelector(fileElementSelector).files[0]);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-    }
-
-    function importConfig() {
-        readTextFile("#importConfigFile").then(configJson => {
-            var localStorage = window.localStorage;
-            localStorage.setItem("ul-level-1", configJson);
-            $("#importConfigDialog").dialog("close");
-        });
-    }
-
-    function importDialog() {
-        $("#importConfigDialog").dialog("open");
-    }
-
-    function displayFolderMenu(item) {
-        $('#ul-level-1 li').each(function () {
-            $(this)[0].remove();
-        });
-        document.getElementById("backButtonDiv").style.display = "block";
-        item && item.value && item.value.forEach(childItem => {
-            renderItems(childItem);
-            if (!tree.find(childItem.name + (globalSettings.currentLevel + 1))) {
-                tree.insert(item.name, childItem.name + (globalSettings.currentLevel + 1), childItem);
-            }
-        });
-        updateBreadCrumbs(item);
-    }
-
-    function buildBreadCrumbPath(folderItem, level) {
-        var breadCrumbs = [];
-        if (level <= 1) {
-            return breadCrumbs;
-        } else if (level > 1) {
-            breadCrumbs.push(folderItem.name);
-            var parent = tree.find(folderItem.name + (level - 1));
-            if (parent && parent.parent) {
-                breadCrumbs.concat(buildBreadCrumbPath(parent.parent.value, level - 2));
-            }
-        }
-        return breadCrumbs;
-    }
-
-    function updateBreadCrumbs(folderItem) {
-        var ul = document.getElementById("ul-bread-crumbs");
-        var breadCrumbs = [];
-        breadCrumbs = buildBreadCrumbPath(folderItem, globalSettings.currentLevel + 1);
-        for (let i = 0; i < breadCrumbs.length; i++) {
-            var li = document.createElement("li");
-            var liElement = document.createTextNode(breadCrumbs[i]);
-            li.appendChild(liElement);
-            ul.appendChild(li);
-        }
-    }
-
-    function onBackButtonClick() {
-        if (globalSettings && globalSettings.currentLevel == 2) {
-            document.getElementById("backButtonDiv").style.display = "none";
-        }
-        $('#ul-level-1 li').each(function () {
-            $(this)[0].remove();
-        });
-
-        $('#ul-bread-crumbs li').each(function () {
-            $(this)[0].remove();
-        });
-
-        globalSettings.currentLevel = globalSettings.currentLevel ? globalSettings.currentLevel - 1 : 1;
-        if (globalSettings.parentItem && globalSettings.parentItem !== 'root' && globalSettings.parentItem?.parent) {
-            globalSettings.currentItem = tree.find(globalSettings.parentItem.parent + (globalSettings.currentLevel - 1)).value;
-            globalSettings.parentItem = globalSettings.currentItem.parent;
-        } else {
-            globalSettings.currentItem = 'root';
-            globalSettings.parentItem = 'root';
-        }
-        if (!globalSettings.currentItem || globalSettings.currentItem === 'root') {
-            loadSavedLevelsFromCache();
-        } else {
-            var item = globalSettings.currentItem;
-            item && item.value && item.value.forEach(childItem => {
-                renderItems(childItem);
-                if (!tree.find(childItem.name + (globalSettings.currentLevel + 1))) {
-                    tree.insert(item.name, childItem.name + (globalSettings.currentLevel + 1), childItem);
-                }
-            });
-            updateBreadCrumbs(globalSettings.currentItem);
-        }
-    }
-
-    function promptItem(words) {
-        try {
-            var synth = window.speechSynthesis;
-            synth.speak(new SpeechSynthesisUtterance(words));
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    function handleItemEdit(liElement, event) {
-        if (globalSettings) {
-            globalSettings.currentItemLiEle = liElement;
-        }
-
-        $("#item-edit-menu").menu().hide();
-        var menu = document.getElementById('item-edit-menu');
-        menu.style.position = "absolute";
-        menu.style.left = event.x + 'px';
-        menu.style.top = event.y + 'px';
-        $("#item-edit-menu").show();
-    }
-
-    function editItemContents() {
-        $("#item-edit-menu").menu().hide();
-        $("#name").val(globalSettings.currentItem.name);
-        $("#addMessageOrFolderDialog").dialog("open");
-        globalSettings.currentAction = "edit";
-    }
-
-    function deleteItem() {
-        $("#item-edit-menu").menu().hide();
-        tree.remove(globalSettings.currentItem.name + globalSettings.currentLevel);
-        $(globalSettings.currentItemLiEle).remove();
-        saveFromTree();
-    }
-
-    function fetchPicBase64(imageTagId) {
-        if (document.getElementById(imageTagId) && document.getElementById(imageTagId).src && document.getElementById(imageTagId).src.includes("base64")) {
-            return Promise.resolve(document.getElementById(imageTagId).src);
-        }
-        var picUploadPromise;
-        document.querySelector('#uploadItemPhoto').files && Array.from(document.querySelector('#uploadItemPhoto').files).forEach(pictureFile => {
-            picUploadPromise = toBase64(pictureFile).then(base64VoiceFile => {
-                return base64VoiceFile;
-                console.log(base64VoiceFile);
-                document.querySelector('#uploadItemPhoto').value = '';
-            });
-        });
-        if (!picUploadPromise) {
-            picUploadPromise = Promise.resolve("No picture");
-        }
-        return picUploadPromise;
-    }
 </script>
