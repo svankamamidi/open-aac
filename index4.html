@@ -3,18 +3,39 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
 <style>
     .keyboard {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        /*padding: 10px;*/
-        background-color: #f9f9f9;
-        /*border: 1px solid #ccc;*/
-        border-radius: 10px;
-        box-sizing: border-box;
-        flex: 1;
-        width: 100%;
-        min-height: 0;
-    }
+		/* Layout Logic */
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		background-color: #f9f9f9;
+		border-top: 1px solid #ccc; /* Subtle line to separate from content */
+		box-sizing: border-box;
+		width: 100%;
+
+		/* Mobile-Specific Magic */
+		position: fixed;            /* Pins keyboard to the screen */
+		bottom: 0;                 /* Sticks it to the bottom */
+		left: 0;
+		z-index: 1000;             /* Ensures it stays above all other elements */
+		padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); /* Extra space for iPhone 'home bar' */
+		
+		/* Animation (Optional but nice) */
+		transition: transform 0.3s ease;
+	}
+
+	.keyboard .key {
+		/* CRITICAL for Mobile Typing */
+		user-select: none;
+		-webkit-user-select: none;
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+		
+		/* Your existing key styles should stay, but ensure they have min-height */
+		min-height: 45px; 
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 
     .row {
         display: flex;
@@ -1425,6 +1446,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add event listener to each key
     document.querySelectorAll('.keyboard .key').forEach(button => {
         button.addEventListener('click', (event) => {
+			// Add a tiny haptic pulse (10ms) for mobile feel
+            if (navigator.vibrate) navigator.vibrate(10);
+			
             // Ignore action/navigation keys so they don't type into the text area
             if (event.target.classList.contains('action-key')) return;
 
@@ -1612,26 +1636,29 @@ document.addEventListener('DOMContentLoaded', () => {
 	        </div>
 	    </div>
 
-	    <!-- QWERTY View -->
-	    <div id="kb-qwerty-view" class="kb-view" style="display:none">
-	        <div class="row">
-	            <button class="key">1</button><button class="key">2</button><button class="key">3</button><button class="key">4</button><button class="key">5</button><button class="key">6</button><button class="key">7</button><button class="key">8</button><button class="key">9</button><button class="key">0</button>
-	        </div>
-	        <div class="row">
-	            <button class="key">Q</button><button class="key">W</button><button class="key">E</button><button class="key">R</button><button class="key">T</button><button class="key">Y</button><button class="key">U</button><button class="key">I</button><button class="key">O</button><button class="key">P</button>
-	        </div>
-	        <div class="row">
-	            <button class="key">Caps</button><button class="key">A</button><button class="key">S</button><button class="key">D</button><button class="key">F</button><button class="key">G</button><button class="key">H</button><button class="key">J</button><button class="key">K</button><button class="key">L</button>
-	        </div>
-	        <div class="row">
-	            <button class="key">Z</button><button class="key">X</button><button class="key">C</button><button class="key">V</button><button class="key">B</button><button class="key">N</button><button class="key">M</button><button class="key">,</button><button class="key">.</button><button class="key">/</button>
-	        </div>
-	        <div class="row">
-	            <button class="key space-bar">Space</button>
-	            <button class="key backspace" style="font-size: 20px">Backspace</button>
-	            <button class="key enter">Enter</button>
-	        </div>
-	    </div>
+	    <!-- Optimized QWERTY View -->
+		<div id="kb-qwerty-view" class="kb-view" style="display:none">
+			<div class="row" style="gap: 2px;">
+				<button class="key">1</button><button class="key">2</button><button class="key">3</button><button class="key">4</button><button class="key">5</button><button class="key">6</button><button class="key">7</button><button class="key">8</button><button class="key">9</button><button class="key">0</button>
+			</div>
+			<div class="row" style="gap: 2px;">
+				<button class="key">Q</button><button class="key">W</button><button class="key">E</button><button class="key">R</button><button class="key">T</button><button class="key">Y</button><button class="key">U</button><button class="key">I</button><button class="key">O</button><button class="key">P</button>
+			</div>
+			<div class="row" style="gap: 2px; padding-left: 5%;">
+				<button class="key">A</button><button class="key">S</button><button class="key">D</button><button class="key">F</button><button class="key">G</button><button class="key">H</button><button class="key">J</button><button class="key">K</button><button class="key">L</button>
+			</div>
+			<div class="row" style="gap: 2px;">
+				<button class="key" style="flex: 1.5; font-size: 12px;">Caps</button>
+				<button class="key">Z</button><button class="key">X</button><button class="key">C</button><button class="key">V</button><button class="key">B</button><button class="key">N</button><button class="key">M</button>
+				<button class="key" style="flex: 1.5;">⌫</button>
+			</div>
+			<div class="row" style="gap: 4px;">
+				<button class="key">,</button>
+				<button class="key space-bar" style="flex: 4;">Space</button>
+				<button class="key">.</button>
+				<button class="key enter" style="flex: 2;">Enter</button>
+			</div>
+		</div>
 
 	    <!-- Emojis View -->
 	    <div id="kb-emoji-view" class="kb-view" style="display:none">
@@ -1687,13 +1714,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	    </div>
 
 	    <!-- Bottom Navigation Row -->
-	    <div class="row bottom-nav-row" style="margin-top: 15px;">
-	        <button class="key action-key" onclick="switchKbView('kb-abc-view')">ABC</button>
-	        <button class="key action-key" onclick="switchKbView('kb-123-view')">123</button>
-	        <button class="key action-key" onclick="switchKbView('kb-symbol-view')">#@$</button>
-	        <button class="key action-key" onclick="switchKbView('kb-qwerty-view')">QWERTY</button>
-	        <button class="key action-key" onclick="switchKbView('kb-emoji-view')">Emojis</button>
-	        <button class="key action-key" style="font-size: 22px;" onclick="switchKbView('kb-settings-view')">Settings</button>
+	    <div class="row bottom-nav-row" style="margin-top: 15px; flex-wrap: wrap; justify-content: center; gap: 5px;">
+	        <button class="key action-key" style="flex: 1 1 28%; min-width: 70px;" onclick="switchKbView('kb-abc-view')">ABC</button>
+	        <button class="key action-key" style="flex: 1 1 28%; min-width: 70px;" onclick="switchKbView('kb-123-view')">123</button>
+	        <button class="key action-key" style="flex: 1 1 28%; min-width: 70px;" onclick="switchKbView('kb-symbol-view')">#@$</button>
+	        <button class="key action-key" style="flex: 1 1 28%; min-width: 90px;" onclick="switchKbView('kb-qwerty-view')">QWERTY</button>
+	        <button class="key action-key" style="flex: 1 1 28%; min-width: 80px;" onclick="switchKbView('kb-emoji-view')">Emojis</button>
+	        <button class="key action-key" style="flex: 1 1 28%; min-width: 90px; font-size: 18px;" onclick="switchKbView('kb-settings-view')">Settings</button>
 	    </div>
 	</div>
 </div>
