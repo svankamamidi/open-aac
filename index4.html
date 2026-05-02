@@ -3,39 +3,32 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
 <style>
     .keyboard {
-		/* Layout Logic */
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-		background-color: #f9f9f9;
-		border-top: 1px solid #ccc; /* Subtle line to separate from content */
-		box-sizing: border-box;
-		width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-sizing: border-box;
+        flex: 1;
+        width: 100%;
+        min-height: 0;
+        
+        /* This prevents the whole keyboard area from 
+           jittering if the user taps fast */
+        touch-action: none; 
+    }
 
-		/* Mobile-Specific Magic */
-		position: fixed;            /* Pins keyboard to the screen */
-		bottom: 0;                 /* Sticks it to the bottom */
-		left: 0;
-		z-index: 1000;             /* Ensures it stays above all other elements */
-		padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); /* Extra space for iPhone 'home bar' */
-		
-		/* Animation (Optional but nice) */
-		transition: transform 0.3s ease;
-	}
-
-	.keyboard .key {
-		/* CRITICAL for Mobile Typing */
-		user-select: none;
-		-webkit-user-select: none;
-		-webkit-tap-highlight-color: transparent;
-		touch-action: manipulation;
-		
-		/* Your existing key styles should stay, but ensure they have min-height */
-		min-height: 45px; 
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
+    .keyboard .key {
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        
+        /* Move it back here for the fastest 'hit' response 
+           on the buttons themselves */
+        touch-action: manipulation; 
+        
+        min-height: 48px; 
+    }
 
     .row {
         display: flex;
