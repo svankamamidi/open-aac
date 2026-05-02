@@ -6,7 +6,9 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
+        /*padding: 10px;*/
         background-color: #f9f9f9;
+        /*border: 1px solid #ccc;*/
         border-radius: 10px;
         box-sizing: border-box;
         flex: 1;
@@ -23,7 +25,7 @@
     }
 
     .key {
-        margin: 2px;
+		margin: 2px;
         flex: 1;
         min-height: 0;
         font-size: 32px;
@@ -36,400 +38,1705 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.2s ease;
     }
 
     .key:hover {
         background-color: #d0d0d0;
-        transform: scale(1.05);
     }
 
-    .keyboard-mode-row {
-        display: flex;
-        justify-content: center;
-        gap: 5px;
-        flex: 1;
-        min-height: 0;
-        margin-top: 10px;
+    .key.space-bar {
+        flex: 4; /* Space bar takes more space */
     }
 
-    .keyboard-mode-btn {
-        margin: 2px;
-        flex: 1;
-        min-height: 0;
-        font-size: 14px;
-        font-weight: bold;
-        text-align: center;
-        background-color: #4CAF50;
-        color: white;
-        border: 1px solid #45a049;
-        border-radius: 5px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 8px;
-        transition: all 0.2s ease;
+    .key.enter, .key.uppercase-toggle {
+        flex: 1.5;
     }
 
-    .keyboard-mode-btn.active {
-        background-color: #2196F3;
-        border-color: #0b7dda;
+    /* Adjust layout for smaller screens *//*
+    @media (max-width: 768px) {
+        .key {
+            font-size: 28px;
+        }
     }
 
-    .theme-option {
-        padding: 10px;
-        margin: 5px;
-        border: 2px solid #ccc;
-        border-radius: 5px;
-        cursor: pointer;
-        text-align: center;
-        transition: all 0.2s ease;
-    }
+    @media (max-width: 480px) {
+        .key {
+            font-size: 26px;
+        }
+    }*/
 
-    .theme-preview {
-        width: 100%;
-        height: 40px;
-        border-radius: 3px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: bold;
-        font-size: 12px;
-        margin-bottom: 5px;
-    }
+  .uppercase-toggle, .enter, .space-bar {
+      flex: 2; /* makes the key wider */
+  }	
+  .prevent-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    overflow-x: hidden;
+  }
+	
+  /* Create two equal columns that floats next to each other */
+  .top-left-column {
+    flex: 75%;
+    height: 5%;
+  }
+  
+  .top-right-column {
+    flex: 20%;
+    height: 5%;
+  }
+  .admin-settings {    
+    padding-top: 5%
+  }
+  .top-row {
+    display: flex;
+  }
+  
+  .addInteractionDiv {
+	width: 15%
+  }
+  
+  .backButtonDiv {
+    width: 15%;
+    font-size: larger
+  }
+  
+  .interactionTypes a {
+    color: #2196f3
+  }
+  
+  .textArea {
+	width: 100%;
+	font-size: larger;
+  }
+  .keyboardIcon {
+	width: 8%;
+	padding-right: 2%;
+	padding-top: 2%;
+  }
+  
+  .topTextArea {
+	padding-bottom: 2%;
+	display: flex;
+	//justify-content: space-between;
+  }
+  
+  .ul-container {
+   	margin:0 auto;
+   	//background:yellow;
+   	text-align:center;
+   	overflow:auto;
+   	min-width:201px;
+   	max-width:901px;
+   	display:block;
+   	list-style:none;
+  }
+
+  .leaf-item {
+    font-weight:bold;
+   	background-color:#FDF2E9;
+   	border:2px solid #FDF2E9;
+   	box-sizing:border-box;
+   	float:left;
+   	height:100px;
+   	width:100px;
+   	margin:5px 3px;
+  }
+  
+  .folder-item {
+    font-weight:bold;
+   	background-color:#FDF2E9;
+   	border:1px solid #F0F3F4;
+   	box-sizing:border-box;
+   	float:left;
+   	height:100px;
+   	width:100px;
+   	margin:5px 3px;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAA6lBMVEUAAAD/uQD/uQD/uQD/uQD/uQD/uQD/uwD/uQD/uQD/uQD/uQD/ugD/uQD/ugD/1lr/0En/yjL/1ln/xzP/0En/11zominomij/uQD/01n/55//33//11//01r/56D/34D/12D/6KD/4IH/2GH/1Fr/1Vz/6KH/2GL/vRD/23T/vhL/xi7/1WH/5Zn/553/3Xf/5pr/4IX/2Wj/2GP/3nj/3XP/22z/2WP/2WT/2WX/2Wb/2Wf/2mn/2mj/2mr/22n/22r/2Wr/2Wn/2mv/22v/2mf/2mb/2GT/2GDzukfzuUbafRfaexb////eYXQTAAAAGHRSTlMAHazy6sR1D+3sWP59gIj+5kj+N+P+8vExUlyIAAAAAWJLR0RNgGggZQAAAAd0SU1FB+QDDQshOSsEIzMAAAFLSURBVHja7drZVsIwFIVhBOdZnOKAINXWeQAVZ1GcEN//eeCGq3PTNmGfc7G/F8i/krYryWqhQERERERENDRWLLk0xicmp0Yy/rRLbWZ2BAFFl8HcfPiAkstkIXiAy2hROyB4gdMucNoFOQK2tnd2c1laXgkRkHv8gfKqf0Blr1rLb807oLJfjzys+wYc+I0fRZ4Bh3E98eMVcHQcVxO1gJPTs/OLyyR4QJze1XWj6U0E3KR1e9cKQQTcg4mABzB7AY9gDLAX8AQmAhpgnAER8AwmAl7A7M0AA17BRMAbmAhog9l7Bt7BRMAHmL0ZUH8NGdAB4xKIgE8wLoG9APVPMfeEDFDfkKgfTtUD1A+nX2D2AtSvaHhP+A1m77b8B4wBIqAFZi+gCSYCEjB7Ab9gIqAGZm8Gun9QXRGw0fsH6m3y/0kiIiIiIhrqAxvdHvTMOppkAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTAzLTEzVDExOjMzOjU3KzAwOjAwvq9K8QAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0wMy0xM1QxMTozMzo1NyswMDowMM/y8k0AAAAASUVORK5CYII=')
+  }
+  
+  table {
+    font-family: arial, sans-serif;
+    font-size: 100%;
+    font-weight: bold;
+    border-spacing: 15px 8px;
+    border-collapse: separate;
+    border: 1px solid white;
+    width: 100%;
+  }
+
+  td, th {
+    border: 1px solid #F0F3F4;
+    text-align: center;
+    padding: 12px;
+    background-color: #FDF2E9;
+    border-radius: 4px;
+  }
+  
+  td {
+	height: 15vw;
+    width: 15vw;
+  }
+
+  //tr:nth-child(even) {
+    //background-color: #dddddd;
+  //}
+
+.breadcrumb-navigation {
+    padding-bottom: 1%;
+    //background-color: rgb(238, 238, 238);
+}
+
+.breadcrumb-navigation>li {
+    display: inline;
+}
+
+.breadcrumb-navigation>li>a {
+    color: #026ece;
+    text-decoration: none;
+}
+
+.breadcrumb-navigation>li>a:hover {
+    color: #6fc302;
+    //text-decoration: underline;
+}
+
+.breadcrumb-navigation li+li:before {
+    padding: 4px;
+    @charset "UTF-8";
+    content: "\2192";
+}
 </style>
-
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <div id="signInButtonDiv"></div>
 
 <script>
-    const ALLOWED_EMAILS = ["pubface1@gmail.com", "vshivasanjith@gmail.com", "madapu.prashanthi@gmail.com"];
-    const WARN_TEXT = "You are using trial version and usage is limited.",
-        BUY_TEXT = "You have exceeded the free trial attempts, click OK to visit our website https://www.desirpm.com for purchase",
-        BUY_LINK = "https://www.desirpm.com/category/aac";
+  const ALLOWED_EMAILS = [
+    "pubface1@gmail.com","vshivasanjith@gmail.com",
+    "madapu.prashanthi@gmail.com"
+  ];
+  const WARN_TEXT = "You are using trial version and usage is limited.",
+	BUY_TEXT = "You have exceeded the free trial attempts, click OK to visit our website https://www.desirpm.com for purchase",
+    BUY_LINK = "https://www.desirpm.com/category/aac";
+  
+  var localStorage = window.localStorage;
+	
+  async function verifyEmailMatchesGUID(email, providedGUID) {
+    const encoder = new TextEncoder();
+    const idData = encoder.encode(email.toLowerCase().trim());
+    const idHash = await crypto.subtle.digest('SHA-256', idData);
+    const idHex = Array.from(new Uint8Array(idHash)).map(b => b.toString(16).padStart(2, '0')).join('');
 
-    var localStorage = window.localStorage;
+    // Reconstruct what the ID part SHOULD look like
+    const expectedPrefix = [
+        idHex.substring(0, 8),
+        idHex.substring(8, 12),
+        idHex.substring(12, 16),
+        idHex.substring(16, 20)
+    ].join('-');
 
-    async function verifyEmailMatchesGUID(email, providedGUID) {
-        const encoder = new TextEncoder();
-        const idData = encoder.encode(email.toLowerCase().trim());
-        const idHash = await crypto.subtle.digest('SHA-256', idData);
-        const idHex = Array.from(new Uint8Array(idHash)).map(b => b.toString(16).padStart(2, '0')).join('');
-        const expectedPrefix = [idHex.substring(0, 8), idHex.substring(8, 12), idHex.substring(12, 16), idHex.substring(16, 20)].join('-');
-        return providedGUID.startsWith(expectedPrefix);
-    }
+    // Check if the provided GUID starts with the correct ID for that email
+    return providedGUID.startsWith(expectedPrefix);
+  }
+	
+  async function handleCredentialResponse(response) {
+     // The response.credential is a JSON Web Token (JWT)
+     const responsePayload = decodeJwtResponse(response.credential);
 
-    async function handleCredentialResponse(response) {
-        const responsePayload = decodeJwtResponse(response.credential);
-        if (ALLOWED_EMAILS.includes(responsePayload.email)) {
-            localStorage.setItem("email", responsePayload.email);
-        } else {
-            let providedGuid = prompt("Please enter your guid:");
-            const isValid = await verifyEmailMatchesGUID(responsePayload.email, providedGuid);
-            if (isValid) {
-                localStorage.setItem("email", responsePayload.email);
-                document.getElementById("signInButtonDiv").style.display = "none";
-                location.reload();
-            } else {
-                alert("Verification failed, try again with registered email");
-                document.getElementById("signInButtonDiv").style.display = "table";
-            }
-        }
-    }
+     console.log("ID: " + responsePayload.sub);
+     console.log('Full Name: ' + responsePayload.name);
+     console.log('Email: ' + responsePayload.email); // Here is your email!
+	 if (ALLOWED_EMAILS.includes(responsePayload.email)){
+	   localStorage.setItem("email", responsePayload.email);
+	 }else{
+		 let providedGuid = prompt("Please enter your guid:");
+		 const isValid = await verifyEmailMatchesGUID(responsePayload.email, providedGuid);
+		 if (isValid){
+			 localStorage.setItem("email", responsePayload.email);
+			 document.getElementById("signInButtonDiv").style.display="none";
+			 location.reload();
+		 }else{
+			 alert("Verification failed, try again with registered email");
+			 document.getElementById("signInButtonDiv").style.display="table";
+		 }
+	 }
+  }
 
-    window.onload = function () {
-        if (localStorage.getItem("email")) {
-            document.getElementById("signInButtonDiv").style.display = "none";
-            return;
-        }
-        google.accounts.id.initialize({
-            client_id: "1029886723542-98bae3anmud86thbtv130euh5eaulaab.apps.googleusercontent.com",
-            callback: handleCredentialResponse
-        });
-        google.accounts.id.renderButton(document.getElementById("signInButtonDiv"), { theme: "outline", size: "large" });
-        google.accounts.id.prompt();
-    }
+  window.onload = function () {
+	if (localStorage.getItem("email")){
+		document.getElementById("signInButtonDiv").style.display="none";
+		return;
+	}
+    google.accounts.id.initialize({
+      client_id: "1029886723542-98bae3anmud86thbtv130euh5eaulaab.apps.googleusercontent.com",
+      callback: handleCredentialResponse
+    });
+    google.accounts.id.renderButton(
+      document.getElementById("signInButtonDiv"),
+      { theme: "outline", size: "large" }  // customization attributes
+    );
+    google.accounts.id.prompt(); // also display the One Tap dialog
+  }
 
-    function decodeJwtResponse(token) {
-        var base64Url = token.split('.')[1];
-        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-    }
+  // Simple function to decode the JWT and get user info
+  function decodeJwtResponse(token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+  }
 </script>
-
 <script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-            window.location.reload();
+  // Registering Service Worker
+  if ('serviceWorker' in navigator) {
+	// Listen for the new service worker taking control
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      // Reload the page to ensure the user sees the latest version
+      window.location.reload();
+    });
+    navigator.serviceWorker.register('/open-aac/sw.js');
+	/*window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => console.log('SW Registered', reg))
+        .catch((err) => console.log('SW Registration Failed', err));
+  });*/
+  }
+	
+const dragAndDropManager = (function() {
+  const targetSelector = 'ul#ul-level-1';
+  let ul = null;
+  let items = [];
+  let activeItem = null;
+  let ghost = null;
+  let initialX = 0;
+  let initialY = 0;
+  let ghostInitialLeft = 0;
+  let ghostInitialTop = 0;
+  let isEnabled = false;
+  let isWaitingForDOM = false;
+
+  const styleEl = document.createElement('style');
+  styleEl.id = 'dnd-mobile-styles';
+  const cssRules = `
+    ul#ul-level-1 li {
+      touch-action: none !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+  `;
+
+  function handleTouchStart(e) {
+    if (!isEnabled) return;
+    activeItem = e.target.closest('li');
+    if (!activeItem) return;
+
+    const touch = e.touches[0];
+    initialX = touch.clientX;
+    initialY = touch.clientY;
+    
+    const rect = activeItem.getBoundingClientRect();
+    ghostInitialLeft = rect.left;
+    ghostInitialTop = rect.top;
+
+    ghost = activeItem.cloneNode(true);
+    Object.assign(ghost.style, {
+      position: 'fixed',
+      top: `${rect.top}px`,
+      left: `${rect.left}px`,
+      width: `${rect.width}px`,
+      height: `${rect.height}px`,
+      opacity: '0.9',
+      pointerEvents: 'none',
+      zIndex: '9999',
+      boxShadow: '0 8px 16px rgba(0,0,0,0.4)',
+      margin: '0',
+      backgroundColor: window.getComputedStyle(activeItem).backgroundColor || 'white'
+    });
+    
+    document.body.appendChild(ghost);
+    activeItem.style.visibility = 'hidden';
+  }
+
+  function handleTouchMove(e) {
+    if (!isEnabled || !activeItem || !ghost) return;
+    if (e.cancelable) e.preventDefault();
+
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - initialX;
+    const deltaY = touch.clientY - initialY;
+    
+    // UPDATED: Move ghost in BOTH directions
+    ghost.style.left = `${ghostInitialLeft + deltaX}px`;
+    ghost.style.top = `${ghostInitialTop + deltaY}px`;
+
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    const overElement = target?.closest('li');
+    
+    if (overElement && overElement !== activeItem && overElement.parentElement === ul) {
+      const rect = overElement.getBoundingClientRect();
+      const midpointX = rect.left + rect.width / 2;
+      const midpointY = rect.top + rect.height / 2;
+      
+      // UPDATED: Logic to handle both rows and columns
+      // If we are significantly above the item, insert before.
+      // If we are in the same row, check if we are before the horizontal midpoint.
+      const isBefore = (touch.clientY < rect.top + rect.height * 0.25) || 
+                       (touch.clientY < rect.bottom && touch.clientX < midpointX);
+
+      if (isBefore) {
+        ul.insertBefore(activeItem, overElement);
+      } else {
+        ul.insertBefore(activeItem, overElement.nextSibling);
+      }
+    }
+  }
+
+  function handleTouchEnd() {
+    if (activeItem) activeItem.style.visibility = 'visible';
+    if (ghost) {
+      ghost.remove();
+      ghost = null;
+    }
+    activeItem = null;
+	reOrderLevel(tree.find(getParentKey()));
+	saveFromTree();
+  }
+
+  function setupListeners() {
+    ul = document.querySelector(targetSelector);
+    if (!ul) return false;
+    
+    items = ul.querySelectorAll('li');
+    if (items.length === 0) return false;
+
+    styleEl.innerHTML = cssRules;
+    document.head.appendChild(styleEl);
+
+    items.forEach(item => {
+      item.addEventListener('touchstart', handleTouchStart, { passive: false });
+      item.addEventListener('touchmove', handleTouchMove, { passive: false });
+      item.addEventListener('touchend', handleTouchEnd);
+      item.addEventListener('touchcancel', handleTouchEnd);
+    });
+    return true;
+  }
+
+  return {
+    enable: function() {
+      if (isEnabled) return;
+      if (setupListeners()) {
+        isEnabled = true;
+      } else if (!isWaitingForDOM) {
+        isWaitingForDOM = true;
+        const observer = new MutationObserver((mutations, obs) => {
+          if (setupListeners()) {
+            isEnabled = true;
+            isWaitingForDOM = false;
+            obs.disconnect();
+          }
         });
-        navigator.serviceWorker.register('/open-aac/sw.js');
+        observer.observe(document.body, { childList: true, subtree: true });
+      }
+    },
+    disable: function() {
+      isEnabled = false;
+      isWaitingForDOM = false; 
+      if (styleEl.parentNode) styleEl.parentNode.removeChild(styleEl);
+      if (items) {
+        items.forEach(item => {
+          item.removeEventListener('touchstart', handleTouchStart);
+          item.removeEventListener('touchmove', handleTouchMove);
+          item.removeEventListener('touchend', handleTouchEnd);
+          item.removeEventListener('touchcancel', handleTouchEnd);
+        });
+      }
+    }
+  };
+})();
+	
+  let aacSettings, email, freeUsageCount;
+  $( function() {
+	var name = $("#name");
+	var addMessageOrFolderDialog = $("#addMessageOrFolderDialog").dialog({
+      autoOpen: false,
+      height: 600,
+      width: 400,
+      modal: true,
+      buttons: {
+        "Save": saveInteraction,
+        Cancel: function() {
+	  document.querySelector('#uploadItemPhoto').value = '';
+	  var image = document.getElementById('itemPhoto');
+	  image.style.visibility = 'hidden';
+          addMessageOrFolderDialog.dialog( "close" );
+        },
+	open: function( event, ui ) {
+	  //TODO: render the existing image (image could have been sourced from search or upload)
+	}
+      },
+      close: function() {
+	document.querySelector('#uploadItemPhoto').value = '';
+	var image = document.getElementById('itemPhoto');
+	image.style.visibility = 'hidden';
+	if (globalSettings.currentAction === 'edit'){
+	  addMessageOrFolderDialog.dialog( "close" );	  
+	}else{
+	  onAddMsgFoldrDlgClose();
+	}
+      }
+    });
+    addMessageOrFolderDialog.keypress(function(e) {
+      if( e.keyCode == $.ui.keyCode.ENTER ) {
+        $("#addMessageOrFolderDialog").parent().find('.ui-dialog-buttonpane button:first').click();
+        return false;
+      }
+    });
+    // Event listener for clicking outside the menu
+    $(document).on("click", function(event) {      
+      if (!$(event.target).closest("#item-edit-menu, #ul-level-1").length) {
+        $("#item-edit-menu").hide();
+      }
+    });
+
+    var importConfigDialog = $("#importConfigDialog").dialog({
+      autoOpen: false,
+      height: 400,
+      width: 350,
+      modal: true,
+      buttons: {
+        "Import": importConfig,
+        Cancel: function() {	  
+          importConfigDialog.dialog( "close" );
+        }
+      },
+      /*close: function() {		
+      }*/
+    });
+    importConfigDialog.keypress(function(e) {
+      if( e.keyCode == $.ui.keyCode.ENTER ) {
+        $("#importConfigDialog").parent().find('.ui-dialog-buttonpane button:first').click();
+        return false;
+      }
+    });
+    
+    //Can per page load actions
+    //load saved levels & tiles
+    //var localStorage = window.localStorage;
+    var levelItems = localStorage.getItem("ul-level-1");
+	aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
+	email = localStorage.getItem("email");
+	if (!email){
+		alert(WARN_TEXT);
+		document.getElementById("signInButtonDiv").style.display="table";
+		freeUsageCount = localStorage.getItem("freeUsageCount") ? Number(localStorage.getItem("freeUsageCount")) : 0;
+		localStorage.setItem("freeUsageCount", freeUsageCount+1);
+		if (freeUsageCount > 5){
+			if (confirm(BUY_TEXT)) {
+              window.location.href = BUY_LINK;
+            }
+			return;
+		}
+	}
+    if(!levelItems){ //if no custom folder structure defined load default one
+      var configJson = loadFile("aac-config.json");
+      localStorage.setItem("ul-level-1", configJson);
+    }
+	changeTheme(aacSettings?.theme?.color ?? 'rgb(62, 39, 35)');
+    loadSavedLevelsFromCache();
+  });
+  
+    class TreeNode {
+  constructor(key, value = key, parent = null) {
+    this.key = key;
+    this.value = value;
+    this.parent = parent;
+    this.children = [];
+  }
+
+  get isLeaf() {
+    return this.children.length === 0;
+  }
+
+  get hasChildren() {
+    return !this.isLeaf;
+  }
+}
+
+class Tree {
+  constructor(key, value = key) {
+    this.root = new TreeNode(key, value);
+  }
+
+  *preOrderTraversal(node = this.root) {
+    yield node;
+    if (node.children.length) {
+      for (let child of node.children) {
+        yield* this.preOrderTraversal(child);
+      }
+    }
+  }
+
+  *postOrderTraversal(node = this.root) {
+    if (node.children.length) {
+      for (let child of node.children) {
+        yield* this.postOrderTraversal(child);
+      }
+    }
+    yield node;
+  }
+
+  swapNodesByKeys(key1, key2){
+	var node1 = tree.find(key1);
+	var node2 = tree.find(key2);
+	var tempNode = tree.find(key1);
+    node1.key = node2.name;
+    node1.value.name = node2.name;
+    node1.value.image = node2.image;
+	node1.value.type = node2.value.type;
+	node1.value.value = node2.value.value;
+	node2.key = tempNode.name;
+    node2.value.name = tempNode.name;
+    node2.value.image = tempNode.image;
+	node2.value.type = tempNode.value.type;
+	node2.value.value = tempNode.value.value;
+  }
+	
+  update(key, updatedNode){
+    var currentNode = tree.find(key);
+    currentNode.key = updatedNode.name;
+    currentNode.value.name = updatedNode.name;
+    currentNode.value.image = updatedNode.image;
+  }
+	
+  insert(parentNodeKey, key, value = key) {
+    for (let node of this.preOrderTraversal()) {
+      if (node.key === parentNodeKey) {
+        node.children.push(new TreeNode(key, value, node));
+        return true;
+      }
+    }
+    return false;
+  }
+
+  remove(key) {
+    for (let node of this.preOrderTraversal()) {
+      const filtered = node.children.filter(c => c.key !== key);
+      if (filtered.length !== node.children.length) {
+        node.children = filtered;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  find(key) {
+    for (let node of this.preOrderTraversal()) {
+      if (node.key === key) return node;
+    }
+    return undefined;
+  }
+}
+  
+  let globalSettings = new Settings();
+  let tree = new Tree(1, 'root');
+  let mainMenuMap = new Map();
+  let ROOT = {};
+  ROOT.name = 'root';
+
+function reOrderLevel(node) {
+  if (!node || !node.children) return;
+
+  // 1. Get the current order of text values from the DOM
+  const ul = document.querySelector('ul#ul-level-1');
+  const currentLiOrder = Array.from(ul.querySelectorAll('li')).map(li => li.textContent.trim());
+
+  // 2. Sort the children array based on the index in the currentLiOrder array
+  node.children.sort((a, b) => {
+    const indexA = currentLiOrder.indexOf(a.value.name.trim());
+    const indexB = currentLiOrder.indexOf(b.value.name.trim());
+    
+    // Safety check: if an item is not found in the DOM, move it to the end
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    
+    return indexA - indexB;
+  });
+
+  console.log('Tree children reordered:', node.children.map(c => c.name));
+  return node;
+}
+
+	
+  function renderTextItem(item){		
+    var ul = document.getElementById("ul-level-1");
+    var li = createItemLi();
+	li.classList.add("leaf-item");
+    var liElement = document.createTextNode(item);
+    if (item.image && item.image !== "No picture"){
+      liElement.style.backgroundImage = "url(item.image)"
+    }
+    li.appendChild(liElement);
+    ul.appendChild(li);
+  }
+  
+  function renderItems(item){	
+    switch(typeof(item)){
+      case 'object':
+		renderItem(item);
+        break;
+      case 'string':
+        renderTextItem(item)
+        break;
+	}
+  }
+  
+  function renderItem(item){
+    var ul = document.getElementById("ul-level-1");
+    var li = createItemLi(item);
+    var liElement = document.createTextNode(item.name);
+    if (item.image && item.image !== "No picture"){
+      li.style.backgroundImage = 'url(' + item.image + ')';
+      li.style.backgroundSize = '100% 85%'; //'cover';
+      li.style.backgroundRepeat = 'no-repeat';
+      li.style.backgroundPosition = 'center bottom'; //'center center';    
+    }
+    li.appendChild(liElement);	  
+    ul.appendChild(li);
+	if (item.type && item.type==='folder'){
+		li.classList.add("folder-item");
+	}else{
+		li.classList.add("leaf-item");
+	}
+  }
+  
+  function loadGivenLevel(levelItems){
+
+    levelItems && Array.isArray(levelItems) && levelItems.forEach(item => {
+
+      mainMenuMap.set(item.value.name, item.value);
+
+	  renderItems(item.value);
+
+    });
+
+  }
+	
+  function loadFile(filePath) {
+    var result = null;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", filePath, false);
+    xmlhttp.send();
+    if (xmlhttp.status==200) {
+      result = xmlhttp.responseText;
+    }
+    return result;
+  }
+	
+  function loadSavedLevelsFromCache(){
+    var localStorage = window.localStorage;
+    tree = new Tree(1, 'root');
+    var levelItems = localStorage.getItem("ul-level-1") && JSON.parse(localStorage.getItem("ul-level-1"));
+    levelItems && Array.isArray(levelItems) && levelItems.forEach(item => {
+      tree.insert(1, item.name + "1", item);
+      traverseStoredTreeAndCreateNodes(item, ROOT, 1);
+      mainMenuMap.set(item.name, item);
+      renderItems(item);
+    });
+	globalSettings.currentLevel = 1;
+  }
+
+  function traverseStoredTreeAndCreateNodes(startNode, parentNode, level){
+    var localLevel = level+1;
+    startNode.value && startNode.value.forEach(item => {
+      if (item.type === 'message'){
+        tree.insert(startNode.name + level, item.name + localLevel, item);	
+      }else if (item.type === 'folder'){
+	tree.insert(startNode.name + level, item.name + localLevel, item);
+	traverseStoredTreeAndCreateNodes(item, startNode, localLevel);
+      }
+    })
+  }
+  
+  function createItemLi(item){
+    var li = document.createElement("li");
+    li.setAttribute("id", "li" + item.name);
+    li.addEventListener('click', function(event) {
+      handleItemClick(li, item, event);
+    });
+    return li;
+  }
+  
+  function handleItemClick(liElement, item, event){
+	//Reset previous clicks on Settings
+	globalSettings.settingsClickCount = 0;
+	if(item.type && item.type == 'folder'){
+		/*if (globalSettings.currentItem && globalSettings.currentItem.type === 'folder'){
+			globalSettings.parentItem = globalSettings.currentItem ? globalSettings.currentItem : item.parent;
+		}else{
+			globalSettings.parentItem = globalSettings.currentFolder;
+		}*/
+		globalSettings.parentItem = item;
+		globalSettings.currentFolder = globalSettings.parentItem;
+	}else{
+		if (!globalSettings.parentItem){
+			globalSettings.parentItem = 'root';
+		}
+		if (globalSettings.currentItem && globalSettings.currentItem.type === 'folder' && globalSettings.currentItem.parent === globalSettings.parentItem){
+			globalSettings.parentItem = globalSettings.currentItem;
+		}
+		globalSettings.currentFolder = globalSettings.parentItem;		
+	}
+	globalSettings.currentItem = item;
+    if (globalSettings && globalSettings.adminMode){
+      handleItemEdit(liElement, event);
+    }else{
+      promptItem(liElement.innerText);
+	  if (item.type && item.type === 'folder'){
+		displayFolderMenu(item);
+		globalSettings.currentLevel = globalSettings.currentLevel + 1;
+	  }else{
+		var spaceChar;
+		if (document.getElementById("textareaEle").value){
+		  spaceChar = " ";
+		}else{
+		  spaceChar = "";
+		}
+		document.getElementById("textareaEle").value = document.getElementById("textareaEle").value + spaceChar + liElement.innerText;
+	  }
+    }
+  }
+
+  function downloadFile(content, fileName, mimeType){
+    const link = document.createElement("a");
+    //const content = document.querySelector("textarea").value;
+    const file = new Blob([content], { type: /*'text/plain'*/mimeType });
+    link.href = URL.createObjectURL(file);
+    link.download = fileName;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+  
+  function exportConfig(){
+    var localStorage = window.localStorage;
+    var configJsonStr = localStorage.getItem("ul-level-1");
+    downloadFile(configJsonStr, 'aac-config.json', 'application/json');
+  }
+
+  function readTextFile(fileElementSelector){      
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsText(document.querySelector(fileElementSelector).files[0]);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+	
+  function importConfig(){
+    readTextFile("#importConfigFile").then(configJson => {
+      var localStorage = window.localStorage;
+      localStorage.setItem("ul-level-1", configJson);
+      $("#importConfigDialog").dialog("close");
+    });    
+  }	  
+
+  function importDialog(){
+    $("#importConfigDialog").dialog("open");
+  }
+  
+  function displayFolderMenu(item){
+	//remove all li elements of ul and render new ones
+	//	new li elements have to be looked up in map for item.value	
+	$('#ul-level-1 li').each(function(){
+      $(this)[0].remove();
+    });
+    document.getElementById("backButtonDiv").style.display="block";	
+	item && item.value && item.value.forEach(childItem => {
+      renderItems(childItem);
+	  if (!tree.find(childItem.name + (globalSettings.currentLevel + 1))){
+		tree.insert(item.name, childItem.name + (globalSettings.currentLevel + 1), childItem);
+	  }
+    });	
+    updateBreadCrumbs(item);
+  }
+
+  /* recursively builds the folder hierarchy path */
+  function buildBreadCrumbPath(folderItem, level){
+    var breadCrumbs = [];
+    if (level <= 1){
+      return breadCrumbs;
+    }else if (level > 1){
+      breadCrumbs.push(folderItem.name);
+      var parent = tree.find(folderItem.name + (level-1));
+      if (parent && parent.parent){
+        breadCrumbs.concat(buildBreadCrumbPath(parent.parent.value, level-2));
+      }
+    }
+    return breadCrumbs;
+  }
+	
+  function updateBreadCrumbs(folderItem){
+	var ul = document.getElementById("ul-bread-crumbs");
+	var breadCrumbs = [];
+	breadCrumbs = buildBreadCrumbPath(folderItem, globalSettings.currentLevel + 1);
+	for(let i = 0; i < breadCrumbs.length; i++){
+      	  var li = document.createElement("li");
+	  var liElement = document.createTextNode(breadCrumbs[i]);
+	  li.appendChild(liElement);
+	  ul.appendChild(li);
+    	}	
+  }
+	
+  function onBackButtonClick(){
+    if (globalSettings && globalSettings.currentLevel == 2){
+      document.getElementById("backButtonDiv").style.display="none";
+    }
+    $('#ul-level-1 li').each(function(){
+      $(this)[0].remove();
+    });
+
+    $('#ul-bread-crumbs li').each(function(){
+      $(this)[0].remove();
+    });	  
+
+    globalSettings.currentLevel = globalSettings.currentLevel ? globalSettings.currentLevel - 1 : 1;
+    if (globalSettings.parentItem && globalSettings.parentItem !== 'root' && globalSettings.parentItem?.parent){
+      globalSettings.currentItem = tree.find(globalSettings.parentItem.parent + (globalSettings.currentLevel-1)).value; //have to get object because here globalSettings.parentItem.parent is just string
+      globalSettings.parentItem = globalSettings.currentItem.parent;
+    }else{	  
+      globalSettings.currentItem = 'root';//globalSettings.currentItem.parent
+      globalSettings.parentItem = 'root';
+    }    
+    if (!globalSettings.currentItem || globalSettings.currentItem === 'root'){
+      loadSavedLevelsFromCache();
+    }else{
+      var item = globalSettings.currentItem;
+      item && item.value && item.value.forEach(childItem => {
+        renderItems(childItem);
+        if (!tree.find(childItem.name + (globalSettings.currentLevel + 1))){
+	  tree.insert(item.name, childItem.name + (globalSettings.currentLevel + 1), childItem);
+        }
+      });
+      updateBreadCrumbs(globalSettings.currentItem);
+    }    
+    //var lookUpKey = 1;
+    /*if (globalSettings.parentItem && globalSettings.parentItem.parent && 
+			globalSettings.parentItem.parent != 'root'){
+		lookUpKey = globalSettings.parentItem.name + globalSettings.currentLevel;
+	}
+	loadGivenLevel(tree.find(lookUpKey).children);*/
+  }
+  
+  function promptItem(words){
+    try{
+    	var synth = window.speechSynthesis;
+    	synth.speak(new SpeechSynthesisUtterance(words));
+    }catch(e){
+      console.log(e);
+    }
+  }
+  
+  function handleItemEdit(liElement, event){
+    if (globalSettings) {
+      globalSettings.currentItemLiEle = liElement;
+    }    
+    
+    $("#item-edit-menu").menu().hide();
+    var menu = document.getElementById('item-edit-menu');
+    menu.style.position = "absolute";
+    menu.style.left = event.x + 'px';
+    menu.style.top = event.y + 'px';
+    $("#item-edit-menu").show();
+    //.position({my: "left top", at: "right bottom", of: liElement})    
+  }
+  
+  function editItemContents(){
+    $("#item-edit-menu").menu().hide();
+    //document.getElementById("item-edit-menu").style.display="none";
+    $("#name").val(globalSettings.currentItem.name);
+    $("#addMessageOrFolderDialog").dialog("open");	  
+    globalSettings.currentAction = "edit";
+  }
+  
+  function deleteItem(){
+    $("#item-edit-menu").menu().hide();	  
+    //document.getElementById("item-edit-menu").style.display="none";
+    tree.remove(globalSettings.currentItem.name + globalSettings.currentLevel);
+	/*
+	if (globalSettings.parentItem && globalSettings.parentItem.type == 'folder' && 
+		globalSettings.currentItem && globalSettings.currentItem.name != globalSettings.parentItem.name){
+		globalSettings.parentItem.value.forEach((eachItem, index) => {
+			if (eachItem.name == globalSettings.currentItem.name){
+				globalSettings.parentItem.value.splice(index, 1);
+			}
+		});
+		mainMenuMap.set(globalSettings.parentItem.name, globalSettings.parentItem);
+	}else{
+		mainMenuMap.delete(globalSettings.currentItem.name);
+	}*/
+	$(globalSettings.currentItemLiEle).remove();
+	//saveFromMap();
+	saveFromTree();  
+  }
+	
+  function fetchPicBase64(imageTagId){
+  	if (document.getElementById(imageTagId) && document.getElementById(imageTagId).src && document.getElementById(imageTagId).src.includes("base64")){
+	  return Promise.resolve(document.getElementById(imageTagId).src);
+	}
+	var picUploadPromise;
+	document.querySelector('#uploadItemPhoto').files && Array.from(document.querySelector('#uploadItemPhoto').files).forEach(pictureFile => {
+          picUploadPromise = toBase64(pictureFile).then(base64VoiceFile => {
+            return base64VoiceFile;
+            console.log(base64VoiceFile);
+	    document.querySelector('#uploadItemPhoto').value = '';
+          });      
+        });
+	if (!picUploadPromise){
+	  picUploadPromise = Promise.resolve("No picture");
+	}
+	return picUploadPromise;
+  }
+
+  function getParentKey(){
+	  var parentLevel = globalSettings.currentLevel - 1;
+	  if (globalSettings.currentItem && globalSettings.currentItem.type !== 'message'){
+		  parentForTree = globalSettings.currentItem.name + parentLevel;
+	  }
+	  else if(!globalSettings.currentFolder || !globalSettings.currentFolder.name || globalSettings.currentFolder.name === 'root'){
+		  parentForTree = 1;
+	  }else{
+		  parentForTree = globalSettings.currentFolder.name + parentLevel;
+	  }
+	  return parentForTree;
+  }
+	
+  function saveInteraction(){	    
+	var newItem = {};
+	newItem.name = $("#name").val();
+	newItem.type = globalSettings.lastAction == InteractionType.Folder ? 'folder' : 'message';
+	  
+	newItem.parent = globalSettings.parentItem && globalSettings.parentItem.name ? globalSettings.parentItem.name : 'root';	
+	return fetchPicBase64('itemPhoto').then((picBase64) => {
+	  newItem.image = picBase64;	  	  
+	  var parentForTree = getParentKey();	  
+	  if(globalSettings.currentAction === 'edit'){	    
+	    var oldName = globalSettings.currentItem.name;
+	    tree.update(globalSettings.currentItem.name + globalSettings.currentLevel, newItem);
+	    //after above statement globalSettings.currentItem is updated and its name field contains new name!!
+	    updateItemUI(oldName, newItem);
+	  }else{
+	    tree.insert(parentForTree, newItem.name + globalSettings.currentLevel, newItem);
+	    renderItem(newItem);
+	  }
+	  //saveFromMap();
+	  saveFromTree();	  
+	  document.querySelector('#uploadItemPhoto').value = '';
+	  var image = document.getElementById('itemPhoto');
+	  image.style.visibility = "hidden";
+          $("#addMessageOrFolderDialog").dialog("close");
+	});
+  }
+
+  function updateItemUI(oldName, newItem){
+    var uiElement = document.querySelector("#li" + oldName);
+    uiElement.innerText = newItem.name;
+    if (newItem.image && newItem.image !== "No picture"){
+      uiElement.style.backgroundImage = 'url(' + newItem.image + ')';
+      uiElement.style.backgroundSize = '100% 85%'; //'cover';
+      uiElement.style.backgroundRepeat = 'no-repeat';
+      uiElement.style.backgroundPosition = 'center bottom'; //'center center';    
+    }
+  }
+	
+  function saveFromTree(){
+    var startNode = tree.root;
+    var levelItems = [];
+    startNode && startNode.children.forEach(element => {
+      correctTheTree(element);
+      levelItems.push(element.value);
+    });
+    localStorage.setItem("ul-level-1", JSON.stringify(levelItems));
+  }
+
+  function correctTheTree(startNode){
+    var array = [];
+    startNode.children && startNode.children.forEach(element =>{	    
+	    correctTheTree(element);
+	    array.push(element.value);
+    })
+    startNode.value.value = array;
+    startNode.value.parent = startNode?.parent?.value?.name;
+  }
+	
+  function saveFromMap(){
+	var levelItems = [];
+	mainMenuMap.forEach(item => {
+		levelItems.push(item);
+	});
+	localStorage.setItem("ul-level-1", JSON.stringify(levelItems));
+  }
+  
+  const InteractionType = Object.freeze({
+	"Message":1,
+	"Folder":2
+  })  
+	
+  function addFolderOrMessage(interactionType){    
+    globalSettings.lastAction = interactionType;
+    $("#addMessageOrFolderDialog").dialog("open");
+  }
+  
+  function onAddMsgFoldrDlgClose(){
+	$("#interactionTypes").dialog( "close" );
+  }
+  
+  /*
+  (type: leaf,
+  name: xyz,
+  image: image base 64
+  parent: root)
+  (type: folder,
+name: text,
+value: ())
+  */
+  
+  function Settings(adminMode, menuId) {
+    this.adminMode = adminMode;
+    this.menuId = menuId;
+    this.greeting = function() {
+      alert('Hi! I\'m ' + this.name + '.');
+    };
+  }  
+  
+  const handleSuccess = function(stream) {
+    const saveButton = document.getElementById('save');
+    
+    const options = {mimeType: 'audio/webm'};
+    const recordedChunks = [];
+    const mediaRecorder = new MediaRecorder(stream, options);
+
+    mediaRecorder.addEventListener('dataavailable', function(e) {
+      if (e.data.size > 0) recordedChunks.push(e.data);
+    });
+
+    mediaRecorder.addEventListener('stop', async function() {
+      globalSettings.voice = new Blob(recordedChunks);
+      const base64Voice = await toBase64(globalSettings.voice);
+      window.localStorage.setItem(globalSettings.menuId.toLowerCase(), base64Voice);
+      /*toBase64(URL.createObjectURL(new Blob(recordedChunks))).then(base64VoiceFile => {
+        localStorage.setItem(globalSettings.menuId.toLowerCase(), base64VoiceFile);
+        console.log(localStorage.getItem(globalSettings.menuId.toLowerCase()));        	
+      });*/
+      //downloadLink.href = URL.createObjectURL(new Blob(recordedChunks));
+      //downloadLink.download = 'acetest.wav';
+    });
+
+    saveButton.addEventListener('click', function() {
+      mediaRecorder.stop();
+    });
+
+    mediaRecorder.start();
+  };
+  
+  function startRecording(){
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+      .then(handleSuccess);
+  }
+  
+  function getAudioFile(submenuId){
+    var audioFile;
+    switch(submenuId){
+      case 'food-menu': audioFile = 'https://drive.google.com/file/d/1HnqTHf1tbl-iWUbnChaYdrCHyBTirOzD/view?usp=sharing';
+    }
+    return audioFile;
+  }
+  
+  function getAudioFileAsBase64(submenuId){    
+    var localStorage = window.localStorage;
+    var audioBase64 = localStorage.getItem(submenuId);
+    /*switch(submenuId){
+      case 'pain-menu': audioBase64 = localStorage.getItem();break;
+      case 'food-menu': audioBase64 = 
+    }*/
+    //return 'data:audio/wav;base64,' + audioBase64;
+    return audioBase64;
+  }
+  
+  function showSubMenu(submenuId){
+    document.getElementById("main-menu").style.display="none";
+    document.getElementById(submenuId).style.display="block";
+    document.getElementById("back").style.display="block";
+    //var audio = new Audio(getAudioFileAsBase64(submenuId.toLowerCase()));    
+    //audio.play();
+    handleMenuDisplay(submenuId);
+  }
+  
+  function showMainMenu(menuId){
+    document.getElementById("main-menu").style.display="table";
+    document.getElementById("food-menu").style.display="none";
+    document.getElementById("pain-menu").style.display="none";
+    document.getElementById("back").style.display="none";
+  }
+  
+  function showText(val){
+    handleMenuDisplay(val.innerText);
+    //alert(val.innerHTML);
+  }
+  
+  async function playRecordedAudio(param){
+    try{
+      var menuId = param ? param : globalSettings.menuId.toLowerCase();
+      var localStorage = window.localStorage;
+      const base64Data = localStorage.getItem(menuId);
+      const base64Response = await fetch(base64Data);
+      var audio = new Audio(URL.createObjectURL(dataURItoBlob(base64Data)/*new Blob(localStorage.getItem('food'))*/));
+      //alert(globalSettings.menuId);
+      audio.play();
+    }catch(e){
+      console.log(e);
+    }
+  }
+  
+  function handleMenuDisplay(menuId){
+    globalSettings.menuId = menuId;
+    if (globalSettings.adminMode){
+    	document.getElementById("record-controls").style.display="table";
+    }else{
+      	
+    }    
+    playRecordedAudio();
+  }
+
+  function changeTheme(theme){
+	  var useTheme;
+	  if (theme){
+	    useTheme = theme;
+	  }else{
+	    useTheme = document.body.style.backgroundColor;
+	  }
+	  if (useTheme === "rgb(62, 39, 35)"){
+	    document.body.style.backgroundColor = "";
+		document.getElementById("ul-bread-crumbs").style.color="black";
+	  }else{
+	    document.body.style.backgroundColor = "rgb(62, 39, 35)";
+		document.getElementById("ul-bread-crumbs").style.color="white";
+	  }
+	  aacSettings = aacSettings ? aacSettings : {"theme": {}};
+	  aacSettings.theme.color = useTheme;
+	  localStorage.setItem("aacSettings", JSON.stringify(aacSettings));
+  }
+  
+  function showSettings(){
+    if (!globalSettings.settingsClickCount){
+      globalSettings.settingsClickCount = 1;
+    }else{
+      globalSettings.settingsClickCount = globalSettings.settingsClickCount + 1;
+    }
+    if (globalSettings.settingsClickCount >= 3){
+    	globalSettings.adminMode = !globalSettings.adminMode;
+	if (globalSettings.adminMode){
+		dragAndDropManager.enable();
+		document.getElementById("addInteractionDiv").style.display="table";
+		document.getElementById("footer-level-1").style.display="table";
+		document.getElementById("exportDiv").style.display="table";
+		document.getElementById("importDiv").style.display="table";
+		document.getElementById("changeThemeDiv").style.display="table";
+	}else{
+		dragAndDropManager.disable();
+		document.getElementById("addInteractionDiv").style.display="none";
+		document.getElementById("footer-level-1").style.display="none";
+		document.getElementById("exportDiv").style.display="none";
+		document.getElementById("importDiv").style.display="none";
+		document.getElementById("changeThemeDiv").style.display="none";
+	}
+	if (globalSettings.settingsClickCount === 4){
+	  globalSettings.settingsClickCount = 0;
+	}
+    }
+  }
+  
+  toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+  
+  async function voiceFilesUploaded(event){
+	var localStorage = window.localStorage;
+    document.querySelector('#upload-files').files && Array.from(document.querySelector('#upload-files').files).forEach(voiceFile => {
+      toBase64(voiceFile).then(base64VoiceFile => {
+        localStorage.setItem(voiceFile.name.replaceAll('.m4a','').toLowerCase(), base64VoiceFile);
+        console.log(localStorage.getItem(voiceFile.name.replaceAll('.m4a','').toLowerCase()));        	
+      });      
+    });
+    
+  }
+  
+  function closeVoiceControls(){
+    document.getElementById("record-controls").style.display="none";
+  }
+  
+  function dataURItoBlob(dataURI) {
+    // convert base64 to raw binary data held in a string
+    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+    var byteString = atob(dataURI.split(',')[1]);
+
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+    // write the bytes of the string to an ArrayBuffer
+    var ab = new ArrayBuffer(byteString.length);
+
+    // create a view into the buffer
+    var ia = new Uint8Array(ab);
+
+    // set the bytes of the buffer to the correct values
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
     }
 
-    let aacSettings, email, freeUsageCount;
+    // write the ArrayBuffer to a blob, and you're done
+    var blob = new Blob([ab], {type: mimeString});
+    return blob;
 
-    // KEYBOARD MANAGER
-    const keyboardManager = {
-        currentLayout: 'abc',
-        isUppercase: false,
-        keyboardTheme: { background: '#000', color: '#fff' },
-        layouts: {
-            abc: ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M'],
-            numbers: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '-', '*', '/', '=', '%', '$', '&', '#', '.'],
-            symbols: ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', ']', '{', '}', ';', ':', '"', "'", '<', '>', ',', '.', '?', '/'],
-            qwerty: ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M'],
-            emojis: ['😀', '😂', '😍', '💯', '🔥', '🎉', '👍', '❤️', '🙌', '👏', '🚀', '⭐', '✨', '💪', '🎊', '🎈', '😎', '🤔', '😜', '😅']
-        },
-        themes: [
-            { name: 'Sky Blue', bg: '#87CEEB', color: '#fff' },
-            { name: 'Pink', bg: '#FFB6C1', color: '#fff' },
-            { name: 'Light Green', bg: '#90EE90', color: '#000' },
-            { name: 'Gray', bg: '#A9A9A9', color: '#000' },
-            { name: 'Black (Default)', bg: '#000', color: '#fff' },
-            { name: 'Light Orange', bg: '#FFD4A3', color: '#fff' },
-            { name: 'Orange', bg: '#FFA500', color: '#fff' },
-            { name: 'White', bg: '#fff', color: '#000' }
-        ],
-        init: function () {
-            this.loadTheme();
-            if (document.getElementById('keyboard')) {
-                this.renderKeyboard();
+  }
+  
+  function chooseInterationType(){
+	$( "#interactionTypes" ).dialog();
+  }
+  
+  function deleteWord(){
+	if (document.getElementById("textareaEle").value){
+	  var lastIndex = document.getElementById("textareaEle").value.lastIndexOf(' ');
+	  document.getElementById("textareaEle").value = document.getElementById("textareaEle").value.substring(0, lastIndex);
+	}
+  }
+  
+  function readWords(){
+	promptItem(document.getElementById("textareaEle").value);
+  }  
+
+  function displayPicture(){
+    document.querySelector('#uploadItemPhoto').files && Array.from(document.querySelector('#uploadItemPhoto').files).forEach(pictureFile => {
+      var image = document.querySelector('#itemPhoto');
+      image.style.visibility = "visible";
+      image.src = URL.createObjectURL(pictureFile);
+    });
+  }
+
+  function updateSearchVal(e){
+    document.getElementById("search-name").value = e.value;
+  }
+
+  /*
+  ** Image Search functionality
+  */
+  const handle = "pZCY6KuRGrSRpPbXlovz3Nww5I0eF6x3Dc22X0Cfj2ow0oyljl7AzSAy";
+  var fileIndex = 0;
+  var searchResults = [];
+  function fetchNRenderNextImage(){
+    var image = document.getElementById('itemPhoto');
+    fetch(searchResults[fileIndex].src.medium , {
+      headers: {
+          "Authorization": handle
+      }
+    })
+    .then((response) => {
+      return response.blob();
+    })	      
+    .then((blob) => {
+      var reader = new FileReader();
+      reader.readAsDataURL(blob); 
+      reader.onloadend = function() {
+        var base64data = reader.result;              
+        console.log(base64data);
+	image.src = base64data;	
+      }	
+    });  
+  }
+
+  function doImgSearch(event){
+    fileIndex = 0;
+    var apiUrl = "https://api.pexels.com/v1/search?query=" + document.getElementById("search-name").value + "&per_page=80"; 
+    fetch(apiUrl, {
+      headers: {
+        "Authorization": handle
+      }
+    })
+    .then(response => response.json())
+    .then(searchRes => {
+      searchResults = searchRes.photos;
+      fetchNRenderNextImage();
+    }); 
+  }
+
+  function fetchPrev(){
+    if (fileIndex > 0){
+      fileIndex = fileIndex - 1;
+      fetchNRenderNextImage();
+    }
+  }
+
+  function fetchNext(){
+    if (fileIndex < 79){
+      fileIndex = fileIndex + 1;
+      fetchNRenderNextImage();
+    }
+  }
+
+  function removePicture(){
+    document.getElementById("itemPhoto").src = "";
+  }
+
+  function invokeKeyboard(){
+    if (globalSettings.keyBoardEnabled){
+      globalSettings.keyBoardEnabled = false;
+      document.getElementById("keyboard").style.display="none";
+      document.getElementById("ul-level-1").style.display="block";
+    }else{
+      globalSettings.keyBoardEnabled = true;
+      document.getElementById("keyboard").style.display="block";
+      document.getElementById("ul-level-1").style.display="none";
+    }
+  }
+	
+document.addEventListener('DOMContentLoaded', () => {
+    let isUppercase = false;
+    let typedText = ""; // Holds the typed text
+
+    // Toggle uppercase
+    /*document.querySelector('.uppercase-toggle').addEventListener('click', () => {
+        isUppercase = !isUppercase;
+        document.querySelectorAll('.row .key').forEach(button => {
+            if (button.innerText.match(/[a-zA-Z]/)) {
+                button.innerText = isUppercase ? button.innerText.toUpperCase() : button.innerText.toLowerCase();
             }
-        },
-        renderKeyboard: function () {
-            const keyboard = document.getElementById('keyboard');
-            if (!keyboard) return;
-            const layout = this.layouts[this.currentLayout];
-            keyboard.innerHTML = '';
-            const rowSize = this.currentLayout === 'symbols' ? 9 : 10;
-            for (let i = 0; i < layout.length; i += rowSize) {
-                const rowDiv = document.createElement('div');
-                rowDiv.className = 'row';
-                const rowKeys = layout.slice(i, i + rowSize);
-                rowKeys.forEach(key => {
-                    const keyDiv = document.createElement('button');
-                    keyDiv.className = 'key';
-                    keyDiv.textContent = this.currentLayout === 'abc' && this.isUppercase ? key.toUpperCase() : key;
-                    keyDiv.style.backgroundColor = this.keyboardTheme.background;
-                    keyDiv.style.color = this.keyboardTheme.color;
-                    keyDiv.onclick = () => this.handleKeyPress(key);
-                    rowDiv.appendChild(keyDiv);
-                });
-                keyboard.appendChild(rowDiv);
+        });
+    });*/
+
+    // Add event listener to each key
+    // Add event listener to each key
+    document.querySelectorAll('.keyboard .key').forEach(button => {
+        button.addEventListener('click', (event) => {
+            // Ignore action/navigation keys so they don't type into the text area
+            if (event.target.classList.contains('action-key')) return;
+
+            const key = event.target.innerText;
+			let keyText = key.toLowerCase();
+			let typedStr = document.getElementById("textareaEle").value?.trim();
+			if (!typedStr){
+				typedText = '';
+			}
+            if (keyText === "enter") {
+                console.log("Enter Key Pressed"); // For demonstration
+                typedText += "\n"; // Add a newline for Enter
+            } else if (keyText === "space") {
+                console.log("Space Bar Pressed"); // For demonstration
+                typedText += " "; // Add a space for Space bar
+            } else if (keyText ==='backspace') {
+              // Handle Backspace
+              typedText = typedText.slice(0, -1);
+            } else if (keyText !== "caps") { // Ignore "Caps" key
+                typedText += key;
             }
-            const controlRow = document.createElement('div');
-            controlRow.className = 'row';
-            const backspaceBtn = document.createElement('button');
-            backspaceBtn.className = 'key';
-            backspaceBtn.textContent = '⌫';
-            backspaceBtn.style.flex = '1.5';
-            backspaceBtn.style.backgroundColor = this.keyboardTheme.background;
-            backspaceBtn.style.color = this.keyboardTheme.color;
-            backspaceBtn.onclick = () => this.handleBackspace();
-            controlRow.appendChild(backspaceBtn);
-            if (this.currentLayout === 'abc') {
-                const shiftBtn = document.createElement('button');
-                shiftBtn.className = 'key';
-                shiftBtn.textContent = '⇧';
-                shiftBtn.style.flex = '1.5';
-                shiftBtn.style.backgroundColor = this.keyboardTheme.background;
-                shiftBtn.style.color = this.keyboardTheme.color;
-                shiftBtn.onclick = () => this.toggleUppercase();
-                controlRow.appendChild(shiftBtn);
-            }
-            const spaceBtn = document.createElement('button');
-            spaceBtn.className = 'key';
-            spaceBtn.textContent = 'Space';
-            spaceBtn.style.flex = '4';
-            spaceBtn.style.backgroundColor = this.keyboardTheme.background;
-            spaceBtn.style.color = this.keyboardTheme.color;
-            spaceBtn.onclick = () => this.handleKeyPress(' ');
-            controlRow.appendChild(spaceBtn);
-            const enterBtn = document.createElement('button');
-            enterBtn.className = 'key';
-            enterBtn.textContent = 'Enter';
-            enterBtn.style.flex = '1.5';
-            enterBtn.style.backgroundColor = this.keyboardTheme.background;
-            enterBtn.style.color = this.keyboardTheme.color;
-            enterBtn.onclick = () => this.handleKeyPress('\n');
-            controlRow.appendChild(enterBtn);
-            document.getElementById('keyboard').appendChild(controlRow);
-            this.attachModeButtons();
-        },
-        attachModeButtons: function () {
-            const keyboard = document.getElementById('keyboard');
-            let modeRow = document.querySelector('.keyboard-mode-row');
-            if (!modeRow) {
-                modeRow = document.createElement('div');
-                modeRow.className = 'keyboard-mode-row';
-                keyboard.appendChild(modeRow);
-            } else {
-                modeRow.innerHTML = '';
-            }
-            const modes = [
-                { label: 'ABC', layout: 'abc' },
-                { label: '123', layout: 'numbers' },
-                { label: '#@$', layout: 'symbols' },
-                { label: 'QWERTY', layout: 'qwerty' },
-                { label: 'Emojis', layout: 'emojis' },
-                { label: '⚙ Settings', action: 'settings' }
-            ];
-            modes.forEach(mode => {
-                const btn = document.createElement('button');
-                btn.className = 'keyboard-mode-btn';
-                if (mode.layout === this.currentLayout) {
-                    btn.classList.add('active');
-                }
-                btn.textContent = mode.label;
-                btn.onclick = () => {
-                    if (mode.action === 'settings') {
-                        this.openThemeDialog();
-                    } else {
-                        this.currentLayout = mode.layout;
-                        this.isUppercase = false;
-                        this.renderKeyboard();
-                    }
-                };
-                modeRow.appendChild(btn);
-            });
-        },
-        handleKeyPress: function (key) {
-            const textarea = document.getElementById('textareaEle');
-            if (textarea) {
-                textarea.value += key;
-            }
-        },
-        handleBackspace: function () {
-            const textarea = document.getElementById('textareaEle');
-            if (textarea) {
-                textarea.value = textarea.value.slice(0, -1);
-            }
-        },
-        toggleUppercase: function () {
-            this.isUppercase = !this.isUppercase;
-            this.renderKeyboard();
-        },
-        loadTheme: function () {
-            const saved = localStorage.getItem('keyboardTheme');
-            if (saved) {
-                this.keyboardTheme = JSON.parse(saved);
-            } else {
-                this.keyboardTheme = { background: '#000', color: '#fff' };
-            }
-        },
-        saveTheme: function () {
-            localStorage.setItem('keyboardTheme', JSON.stringify(this.keyboardTheme));
-        },
-        openThemeDialog: function () {
-            const html = this.themes.map((theme, idx) => `
-                <div class="theme-option" onclick="keyboardManager.applyTheme(${idx})">
-                    <div class="theme-preview" style="background-color: ${theme.bg}; color: ${theme.color};">
-                        ${theme.name}
-                    </div>
-                </div>
-            `).join('');
-            const dialog = $('<div>').html(`<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">${html}</div>`).dialog({
-                title: 'Select Keyboard Theme',
-                width: 400,
-                modal: true,
-                buttons: {
-                    'Close': function () {
-                        $(this).dialog('close');
-                    }
-                }
-            });
-        },
-        applyTheme: function (themeIdx) {
-            const theme = this.themes[themeIdx];
-            this.keyboardTheme = { background: theme.bg, color: theme.color };
-            this.saveTheme();
-            this.renderKeyboard();
-        }
+	        document.getElementById("textareaEle").value = typedText;
+		    promptItem(key);
+            console.log("Typed Text: " + typedText); // Display the typed text in the console
+        });
+    });
+
+    // --- NEW KEYBOARD LOGIC ---
+    window.switchKbView = function(viewId) {
+        document.querySelectorAll('.kb-view').forEach(v => v.style.display = 'none');
+        document.getElementById(viewId).style.display = 'block';
     };
 
-    // UTILITY FUNCTIONS
-    function toBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
+    window.applyKbTheme = function(bgColor, fgColor) {
+        const kb = document.getElementById('keyboard');
+        kb.style.backgroundColor = bgColor;
+        kb.querySelectorAll('.key').forEach(k => {
+            k.style.backgroundColor = bgColor;
+            k.style.color = fgColor;
         });
-    }
+    };
+});
 
-    function Settings(adminMode, menuId) {
-        this.adminMode = adminMode;
-        this.menuId = menuId;
-    }
 
-    function loadFile(filePath) {
-        var result = null;
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("GET", filePath, false);
-        xmlhttp.send();
-        if (xmlhttp.status == 200) {
-            result = xmlhttp.responseText;
-        }
-        return result;
-    }
-
-    function changeTheme(color) {
-        document.body.style.backgroundColor = color;
-    }
-
-    function saveInteraction() {
-        console.log("Saving interaction...");
-    }
-
-    function onAddMsgFoldrDlgClose() {
-        console.log("Dialog closing...");
-    }
-
-    function getParentKey() {
-        return globalSettings && globalSettings.parentItem ? globalSettings.parentItem.name : 1;
-    }
-
-    function reOrderLevel(node) {
-        if (!node || !node.children) return;
-    }
-
-    function saveFromTree() {
-        console.log("Saving from tree...");
-    }
-
-    let globalSettings = new Settings();
-    let tree = null;
-
-    $(function () {
-        var levelItems = localStorage.getItem("ul-level-1");
-        aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
-        email = localStorage.getItem("email");
-        
-        if (!email) {
-            alert(WARN_TEXT);
-            document.getElementById("signInButtonDiv").style.display = "table";
-            freeUsageCount = localStorage.getItem("freeUsageCount") ? Number(localStorage.getItem("freeUsageCount")) : 0;
-            localStorage.setItem("freeUsageCount", freeUsageCount + 1);
-            if (freeUsageCount > 5) {
-                if (confirm(BUY_TEXT)) {
-                    window.location.href = BUY_LINK;
-                }
-                return;
-            }
-        }
-
-        if (!levelItems) {
-            var configJson = loadFile("aac-config.json");
-            localStorage.setItem("ul-level-1", configJson);
-        }
-
-        changeTheme(aacSettings?.theme?.color ?? 'rgb(62, 39, 35)');
-        keyboardManager.init();
-    });
 </script>
+
+<div class="top-row prevent-select">
+  <div id="addInteractionDiv" class="addInteractionDiv" style="display:none">
+	<button id="addInteractionBtn" onclick="chooseInterationType()">Add</button>
+  </div>
+  <div id="backButtonDiv" class="backButtonDiv" style="display:none">
+	<a id="backButton" href="#" onclick="onBackButtonClick()">Back</a>
+  </div>
+  <div id="record-controls" style="display:none">
+    <button id="record" onclick="startRecording()">Record</button>
+    <button id="stop">Stop</button>
+    <button id="play" onclick="playRecordedAudio()">Play</button>
+    <button id="save">Save</button>
+    <button id="close-record-controls" onclick="closeVoiceControls()">Close</button>
+  </div>
+  <div  class="top-left-column top-left">
+      <a id="back" style="display:none" href="#" onclick="showMainMenu('main-menu')">Back</a>
+  </div>  
+</div>  
+
+<!--Notes: for now when you click on a tile, its text will be added to below implemented TextArea.
+-->
+<div id="level-1" class="prevent-select">
+	<div id="topTextArea" class="topTextArea">
+		<div id="keyboardIcon" class="keyboardIcon" onclick="invokeKeyboard()">
+			<img style="width: 100%; height: auto" src="data:image/jpg;base64, /9j/4AAQSkZJRgABAQEAkACQAAD/4REwRXhpZgAATU0AKgAAAAgABAE7AAIAAAAiAAAISodpAAQAAAABAAAIbJydAAEAAABEAAAQ5OocAAcAAAgMAAAAPgAAAAAc6gAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFZlbmthdGEgTmFnYSBTdWRoYWthciBWYW5rYW1hbWlkaQAABZADAAIAAAAUAAAQupAEAAIAAAAUAAAQzpKRAAIAAAADMDAAAJKSAAIAAAADMDAAAOocAAcAAAgMAAAIrgAAAAAc6gAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIwMjI6MTA6MjIgMTA6MjA6MzIAMjAyMjoxMDoyMiAxMDoyMDozMgAAAFYAZQBuAGsAYQB0AGEAIABOAGEAZwBhACAAUwB1AGQAaABhAGsAYQByACAAVgBhAG4AawBhAG0AYQBtAGkAZABpAAAA/+ELNGh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8APD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4NCjx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iPjxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+PHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9InV1aWQ6ZmFmNWJkZDUtYmEzZC0xMWRhLWFkMzEtZDMzZDc1MTgyZjFiIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iLz48cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0idXVpZDpmYWY1YmRkNS1iYTNkLTExZGEtYWQzMS1kMzNkNzUxODJmMWIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+PHhtcDpDcmVhdGVEYXRlPjIwMjItMTAtMjJUMTA6MjA6MzIuMDAzPC94bXA6Q3JlYXRlRGF0ZT48L3JkZjpEZXNjcmlwdGlvbj48cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0idXVpZDpmYWY1YmRkNS1iYTNkLTExZGEtYWQzMS1kMzNkNzUxODJmMWIiIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyI+PGRjOmNyZWF0b3I+PHJkZjpTZXEgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cmRmOmxpPlZlbmthdGEgTmFnYSBTdWRoYWthciBWYW5rYW1hbWlkaTwvcmRmOmxpPjwvcmRmOlNlcT4NCgkJCTwvZGM6Y3JlYXRvcj48L3JkZjpEZXNjcmlwdGlvbj48L3JkZjpSREY+PC94OnhtcG1ldGE+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgIDw/eHBhY2tldCBlbmQ9J3cnPz7/2wBDAAcFBQYFBAcGBQYIBwcIChELCgkJChUPEAwRGBUaGRgVGBcbHichGx0lHRcYIi4iJSgpKywrGiAvMy8qMicqKyr/2wBDAQcICAoJChQLCxQqHBgcKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKir/wAARCAA+AGwDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDq/C3hWx1zSnubuSdHWYxgRMACMA9weea2v+FeaT/z3vP++1/+Jpfh7/yL03/Xy3/oC1ymu61qkev30cWoXUaJO6qqTMoABwBgGvif3FKhCc4XufR+/KbSZ1X/AArzSf8Anvef99r/APE0f8K80n/nvef99r/8TVTwDqN7e3N4l5dTTqqKVErlsHJ6ZrlD4i1gsT/ad11/56miVTDRhGfs97/gCjUbavsdt/wrzSf+e95/32v/AMTR/wAK80n/AJ73n/fa/wDxNJot/d3HgXULia5keaOOXZIW+ZcRgjnr1NcN/bmrf9BS9/8AAh/8adSeGpqL9nuKKqSbVzuv+FeaT/z3vP8Avtf/AImj/hXmk/8APe8/77X/AOJqrNqV6nw1gu1upRcFtpm3ncR5hHX6CuUi8QauZkB1O6wWH/LU0VKmGg1enuk/vHGNR31O1/4V5pP/AD3vP++1/wDiaP8AhXmk/wDPe8/77X/4mq/jbU72zstMa0upIWlVi5jbbu4X0+prn9E13VZddso5dQuHR50VlaQkEFgCMH606ksNCp7NwFFVHHmudR/wrzSf+e95/wB9r/8AE0f8K80n/nvef99r/wDE1m+O9SvrPWYI7S8ngQ24YrFIVBO5uePpVPwhq2o3PiW3iub64mjYOGSSUsD8hPQ+4ocsMq3suTrYLVOXmub3/CvNJ/573n/fa/8AxNcHq9pHYaxdWsJYxwyFFLHJIHrXs9eP+JP+Rm1D/ru1Tj6NOnBOCtqOjOUm7s7b4e/8i9N/18t/6AtVNT8BS32qXN1HfIqzSF9rIcjPOKt/D3/kXpv+vlv/AEBa4vxMxPia/wAk/wCuPenUlCOFg5xv87BFN1HZ2O88MeGJNAmuJJblZjKoUBVxjFY5+HBycah9P3f/ANej4cE7r4ZOPl4z9a4csSxyT19azqVKKowbhpr1HGMud6nrGneH/sPh250trjf9oV1MgT7u5dvTNc//AMK2/wCor/5L/wD2VWPDkjp8P9QZWYMiSlSDyv7sHj8a4X7dd/8AP1P/AN/DV1qlBQhzQvp3FCM7uzPTZPDG/wAJpov2r7hz5uzGfmLdM+9Yi/DpkcMNQGQc/wCr/wDr0/UZpW+GcTtI5csAWLHJG8jr+FcTDLIZ0/eP94fxH1pYipRUopwvouoQjNp2Z6d4g8M/25b2kYufKNsCMlc7sgf4VmWHgI2WpW919u3CGRZNvl9cEHHX2qt4+lkFhpOHYblctg9Tha5rQJpR4hsMSP8A8fEY+8ehYA061Siq9nC701uEIy5Lpne+IvCQ1+9iufthtykflkeVvzyT6j1qHRfBQ0fVo70X5mEe7CeTtzkEddx9awviIx/t23GTj7MP/Qmql4JZv+EqteTyHB56/I1OVSl9a5XDW61v+glGXs73PU68f8Sf8jNqH/Xdq9grx/xJ/wAjNqH/AF3atMy/hx9RYf4mdt8Pf+Rem/6+W/8AQFqPVPDehXOqTz3WpJDNI250aZRtP0NSfD3/AJF6b/r5b/0Ba4rxL/yM1/8A9djUVJxhhYOUbjSbqOzseh+HNI07TPPbTLsXO/Afa4YL+VY0vhDw/DK0cuprG4PKvMoIqH4cfevvov8AWua8Sf8AIzah/wBd2qalWmsPCbguug4xlztXO/s4NGstEuNNi1WAxzq4LGdMjcu3jn0rB/4RHRsf8h61z9V/+Lri6K5pYqE0lKmtPNmiptbM9PktNHm8OJpEurW5RTnzBKoyd2emfeskeFdBVgRrUAIOQfNX/wCKrhqKJYqErc1NaAqbW0j07WrLRdagto5tVgT7MCFImU5BA68+wqppnhXSE1GGa01NJpIXWQJG4JO0g+p4rzyuj8Df8jLD9G/9BatYYiFaquaCuyXBxi7M67xHouk6heRT6pfLayCPYoaVV3AHPf61X0XQ9DstWinsNTjnnXdtjWZWzkEdAc9CayPiP/yELL/rk386yPCH/I0Wv1Na1KsFiuXkV7rUiMW6d7nrFeP+JP8AkZtQ/wCu7V7BXj/iT/kZtQ/67tWmZfw4+osP8TO2+Hv/ACL03/Xy3/oC1oXfhPSr27kuZom8yU7mw3U15xp/iHVNKtzBYXXlRs28r5atzgDuD6CrX/Caa/8A8/8A/wCQY/8A4msaeMoKlGE4t29P8ypUp8zaZ6Npeh2WjmQ2SMpkxuyc9Kq3fhLSry7kuZom8yVtzYbqa4P/AITTX/8An/8A/IMf/wATR/wmmv8A/P8A/wDkGP8A+Jq3jcM48ri7ei/zF7Kpe9zt/wDhCdG/55P/AN9D/Cj/AIQnRv8Ank//AH0P8K4j/hNNf/5//wDyDH/8TR/wmmv/APP/AP8AkGP/AOJqfrWE/k/Bf5j9nV7nb/8ACE6N/wA8X/76H+FH/CE6N/zyf/vof4VxH/Caa/8A8/8A/wCQY/8A4mj/AITTX/8An/8A/IMf/wATR9awn8n4L/MPZ1e52/8AwhOjf88n/wC+h/hVnT/DOm6Zdrc2sbCRQQCW9RivP/8AhNNf/wCf/wD8gx//ABNH/Caa/wD8/wD/AOQY/wD4mmsXhU7qH4L/ADF7Ko+p6Pqeh2GrvG99DvaMEKc44NQWfhfS7C7S5toCsiHKnca8/wD+E01//n//APIMf/xNH/Caa/8A8/8A/wCQY/8A4mqeNwzlzOOvov8AMPY1LWuer14/4k/5GbUP+u7VZ/4TTX/+f/8A8gx//E1j3NzLd3UlxcPvlkbc7YAyfwrmxmKhXilFMulTcHdn/9k=" />
+		</div>
+		<div id="textAreaDiv" style="width: 60%">
+			<textarea id="textareaEle" class="textArea" onclick="readWords()"></textarea>
+		</div>
+		<div id="delete-word" class="keyboardIcon">
+			<img name="delete-word-img" onclick="deleteWord()" style="width: 70%; height: 75%" src="data:image/jpg;base64, /9j/4AAQSkZJRgABAQEAkACQAAD/4REwRXhpZgAATU0AKgAAAAgABAE7AAIAAAAiAAAISodpAAQAAAABAAAIbJydAAEAAABEAAAQ5OocAAcAAAgMAAAAPgAAAAAc6gAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFZlbmthdGEgTmFnYSBTdWRoYWthciBWYW5rYW1hbWlkaQAABZADAAIAAAAUAAAQupAEAAIAAAAUAAAQzpKRAAIAAAADMjAAAJKSAAIAAAADMjAAAOocAAcAAAgMAAAIrgAAAAAc6gAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIwMjI6MTA6MzEgMDA6MjU6MDkAMjAyMjoxMDozMSAwMDoyNTowOQAAAFYAZQBuAGsAYQB0AGEAIABOAGEAZwBhACAAUwB1AGQAaABhAGsAYQByACAAVgBhAG4AawBhAG0AYQBtAGkAZABpAAAA/+ELNGh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8APD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4NCjx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iPjxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+PHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9InV1aWQ6ZmFmNWJkZDUtYmEzZC0xMWRhLWFkMzEtZDMzZDc1MTgyZjFiIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iLz48cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0idXVpZDpmYWY1YmRkNS1iYTNkLTExZGEtYWQzMS1kMzNkNzUxODJmMWIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+PHhtcDpDcmVhdGVEYXRlPjIwMjItMTAtMzFUMDA6MjU6MDkuMjAxPC94bXA6Q3JlYXRlRGF0ZT48L3JkZjpEZXNjcmlwdGlvbj48cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0idXVpZDpmYWY1YmRkNS1iYTNkLTExZGEtYWQzMS1kMzNkNzUxODJmMWIiIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyI+PGRjOmNyZWF0b3I+PHJkZjpTZXEgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cmRmOmxpPlZlbmthdGEgTmFnYSBTdWRoYWthciBWYW5rYW1hbWlkaTwvcmRmOmxpPjwvcmRmOlNlcT4NCgkJCTwvZGM6Y3JlYXRvcj48L3JkZjpEZXNjcmlwdGlvbj48L3JkZjpSREY+PC94OnhtcG1ldGE+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgIDw/eHBhY2tldCBlbmQ9J3cnPz7/2wBDAAcFBQYFBAcGBQYIBwcIChELCgkJChUPEAwRGBUaGRgVGBcbHichGx0lHRcYIi4iJSgpKywrGiAvMy8qMicqKyr/2wBDAQcICAoJChQLCxQqHBgcKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKir/wAARCABTAGQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwBlFFFfmJ9aFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRT4YZbiZYoI2kkc4VFGSae4hlFdrpvgUxWcl3rDYZY2ZYEPQ4/iP9B+fauh0rQ9On0eylmtVeSS3RmYk5JKgk9a7qeBqz30MZVoo8por2H/hHtK/580/M/wCNH/CPaV/z5p+Z/wAa2/s2p/MifrEex49RXp/iLRdOt/Dt7LDaqkiRkqwJ4/WvMK48Rh5UJKLZrCamroKKKK5jQKKKKACiiigDc0Hwre63iUYgtc4MzDr/ALo7/wAq9G0jQrHRYdtnF85GHlblm/H+gryvS9ZvtHn8yxmKgn5ozyr/AFH+TXomheMLHV9sM5FrdHjYx+Vz/sn+nX617GBnh1p9rz/Q5ayn8javv+Qfcf8AXJv5GodF/wCQBp//AF7R/wDoIqa9/wCQfcf9cm/lUOi/8gDT/wDr2j/9BFer/wAvPkc32Tg/ijrd94EvNO8Y2d7LLaoTZ3ekyXJWO4DAlXRTkB1I5IGSPYHO58NLe/8A+ELttT1jVJdSvtW/06R2nLxxB+VjjB4VVBAwO+fap9R8HDWfG9nrer3i3Vlp8DJaaYYPkSVuGlZiTuOOAMDHH4v8GeFH8HWN3psOoG601rl5rKBotrWiMSTHu3HcMnI4GMnr26lKPs7df+Dt+v4GLT501t/wN/0/Eu+KP+RXv/8Arkf515FXrvij/kV7/wD65H+deRV85mX8Reh6GH+FhRRRXlnSFFFFABRRRQAUUUUAdFpXjG9srZ7S8zdW7IUBY/OmRjg9x7H9K3tP8d6XaaZa28kN0XhhSNiqLgkKBx81ef0V108XWhszKVKLPSf+Fh6R/wA8bz/v2v8A8VR/wsPSP+eN5/37X/4qvNqK1/tCv5E+wgd3rXjbTdR0W6tIIroSTJtUuigZ/wC+q4SiiuatWnWd5mkYKCsgooorAsKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//2Q==" />
+		</div>
+		<div id="exportDiv" class="" style="display:none; padding-right: 1%">
+		  <a href="#" onclick="exportConfig()">Export</a>
+	  	</div>
+		<div id="importDiv" class="" style="display:none;  padding-right: 1%">
+		  <a href="#" onclick="importDialog()">Import</a>
+	  	</div>
+		<div id="changeThemeDiv" class="" style="display:none">
+		  <a href="#" onclick="changeTheme()">Change Theme</a>
+	  	</div>
+	</div>
+	<ul id="ul-bread-crumbs" class="breadcrumb-navigation">		
+	</ul>
+	<ul id="ul-level-1" class="ul-container">
+	</ul>
+	<div id="keyboard" class="keyboard" style="display:none">
+	    
+	    <!-- Original Alphabet View (ABC) -->
+	    <div id="kb-abc-view" class="kb-view">
+	        <div class="row">
+	            <button class="key">1</button>
+	            <button class="key">2</button>
+	            <button class="key">3</button>
+	            <button class="key">4</button>
+	            <button class="key">5</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">6</button>
+	            <button class="key">7</button>
+	            <button class="key">8</button>
+	            <button class="key">9</button>
+	            <button class="key">0</button>
+	            <button class="key backspace" style="font-size: 20px">Backspace</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">A</button>
+	            <button class="key">B</button>
+	            <button class="key">C</button>
+	            <button class="key">D</button>
+	            <button class="key">E</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">F</button>
+	            <button class="key">G</button>
+	            <button class="key">H</button>
+	            <button class="key">I</button>
+	            <button class="key">J</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">K</button>
+	            <button class="key">L</button>
+	            <button class="key">M</button>
+	            <button class="key">N</button>
+	            <button class="key">O</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">P</button>
+	            <button class="key">Q</button>
+	            <button class="key">R</button>
+	            <button class="key">S</button>
+	            <button class="key">T</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">U</button>
+	            <button class="key">V</button>
+	            <button class="key">W</button>
+	            <button class="key">X</button>
+	            <button class="key">Y</button>
+	            <button class="key">Z</button>
+	        </div>
+	        <div class="row">
+	            <button class="key space-bar">Space</button>
+	            <button class="key enter">Enter</button>
+	        </div>
+	    </div>
+
+	    <!-- 123 View -->
+	    <div id="kb-123-view" class="kb-view" style="display:none">
+	        <div class="row">
+	            <button class="key">1</button><button class="key">2</button><button class="key">3</button><button class="key">+</button><button class="key">-</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">4</button><button class="key">5</button><button class="key">6</button><button class="key">*</button><button class="key">/</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">7</button><button class="key">8</button><button class="key">9</button><button class="key">=</button><button class="key">%</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">.</button><button class="key">0</button><button class="key">$</button><button class="key">&amp;</button><button class="key">#</button>
+	        </div>
+	        <div class="row">
+	            <button class="key space-bar">Space</button>
+	            <button class="key backspace" style="font-size: 20px">Backspace</button>
+	            <button class="key enter">Enter</button>
+	        </div>
+	    </div>
+
+	    <!-- QWERTY View -->
+	    <div id="kb-qwerty-view" class="kb-view" style="display:none">
+	        <div class="row">
+	            <button class="key">Q</button><button class="key">W</button><button class="key">E</button><button class="key">R</button><button class="key">T</button><button class="key">Y</button><button class="key">U</button><button class="key">I</button><button class="key">O</button><button class="key">P</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">A</button><button class="key">S</button><button class="key">D</button><button class="key">F</button><button class="key">G</button><button class="key">H</button><button class="key">J</button><button class="key">K</button><button class="key">L</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">Z</button><button class="key">X</button><button class="key">C</button><button class="key">V</button><button class="key">B</button><button class="key">N</button><button class="key">M</button>
+	        </div>
+	        <div class="row">
+	            <button class="key space-bar">Space</button>
+	            <button class="key backspace" style="font-size: 20px">Backspace</button>
+	            <button class="key enter">Enter</button>
+	        </div>
+	    </div>
+
+	    <!-- Emojis View -->
+	    <div id="kb-emoji-view" class="kb-view" style="display:none">
+	        <div class="row">
+	            <button class="key">😀</button><button class="key">😂</button><button class="key">🥰</button><button class="key">😎</button><button class="key">😭</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">🙏</button><button class="key">👍</button><button class="key">🔥</button><button class="key">✨</button><button class="key">❤️</button>
+	        </div>
+	        <div class="row">
+	            <button class="key space-bar">Space</button>
+	            <button class="key backspace" style="font-size: 20px">Backspace</button>
+	            <button class="key enter">Enter</button>
+	        </div>
+	    </div>
+
+	    <!-- Symbols View -->
+	    <div id="kb-symbol-view" class="kb-view" style="display:none">
+	        <div class="row">
+	            <button class="key">!</button><button class="key">@</button><button class="key">#</button><button class="key">$</button><button class="key">%</button><button class="key">^</button><button class="key">&amp;</button><button class="key">*</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">(</button><button class="key">)</button><button class="key">-</button><button class="key">_</button><button class="key">=</button><button class="key">+</button><button class="key">[</button><button class="key">]</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">{</button><button class="key">}</button><button class="key">\</button><button class="key">|</button><button class="key">;</button><button class="key">:</button><button class="key">'</button><button class="key">"</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">,</button><button class="key">.</button><button class="key">&lt;</button><button class="key">&gt;</button><button class="key">/</button><button class="key">?</button>
+	        </div>
+	        <div class="row">
+	            <button class="key space-bar">Space</button>
+	            <button class="key backspace" style="font-size: 20px">Backspace</button>
+	            <button class="key enter">Enter</button>
+	        </div>
+	    </div>
+
+	    <!-- Settings View -->
+	    <div id="kb-settings-view" class="kb-view" style="display:none">
+	        <div class="row" style="flex-wrap: wrap;">
+	            <button class="key action-key" style="font-size: 16px; flex: 1 1 30%;" onclick="applyKbTheme('skyblue', 'white')">Sky Blue / White</button>
+	            <button class="key action-key" style="font-size: 16px; flex: 1 1 30%;" onclick="applyKbTheme('pink', 'white')">Pink / White</button>
+	            <button class="key action-key" style="font-size: 16px; flex: 1 1 30%;" onclick="applyKbTheme('lightgreen', 'black')">Light Green / Black</button>
+	            <button class="key action-key" style="font-size: 16px; flex: 1 1 30%;" onclick="applyKbTheme('gray', 'black')">Gray / Black</button>
+	            <button class="key action-key" style="font-size: 16px; flex: 1 1 30%;" onclick="applyKbTheme('black', 'white')">Black / White (Default)</button>
+	            <button class="key action-key" style="font-size: 16px; flex: 1 1 30%;" onclick="applyKbTheme('#FFB347', 'white')">Light Orange / White</button>
+	            <button class="key action-key" style="font-size: 16px; flex: 1 1 30%;" onclick="applyKbTheme('orange', 'white')">Orange / White</button>
+	            <button class="key action-key" style="font-size: 16px; flex: 1 1 30%;" onclick="applyKbTheme('white', 'black')">White / Black</button>
+	            <button class="key action-key" style="font-size: 16px; flex: 1 1 30%;" onclick="applyKbTheme('#e0e0e0', 'black')">Reset Defaults</button>
+	        </div>
+	    </div>
+
+	    <!-- Bottom Navigation Row -->
+	    <div class="row bottom-nav-row" style="margin-top: 15px;">
+	        <button class="key action-key" onclick="switchKbView('kb-abc-view')">ABC</button>
+	        <button class="key action-key" onclick="switchKbView('kb-123-view')">123</button>
+	        <button class="key action-key" onclick="switchKbView('kb-symbol-view')">#@$</button>
+	        <button class="key action-key" onclick="switchKbView('kb-qwerty-view')">QWERTY</button>
+	        <button class="key action-key" onclick="switchKbView('kb-emoji-view')">Emojis</button>
+	        <button class="key action-key" style="font-size: 22px;" onclick="switchKbView('kb-settings-view')">Settings</button>
+	    </div>
+	</div>
+</div>
+<div id="aac-settings-icon" class="admin-settings">
+  <a href="#" onclick="showSettings()">Settings</a>
+</div>
+
+<!-- Footer -->
+<div id="footer-level-1" style="display:none">
+  </br>	
+  <a href="https://youtu.be/lclafmBfSo0?feature=shared" target="_blank">Demo video</a>	
+</div>
+
+<ul id="item-edit-menu" style="display:none; width: 150px;">
+  <li onclick="deleteItem()"><div>Delete</div></li>
+  <li onclick="editItemContents()"><div>Edit contents</div></li>
+</ul>
+
+<div id='addMessageOrFolderDialog' style="display:none">
+	<!--same div for both folder or message, in either case, should be able to 
+		enter name, record voice, set/upload picture-->
+	<form>
+		<fieldset>
+			<label for="name">Name</label>
+			<input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" style="margin-bottom: 20px" onfocusout="updateSearchVal(this)">
+			<div style="display: block">
+			  <label for="search-name">Search</label>
+			  <input type="text" name="search-name" id="search-name" class="text ui-widget-content ui-corner-all" style="margin-bottom: 20px" onfocusout="doImgSearch()">
+			</div>
+			<div style="display: flex">
+			  <label for="itemPhoto">Picture</label>
+			  <input type="file" id="uploadItemPhoto" style="margin-left: 10px" onchange="displayPicture()"/>
+			</div>
+			<img name="itemPhoto" id="itemPhoto" style="width: 50%; height: 50%; margin-top: 20px; border:0px"/>			
+			<input type="button" id="left-nav-img-search" value="Prev" onclick="fetchPrev()"/>
+			<input type="button" id="right-nav-img-search" value="Next" onclick="fetchNext()"/>
+			<input type="button" id="remove-picture" value="X" onclick="removePicture()"/>
+			<!-- Allow form submission with keyboard without duplicating the dialog button -->
+			<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+		</fieldset>
+	</form>
+</div>
+
+<div id='importConfigDialog' style="display:none">	
+	<form>
+		<fieldset>			
+			<div style="display: flex">
+			  <label for="importConfigFile">Import config</label>
+			  <input type="file" id="importConfigFile" style="margin-left: 10px" />
+			</div>			
+			<!-- Allow form submission with keyboard without duplicating the dialog button -->
+			<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+		</fieldset>
+	</form>
+</div>
+
+<div id='interactionTypes' title="Add" class="interactionTypes" style="display:none">
+  <a href="#" onclick="addFolderOrMessage(InteractionType.Message)">Add message</a><p/>
+  <a href="#" onclick="addFolderOrMessage(InteractionType.Folder)">Add folder</a>
+</div>
+
+<div id='aac_settings' style="display:none">
+  <label for="upload-files">Select voice files to load:</label>
+  <input type="file" multiple=true id="upload-files" onchange='voiceFilesUploaded(event)'/>
+</div>
