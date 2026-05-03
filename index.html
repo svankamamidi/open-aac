@@ -6,14 +6,28 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
-        /*padding: 10px;*/
         background-color: #f9f9f9;
-        /*border: 1px solid #ccc;*/
         border-radius: 10px;
         box-sizing: border-box;
         flex: 1;
         width: 100%;
         min-height: 0;
+        
+        /* This prevents the whole keyboard area from 
+           jittering if the user taps fast */
+        touch-action: pan-x; 
+    }
+
+    .keyboard .key {
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        
+        /* Move it back here for the fastest 'hit' response 
+           on the buttons themselves */
+        touch-action: manipulation; 
+        
+        min-height: 48px; 
     }
 
     .row {
@@ -1407,6 +1421,32 @@ value: ())
   }
 	
 document.addEventListener('DOMContentLoaded', () => {
+	    const kbElement = document.getElementById('keyboard');
+    
+    // Only proceed if the keyboard exists to avoid errors
+    if (kbElement) {
+        let touchStartY = 0;
+
+        // Capture the starting point of the touch
+        kbElement.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        // Calculate the movement and scroll the window
+        kbElement.addEventListener('touchmove', (e) => {
+            const touchY = e.touches[0].clientY;
+            const touchDelta = touchStartY - touchY;
+
+            // Scroll the main window
+            window.scrollBy(0, touchDelta);
+
+            // Update start position for smooth continuous scrolling
+            touchStartY = touchY;
+        }, { passive: true });
+        
+        console.log("Keyboard swipe-to-scroll initialized.");
+    }
+	
     let isUppercase = false;
     let typedText = ""; // Holds the typed text
 
@@ -1420,32 +1460,68 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });*/
 
+    let isCapsLock = true; // Tracks the state of Caps Lock (defaulting to true to match HTML)
+
     // Add event listener to each key
     document.querySelectorAll('.keyboard .key').forEach(button => {
         button.addEventListener('click', (event) => {
+			// Add a tiny haptic pulse (10ms) for mobile feel
+            if (navigator.vibrate) navigator.vibrate(10);
+			
+            // Ignore action/navigation keys so they don't type into the text area
+            if (event.target.classList.contains('action-key')) return;
+
             const key = event.target.innerText;
 			let keyText = key.toLowerCase();
 			let typedStr = document.getElementById("textareaEle").value?.trim();
 			if (!typedStr){
 				typedText = '';
 			}
+            
             if (keyText === "enter") {
-                console.log("Enter Key Pressed"); // For demonstration
-                typedText += "\n"; // Add a newline for Enter
+                console.log("Enter Key Pressed");
+                typedText += "\n";
             } else if (keyText === "space") {
-                console.log("Space Bar Pressed"); // For demonstration
-                typedText += " "; // Add a space for Space bar
-            } else if (keyText ==='backspace') {
-              // Handle Backspace
-              typedText = typedText.slice(0, -1);
-            } else if (keyText !== "caps") { // Ignore "Caps" key
-                typedText += key;
+                console.log("Space Bar Pressed");
+                typedText += " ";
+            } else if (keyText === 'backspace') {
+                typedText = typedText.slice(0, -1);
+            } else if (keyText === 'caps') {
+                isCapsLock = !isCapsLock;
+                
+                // Add a subtle background highlight to the Caps key when active
+                event.target.style.backgroundColor = isCapsLock ? 'rgba(128, 128, 128, 0.4)' : '';
+                
+                // Dynamically update the visual text of all letter keys to upper/lower case
+                document.querySelectorAll('.keyboard .key').forEach(k => {
+                    if (k.innerText.length === 1 && k.innerText.match(/[a-zA-Z]/)) {
+                        k.innerText = isCapsLock ? k.innerText.toUpperCase() : k.innerText.toLowerCase();
+                    }
+                });
+            } else { 
+                typedText += key; // Grabs the exact current casing visible on the key
             }
-	    document.getElementById("textareaEle").value = typedText;
-		promptItem(key);
-            console.log("Typed Text: " + typedText); // Display the typed text in the console
+            
+	        document.getElementById("textareaEle").value = typedText;
+		    promptItem(key);
+            console.log("Typed Text: " + typedText);
         });
     });
+
+    // --- NEW KEYBOARD LOGIC ---
+    window.switchKbView = function(viewId) {
+        document.querySelectorAll('.kb-view').forEach(v => v.style.display = 'none');
+        document.getElementById(viewId).style.display = 'block';
+    };
+
+    window.applyKbTheme = function(bgColor, fgColor) {
+        const kb = document.getElementById('keyboard');
+        kb.style.backgroundColor = bgColor;
+        kb.querySelectorAll('.key').forEach(k => {
+            k.style.backgroundColor = bgColor;
+            k.style.color = fgColor;
+        });
+    };
 });
 
 
@@ -1498,64 +1574,172 @@ document.addEventListener('DOMContentLoaded', () => {
 	<ul id="ul-level-1" class="ul-container">
 	</ul>
 	<div id="keyboard" class="keyboard" style="display:none">
-	    <!-- Number Row -->
-	    <div class="row">
-	        <button class="key">1</button>
-	        <button class="key">2</button>
-	        <button class="key">3</button>
-	        <button class="key">4</button>
-	        <button class="key">5</button>
+	    
+	    <!-- Original Alphabet View (ABC) -->
+	    <div id="kb-abc-view" class="kb-view">
+	        <div class="row">
+	            <button class="key">1</button>
+	            <button class="key">2</button>
+	            <button class="key">3</button>
+	            <button class="key">4</button>
+	            <button class="key">5</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">6</button>
+	            <button class="key">7</button>
+	            <button class="key">8</button>
+	            <button class="key">9</button>
+	            <button class="key">0</button>
+	            <button class="key backspace" style="font-size: 20px">Backspace</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">A</button>
+	            <button class="key">B</button>
+	            <button class="key">C</button>
+	            <button class="key">D</button>
+	            <button class="key">E</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">F</button>
+	            <button class="key">G</button>
+	            <button class="key">H</button>
+	            <button class="key">I</button>
+	            <button class="key">J</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">K</button>
+	            <button class="key">L</button>
+	            <button class="key">M</button>
+	            <button class="key">N</button>
+	            <button class="key">O</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">P</button>
+	            <button class="key">Q</button>
+	            <button class="key">R</button>
+	            <button class="key">S</button>
+	            <button class="key">T</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">U</button>
+	            <button class="key">V</button>
+	            <button class="key">W</button>
+	            <button class="key">X</button>
+	            <button class="key">Y</button>
+	            <button class="key">Z</button>
+	        </div>
+	        <div class="row">
+	            <button class="key space-bar">Space</button>
+	            <button class="key enter">Enter</button>
+	        </div>
+	    </div>
+
+	    <!-- 123 View -->
+	    <div id="kb-123-view" class="kb-view" style="display:none">
+	        <div class="row">
+	            <button class="key">1</button><button class="key">2</button><button class="key">3</button><button class="key">+</button><button class="key">-</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">4</button><button class="key">5</button><button class="key">6</button><button class="key">*</button><button class="key">/</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">7</button><button class="key">8</button><button class="key">9</button><button class="key">=</button><button class="key">%</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">.</button><button class="key">0</button><button class="key">$</button><button class="key">&amp;</button><button class="key">#</button>
+	        </div>
+	        <div class="row">
+	            <button class="key space-bar">Space</button>
+	            <button class="key backspace" style="font-size: 20px">Backspace</button>
+	            <button class="key enter">Enter</button>
+	        </div>
+	    </div>
+
+	    <!-- Optimized QWERTY View -->
+		<div id="kb-qwerty-view" class="kb-view" style="display:none">
+			<div class="row" style="gap: 2px;">
+				<button class="key">1</button><button class="key">2</button><button class="key">3</button><button class="key">4</button><button class="key">5</button><button class="key">6</button><button class="key">7</button><button class="key">8</button><button class="key">9</button><button class="key">0</button>
+			</div>
+			<div class="row" style="gap: 2px;">
+				<button class="key">Q</button><button class="key">W</button><button class="key">E</button><button class="key">R</button><button class="key">T</button><button class="key">Y</button><button class="key">U</button><button class="key">I</button><button class="key">O</button><button class="key">P</button>
+			</div>
+			<div class="row" style="gap: 2px; padding-left: 5%;">
+				<button class="key">A</button><button class="key">S</button><button class="key">D</button><button class="key">F</button><button class="key">G</button><button class="key">H</button><button class="key">J</button><button class="key">K</button><button class="key">L</button>
+			</div>
+			<div class="row" style="gap: 2px;">
+				<button class="key" style="flex: 1.5; font-size: 12px;">Caps</button>
+				<button class="key">Z</button><button class="key">X</button><button class="key">C</button><button class="key">V</button><button class="key">B</button><button class="key">N</button><button class="key">M</button>
+				<button class="key" style="flex: 1.5;">⌫</button>
+			</div>
+			<div class="row" style="gap: 4px;">
+				<button class="key">,</button>
+				<button class="key space-bar" style="flex: 4;">Space</button>
+				<button class="key">.</button>
+				<button class="key enter" style="flex: 2;">Enter</button>
+			</div>
 		</div>
-		<div class="row">
-	        <button class="key">6</button>
-	        <button class="key">7</button>
-	        <button class="key">8</button>
-	        <button class="key">9</button>
-	        <button class="key">0</button>
-		<button class="key backspace" style="font-size: 20px">Backspace</button>
+
+	    <!-- Emojis View -->
+	    <div id="kb-emoji-view" class="kb-view" style="display:none">
+	        <div class="row">
+	            <button class="key">😀</button><button class="key">😂</button><button class="key">🥰</button><button class="key">😎</button><button class="key">😭</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">🙏</button><button class="key">👍</button><button class="key">🔥</button><button class="key">✨</button><button class="key">❤️</button>
+	        </div>
+	        <div class="row">
+	            <button class="key space-bar">Space</button>
+	            <button class="key backspace" style="font-size: 20px">Backspace</button>
+	            <button class="key enter">Enter</button>
+	        </div>
 	    </div>
-	    <!-- Alphabet Row 1 -->
-	    <div class="row">
-	        <button class="key">A</button>
-	        <button class="key">B</button>
-	        <button class="key">C</button>
-	        <button class="key">D</button>
-	        <button class="key">E</button>
-		</div>
-		<div class="row">
-	        <button class="key">F</button>
-	        <button class="key">G</button>
-	        <button class="key">H</button>
-	        <button class="key">I</button>
-	        <button class="key">J</button>
+
+	    <!-- Symbols View -->
+	    <div id="kb-symbol-view" class="kb-view" style="display:none">
+	        <div class="row">
+	            <button class="key">!</button><button class="key">@</button><button class="key">#</button><button class="key">$</button><button class="key">%</button><button class="key">^</button><button class="key">&amp;</button><button class="key">*</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">(</button><button class="key">)</button><button class="key">-</button><button class="key">_</button><button class="key">=</button><button class="key">+</button><button class="key">[</button><button class="key">]</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">{</button><button class="key">}</button><button class="key">\</button><button class="key">|</button><button class="key">;</button><button class="key">:</button><button class="key">'</button><button class="key">"</button>
+	        </div>
+	        <div class="row">
+	            <button class="key">,</button><button class="key">.</button><button class="key">&lt;</button><button class="key">&gt;</button><button class="key">/</button><button class="key">?</button>
+	        </div>
+	        <div class="row">
+	            <button class="key space-bar">Space</button>
+	            <button class="key backspace" style="font-size: 20px">Backspace</button>
+	            <button class="key enter">Enter</button>
+	        </div>
 	    </div>
-	    <!-- Alphabet Row 2 -->
-	    <div class="row">
-	        <button class="key">K</button>
-	        <button class="key">L</button>
-	        <button class="key">M</button>
-	        <button class="key">N</button>
-	        <button class="key">O</button>
-		</div>
-		<div class="row">
-	        <button class="key">P</button>
-	        <button class="key">Q</button>
-	        <button class="key">R</button>
-	        <button class="key">S</button>
-			<button class="key">T</button>
+
+	    <!-- Settings View -->
+	    <div id="kb-settings-view" class="kb-view" style="display:none">
+	        <div class="row" style="flex-wrap: wrap; gap: 8px; justify-content: center; padding: 10px;">
+	            <button class="key action-key" style="font-size: 14px; flex: 1 1 28%; min-height: 60px; padding: 10px; background-color: skyblue; color: white; border: 1px solid #ccc; border-radius: 8px;" onclick="applyKbTheme('skyblue', 'white')">Sky Blue / White</button>
+	            <button class="key action-key" style="font-size: 14px; flex: 1 1 28%; min-height: 60px; padding: 10px; background-color: pink; color: white; border: 1px solid #ccc; border-radius: 8px;" onclick="applyKbTheme('pink', 'white')">Pink / White</button>
+	            <button class="key action-key" style="font-size: 14px; flex: 1 1 28%; min-height: 60px; padding: 10px; background-color: lightgreen; color: black; border: 1px solid #ccc; border-radius: 8px;" onclick="applyKbTheme('lightgreen', 'black')">Light Green / Black</button>
+	            
+	            <button class="key action-key" style="font-size: 14px; flex: 1 1 28%; min-height: 60px; padding: 10px; background-color: gray; color: black; border: 1px solid #ccc; border-radius: 8px;" onclick="applyKbTheme('gray', 'black')">Gray / Black</button>
+	            <button class="key action-key" style="font-size: 14px; flex: 1 1 28%; min-height: 60px; padding: 10px; background-color: black; color: white; border: 1px solid #444; border-radius: 8px;" onclick="applyKbTheme('black', 'white')">Black / White</button>
+	            <button class="key action-key" style="font-size: 14px; flex: 1 1 28%; min-height: 60px; padding: 10px; background-color: #FFB347; color: white; border: 1px solid #ccc; border-radius: 8px;" onclick="applyKbTheme('#FFB347', 'white')">Lt Orange / White</button>
+	            
+	            <button class="key action-key" style="font-size: 14px; flex: 1 1 28%; min-height: 60px; padding: 10px; background-color: orange; color: white; border: 1px solid #ccc; border-radius: 8px;" onclick="applyKbTheme('orange', 'white')">Orange / White</button>
+	            <button class="key action-key" style="font-size: 14px; flex: 1 1 28%; min-height: 60px; padding: 10px; background-color: white; color: black; border: 1px solid #ccc; border-radius: 8px;" onclick="applyKbTheme('white', 'black')">White / Black</button>
+	            <button class="key action-key" style="font-size: 14px; flex: 1 1 28%; min-height: 60px; padding: 10px; background-color: #e0e0e0; color: black; border: 1px solid #999; font-weight: bold; border-radius: 8px;" onclick="applyKbTheme('#e0e0e0', 'black')">Reset Defaults</button>
+	        </div>
 	    </div>
-	    <div class="row">
-	        <button class="key">U</button>
-	        <button class="key">V</button>
-	        <button class="key">W</button>
-	        <button class="key">X</button>
-	        <button class="key">Y</button>
-	        <button class="key">Z</button>
-	    </div>
-	    <!-- Space Row -->
-	    <div class="row">
-	        <button class="key space-bar">Space</button>
-			<button class="key enter">Enter</button>
+
+	    <!-- Bottom Navigation Row -->
+	    <div class="row bottom-nav-row" style="margin-top: 15px; flex-wrap: wrap; justify-content: center; gap: 5px;">
+	        <button class="key action-key" style="flex: 1 1 28%; min-width: 70px;" onclick="switchKbView('kb-abc-view')">ABC</button>
+	        <button class="key action-key" style="flex: 1 1 28%; min-width: 70px;" onclick="switchKbView('kb-123-view')">123</button>
+	        <button class="key action-key" style="flex: 1 1 28%; min-width: 70px;" onclick="switchKbView('kb-symbol-view')">#@$</button>
+	        <button class="key action-key" style="flex: 1 1 28%; min-width: 90px;" onclick="switchKbView('kb-qwerty-view')">QWERTY</button>
+	        <button class="key action-key" style="flex: 1 1 28%; min-width: 80px;" onclick="switchKbView('kb-emoji-view')">Emojis</button>
+	        <button class="key action-key" style="flex: 1 1 28%; min-width: 90px; font-size: 18px;" onclick="switchKbView('kb-settings-view')">Settings</button>
 	    </div>
 	</div>
 </div>
