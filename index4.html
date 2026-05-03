@@ -15,7 +15,7 @@
         
         /* This prevents the whole keyboard area from 
            jittering if the user taps fast */
-        touch-action: none; 
+        touch-action: pan-x; 
     }
 
     .keyboard .key {
@@ -320,6 +320,26 @@
         .catch((err) => console.log('SW Registration Failed', err));
   });*/
   }
+
+const kbElement = document.getElementById('keyboard');
+    let touchStartY = 0;
+
+    // Capture the starting point of the touch
+    kbElement.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    // Calculate the movement and scroll the window
+    kbElement.addEventListener('touchmove', (e) => {
+        const touchY = e.touches[0].clientY;
+        const touchDelta = touchStartY - touchY;
+
+        // Scroll the main window by the amount moved
+        window.scrollBy(0, touchDelta);
+
+        // Reset start position to the current position for smooth continuous scrolling
+        touchStartY = touchY;
+    }, { passive: true });
 	
 const dragAndDropManager = (function() {
   const targetSelector = 'ul#ul-level-1';
