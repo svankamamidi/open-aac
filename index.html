@@ -1484,7 +1484,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (keyText === "space") {
                 console.log("Space Bar Pressed");
                 typedText += " ";
-            } else if (keyText === 'backspace') {
+            } else if (keyText === 'backspace' || keyText === '⌫') {
                 typedText = typedText.slice(0, -1);
             } else if (keyText === 'caps') {
                 isCapsLock = !isCapsLock;
