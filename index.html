@@ -1163,7 +1163,7 @@ function reOrderLevel(node) {
   }
 
   function updateItemUI(oldName, newItem){
-    var uiElement = document.querySelector("#li" + oldName);
+    var uiElement = document.getElementById("li" + oldName);
     uiElement.innerText = newItem.name;
     if (newItem.image && newItem.image !== "No picture"){
       uiElement.style.backgroundImage = 'url(' + newItem.image + ')';
