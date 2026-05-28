@@ -331,7 +331,7 @@
     }
   };
 
-  var localStorage = customStorage;
+  
 	
   async function verifyEmailMatchesGUID(email, providedGUID) {
     const encoder = new TextEncoder();
@@ -359,12 +359,12 @@
      console.log('Full Name: ' + responsePayload.name);
      console.log('Email: ' + responsePayload.email); // Here is your email!
 	 if (ALLOWED_EMAILS.includes(responsePayload.email)){
-	   localStorage.setItem("email", responsePayload.email);
+	   customStorage.setItem("email", responsePayload.email);
 	 }else{
 		 let providedGuid = prompt("Please enter your guid:");
 		 const isValid = await verifyEmailMatchesGUID(responsePayload.email, providedGuid);
 		 if (isValid){
-			 localStorage.setItem("email", responsePayload.email);
+			 customStorage.setItem("email", responsePayload.email);
 			 document.getElementById("signInButtonDiv").style.display="none";
 			 location.reload();
 		 }else{
@@ -376,7 +376,7 @@
 
   window.onload = function () {
     customStorage.init().then(() => {
-	if (localStorage.getItem("email")){
+	if (customStorage.getItem("email")){
 		document.getElementById("signInButtonDiv").style.display="none";
 		return;
 	}
@@ -640,15 +640,15 @@ const dragAndDropManager = (function() {
     
     //Can per page load actions
     //load saved levels & tiles
-    ////var localStorage = customStorage;
-    var levelItems = localStorage.getItem("ul-level-1");
-	aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
-	email = localStorage.getItem("email");
+    ////
+    var levelItems = customStorage.getItem("ul-level-1");
+	aacSettings = customStorage.getItem("aacSettings") && JSON.parse(customStorage.getItem("aacSettings"));
+	email = customStorage.getItem("email");
 	if (!email){
 		alert(WARN_TEXT);
 		document.getElementById("signInButtonDiv").style.display="table";
-		freeUsageCount = localStorage.getItem("freeUsageCount") ? Number(localStorage.getItem("freeUsageCount")) : 0;
-		localStorage.setItem("freeUsageCount", freeUsageCount+1);
+		freeUsageCount = customStorage.getItem("freeUsageCount") ? Number(customStorage.getItem("freeUsageCount")) : 0;
+		customStorage.setItem("freeUsageCount", freeUsageCount+1);
 		if (freeUsageCount > 5){
 			if (confirm(BUY_TEXT)) {
               window.location.href = BUY_LINK;
@@ -658,7 +658,7 @@ const dragAndDropManager = (function() {
 	}
     if(!levelItems){ //if no custom folder structure defined load default one
       var configJson = loadFile("aac-config.json");
-      localStorage.setItem("ul-level-1", configJson);
+      customStorage.setItem("ul-level-1", configJson);
     }
 	changeTheme(aacSettings?.theme?.color ?? 'rgb(62, 39, 35)');
     loadSavedLevelsFromCache();
@@ -853,9 +853,9 @@ function reOrderLevel(node) {
   }
 	
   function loadSavedLevelsFromCache(){
-    //var localStorage = customStorage;
+    //
     tree = new Tree(1, 'root');
-    var levelItems = localStorage.getItem("ul-level-1") && JSON.parse(localStorage.getItem("ul-level-1"));
+    var levelItems = customStorage.getItem("ul-level-1") && JSON.parse(customStorage.getItem("ul-level-1"));
     levelItems && Array.isArray(levelItems) && levelItems.forEach(item => {
       tree.insert(1, item.name + "1", item);
       traverseStoredTreeAndCreateNodes(item, ROOT, 1);
@@ -937,8 +937,8 @@ function reOrderLevel(node) {
   }
   
   function exportConfig(){
-    //var localStorage = customStorage;
-    var configJsonStr = localStorage.getItem("ul-level-1");
+    //
+    var configJsonStr = customStorage.getItem("ul-level-1");
     downloadFile(configJsonStr, 'aac-config.json', 'application/json');
   }
 
@@ -953,8 +953,8 @@ function reOrderLevel(node) {
 	
   function importConfig(){
     readTextFile("#importConfigFile").then(configJson => {
-      //var localStorage = customStorage;
-      localStorage.setItem("ul-level-1", configJson);
+      //
+      customStorage.setItem("ul-level-1", configJson);
       $("#importConfigDialog").dialog("close");
     });    
   }	  
@@ -1174,7 +1174,7 @@ function reOrderLevel(node) {
       correctTheTree(element);
       levelItems.push(element.value);
     });
-    localStorage.setItem("ul-level-1", JSON.stringify(levelItems));
+    customStorage.setItem("ul-level-1", JSON.stringify(levelItems));
   }
 
   function correctTheTree(startNode){
@@ -1192,7 +1192,7 @@ function reOrderLevel(node) {
 	mainMenuMap.forEach(item => {
 		levelItems.push(item);
 	});
-	localStorage.setItem("ul-level-1", JSON.stringify(levelItems));
+	customStorage.setItem("ul-level-1", JSON.stringify(levelItems));
   }
   
   const InteractionType = Object.freeze({
@@ -1243,8 +1243,8 @@ value: ())
       const base64Voice = await toBase64(globalSettings.voice);
       customStorage.setItem(globalSettings.menuId.toLowerCase(), base64Voice);
       /*toBase64(URL.createObjectURL(new Blob(recordedChunks))).then(base64VoiceFile => {
-        localStorage.setItem(globalSettings.menuId.toLowerCase(), base64VoiceFile);
-        console.log(localStorage.getItem(globalSettings.menuId.toLowerCase()));        	
+        customStorage.setItem(globalSettings.menuId.toLowerCase(), base64VoiceFile);
+        console.log(customStorage.getItem(globalSettings.menuId.toLowerCase()));        	
       });*/
       //downloadLink.href = URL.createObjectURL(new Blob(recordedChunks));
       //downloadLink.download = 'acetest.wav';
@@ -1271,10 +1271,10 @@ value: ())
   }
   
   function getAudioFileAsBase64(submenuId){    
-    //var localStorage = customStorage;
-    var audioBase64 = localStorage.getItem(submenuId);
+    //
+    var audioBase64 = customStorage.getItem(submenuId);
     /*switch(submenuId){
-      case 'pain-menu': audioBase64 = localStorage.getItem();break;
+      case 'pain-menu': audioBase64 = customStorage.getItem();break;
       case 'food-menu': audioBase64 = 
     }*/
     //return 'data:audio/wav;base64,' + audioBase64;
@@ -1305,10 +1305,10 @@ value: ())
   async function playRecordedAudio(param){
     try{
       var menuId = param ? param : globalSettings.menuId.toLowerCase();
-      //var localStorage = customStorage;
-      const base64Data = localStorage.getItem(menuId);
+      //
+      const base64Data = customStorage.getItem(menuId);
       const base64Response = await fetch(base64Data);
-      var audio = new Audio(URL.createObjectURL(dataURItoBlob(base64Data)/*new Blob(localStorage.getItem('food'))*/));
+      var audio = new Audio(URL.createObjectURL(dataURItoBlob(base64Data)/*new Blob(customStorage.getItem('food'))*/));
       //alert(globalSettings.menuId);
       audio.play();
     }catch(e){
@@ -1342,7 +1342,7 @@ value: ())
 	  }
 	  aacSettings = aacSettings ? aacSettings : {"theme": {}};
 	  aacSettings.theme.color = useTheme;
-	  localStorage.setItem("aacSettings", JSON.stringify(aacSettings));
+	  customStorage.setItem("aacSettings", JSON.stringify(aacSettings));
   }
   
   function showSettings(){
@@ -1382,11 +1382,11 @@ value: ())
   });
   
   async function voiceFilesUploaded(event){
-	//var localStorage = customStorage;
+	//
     document.querySelector('#upload-files').files && Array.from(document.querySelector('#upload-files').files).forEach(voiceFile => {
       toBase64(voiceFile).then(base64VoiceFile => {
-        localStorage.setItem(voiceFile.name.replaceAll('.m4a','').toLowerCase(), base64VoiceFile);
-        console.log(localStorage.getItem(voiceFile.name.replaceAll('.m4a','').toLowerCase()));        	
+        customStorage.setItem(voiceFile.name.replaceAll('.m4a','').toLowerCase(), base64VoiceFile);
+        console.log(customStorage.getItem(voiceFile.name.replaceAll('.m4a','').toLowerCase()));        	
       });      
     });
     
@@ -1893,5 +1893,6 @@ document.addEventListener('DOMContentLoaded', () => {
   <label for="upload-files">Select voice files to load:</label>
   <input type="file" multiple=true id="upload-files" onchange='voiceFilesUploaded(event)'/>
 </div>
+
 
 
