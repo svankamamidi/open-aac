@@ -293,9 +293,15 @@
                 if (reqGet.result === undefined && oldVal !== null) {
                   storeMigrate.put(oldVal, key);
                   this._data[key] = oldVal;
-                } else if (reqGet.result !== undefined) {
+                
+                    window.localStorage.removeItem(key);
+                  } else if (reqGet.result !== undefined) {
                   this._data[key] = reqGet.result;
-                }
+                
+                    if (oldVal !== null) {
+                      window.localStorage.removeItem(key);
+                    }
+                  }
                 
                 processed++;
                 if (processed === keysToMigrate.length) res();
@@ -1446,6 +1452,7 @@ value: ())
 
   function updateSearchVal(e){
     document.getElementById("search-name").value = e.value;
+    doImgSearch();
   }
 
   /*
@@ -1895,6 +1902,7 @@ document.addEventListener('DOMContentLoaded', () => {
   <label for="upload-files">Select voice files to load:</label>
   <input type="file" multiple=true id="upload-files" onchange='voiceFilesUploaded(event)'/>
 </div>
+
 
 
 
