@@ -7,8 +7,8 @@ const appShellFiles = [
   '/open-aac/icons/aac.png',
   'https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css',
   'https://code.jquery.com/jquery-3.6.0.js',
-  'https://code.jquery.com/ui/1.13.0/jquery-ui.js',
-  'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css'
+  'https://code.jquery.com/ui/1.13.0/jquery-ui.js'
+  //'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css'
 ];
 
 // Installing Service Worker
