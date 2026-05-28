@@ -235,7 +235,103 @@
 	BUY_TEXT = "You have exceeded the free trial attempts, click OK to visit our website https://www.desirpm.com for purchase",
     BUY_LINK = "https://www.desirpm.com/category/aac";
   
-  var localStorage = window.localStorage;
+  const customStorage = {
+    _data: {},
+    getItem(key) {
+      return this._data.hasOwnProperty(key) ? this._data[key] : null;
+    },
+    setItem(key, value) {
+      this._data[key] = String(value);
+      if (this.db) {
+        const tx = this.db.transaction("keyval", "readwrite");
+        tx.objectStore("keyval").put(this._data[key], key);
+      }
+    },
+    removeItem(key) {
+      delete this._data[key];
+      if (this.db) {
+        const tx = this.db.transaction("keyval", "readwrite");
+        tx.objectStore("keyval").delete(key);
+      }
+    },
+    clear() {
+      this._data = {};
+      if (this.db) {
+        const tx = this.db.transaction("keyval", "readwrite");
+        tx.objectStore("keyval").clear();
+      }
+    },
+    initPromise: null,
+    async init() {
+      if (this.initPromise) return this.initPromise;
+      this.initPromise = new Promise((resolve, reject) => {
+        const req = window.indexedDB.open("MyAAC_DB", 1);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains("keyval")) {
+            db.createObjectStore("keyval");
+          }
+        };
+        req.onsuccess = async (e) => {
+          const db = e.target.result;
+          this.db = db;
+          
+          // --- BEGIN MIGRATION CODE (Transfer existing objects to IndexedDB) ---
+          // TODO: Remove this block later once migration is complete across users
+          const txMigrate = db.transaction("keyval", "readwrite");
+          const storeMigrate = txMigrate.objectStore("keyval");
+          const keysToMigrate = ["aacSettings", "email", "ul-level-1", "freeUsageCount"];
+          
+          await new Promise(res => {
+            let processed = 0;
+            if (keysToMigrate.length === 0) res();
+            keysToMigrate.forEach(key => {
+              const reqGet = storeMigrate.get(key);
+              reqGet.onsuccess = () => {
+                const oldVal = window.localStorage.getItem(key);
+                // If not in IndexedDB but in window.localStorage, transfer it
+                if (reqGet.result === undefined && oldVal !== null) {
+                  storeMigrate.put(oldVal, key);
+                  this._data[key] = oldVal;
+                } else if (reqGet.result !== undefined) {
+                  this._data[key] = reqGet.result;
+                }
+                
+                processed++;
+                if (processed === keysToMigrate.length) res();
+              };
+              reqGet.onerror = () => {
+                const oldVal = window.localStorage.getItem(key);
+                if (oldVal !== null) this._data[key] = oldVal;
+                processed++;
+                if (processed === keysToMigrate.length) res();
+              };
+            });
+          });
+          // --- END MIGRATION CODE ---
+          
+          // Load all remaining data into memory
+          const txLoad = db.transaction("keyval", "readonly");
+          const storeLoad = txLoad.objectStore("keyval");
+          const reqAll = storeLoad.openCursor();
+          reqAll.onsuccess = (e) => {
+            const cursor = e.target.result;
+            if (cursor) {
+              this._data[cursor.key] = cursor.value;
+              cursor.continue();
+            } else {
+              resolve();
+            }
+          };
+          reqAll.onerror = (e) => reject(e.target.error);
+        };
+        req.onerror = (e) => reject(e.target.error);
+      });
+      return this.initPromise;
+    }
+  };
+
+  var localStorage = customStorage;
 	
   async function verifyEmailMatchesGUID(email, providedGUID) {
     const encoder = new TextEncoder();
@@ -279,6 +375,7 @@
   }
 
   window.onload = function () {
+    customStorage.init().then(() => {
 	if (localStorage.getItem("email")){
 		document.getElementById("signInButtonDiv").style.display="none";
 		return;
@@ -292,6 +389,7 @@
       { theme: "outline", size: "large" }  // customization attributes
     );
     google.accounts.id.prompt(); // also display the One Tap dialog
+    });
   }
 
   // Simple function to decode the JWT and get user info
@@ -476,6 +574,7 @@ const dragAndDropManager = (function() {
 	
   let aacSettings, email, freeUsageCount;
   $( function() {
+    customStorage.init().then(() => {
 	var name = $("#name");
 	var addMessageOrFolderDialog = $("#addMessageOrFolderDialog").dialog({
       autoOpen: false,
@@ -541,7 +640,7 @@ const dragAndDropManager = (function() {
     
     //Can per page load actions
     //load saved levels & tiles
-    //var localStorage = window.localStorage;
+    ////var localStorage = customStorage;
     var levelItems = localStorage.getItem("ul-level-1");
 	aacSettings = localStorage.getItem("aacSettings") && JSON.parse(localStorage.getItem("aacSettings"));
 	email = localStorage.getItem("email");
@@ -563,8 +662,9 @@ const dragAndDropManager = (function() {
     }
 	changeTheme(aacSettings?.theme?.color ?? 'rgb(62, 39, 35)');
     loadSavedLevelsFromCache();
-  });
-  
+    });
+});
+
     class TreeNode {
   constructor(key, value = key, parent = null) {
     this.key = key;
@@ -753,7 +853,7 @@ function reOrderLevel(node) {
   }
 	
   function loadSavedLevelsFromCache(){
-    var localStorage = window.localStorage;
+    //var localStorage = customStorage;
     tree = new Tree(1, 'root');
     var levelItems = localStorage.getItem("ul-level-1") && JSON.parse(localStorage.getItem("ul-level-1"));
     levelItems && Array.isArray(levelItems) && levelItems.forEach(item => {
@@ -837,7 +937,7 @@ function reOrderLevel(node) {
   }
   
   function exportConfig(){
-    var localStorage = window.localStorage;
+    //var localStorage = customStorage;
     var configJsonStr = localStorage.getItem("ul-level-1");
     downloadFile(configJsonStr, 'aac-config.json', 'application/json');
   }
@@ -853,7 +953,7 @@ function reOrderLevel(node) {
 	
   function importConfig(){
     readTextFile("#importConfigFile").then(configJson => {
-      var localStorage = window.localStorage;
+      //var localStorage = customStorage;
       localStorage.setItem("ul-level-1", configJson);
       $("#importConfigDialog").dialog("close");
     });    
@@ -1141,7 +1241,7 @@ value: ())
     mediaRecorder.addEventListener('stop', async function() {
       globalSettings.voice = new Blob(recordedChunks);
       const base64Voice = await toBase64(globalSettings.voice);
-      window.localStorage.setItem(globalSettings.menuId.toLowerCase(), base64Voice);
+      customStorage.setItem(globalSettings.menuId.toLowerCase(), base64Voice);
       /*toBase64(URL.createObjectURL(new Blob(recordedChunks))).then(base64VoiceFile => {
         localStorage.setItem(globalSettings.menuId.toLowerCase(), base64VoiceFile);
         console.log(localStorage.getItem(globalSettings.menuId.toLowerCase()));        	
@@ -1171,7 +1271,7 @@ value: ())
   }
   
   function getAudioFileAsBase64(submenuId){    
-    var localStorage = window.localStorage;
+    //var localStorage = customStorage;
     var audioBase64 = localStorage.getItem(submenuId);
     /*switch(submenuId){
       case 'pain-menu': audioBase64 = localStorage.getItem();break;
@@ -1205,7 +1305,7 @@ value: ())
   async function playRecordedAudio(param){
     try{
       var menuId = param ? param : globalSettings.menuId.toLowerCase();
-      var localStorage = window.localStorage;
+      //var localStorage = customStorage;
       const base64Data = localStorage.getItem(menuId);
       const base64Response = await fetch(base64Data);
       var audio = new Audio(URL.createObjectURL(dataURItoBlob(base64Data)/*new Blob(localStorage.getItem('food'))*/));
@@ -1282,7 +1382,7 @@ value: ())
   });
   
   async function voiceFilesUploaded(event){
-	var localStorage = window.localStorage;
+	//var localStorage = customStorage;
     document.querySelector('#upload-files').files && Array.from(document.querySelector('#upload-files').files).forEach(voiceFile => {
       toBase64(voiceFile).then(base64VoiceFile => {
         localStorage.setItem(voiceFile.name.replaceAll('.m4a','').toLowerCase(), base64VoiceFile);
@@ -1793,3 +1893,5 @@ document.addEventListener('DOMContentLoaded', () => {
   <label for="upload-files">Select voice files to load:</label>
   <input type="file" multiple=true id="upload-files" onchange='voiceFilesUploaded(event)'/>
 </div>
+
+
