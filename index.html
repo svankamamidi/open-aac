@@ -227,6 +227,146 @@
 <div id="signInButtonDiv"></div>
 
 <script>
+  // --- IndexedDB Configuration for Voice Preference ---
+	const VOICE_DB_NAME = 'VoiceConfigDB';
+	const VOICE_STORE_NAME = 'settings';
+	const VOICE_KEY = 'selectedVoiceName';
+	let selectedVoiceName = null;
+	
+	function initVoiceDB() {
+	    return new Promise((resolve, reject) => {
+	        const request = indexedDB.open(VOICE_DB_NAME, 1);
+	        request.onupgradeneeded = (e) => {
+	            const db = e.target.result;
+	            if (!db.objectStoreNames.contains(VOICE_STORE_NAME)) {
+	                db.createObjectStore(VOICE_STORE_NAME);
+	            }
+	        };
+	        request.onsuccess = (e) => resolve(e.target.result);
+	        request.onerror = (e) => reject(e.target.error);
+	    });
+	}
+	
+	async function saveVoiceToDB(voiceName) {
+	    try {
+	        const db = await initVoiceDB();
+	        return new Promise((resolve, reject) => {
+	            const tx = db.transaction(VOICE_STORE_NAME, 'readwrite');
+	            const store = tx.objectStore(VOICE_STORE_NAME);
+	            const request = store.put(voiceName, VOICE_KEY);
+	            request.onsuccess = () => resolve();
+	            request.onerror = () => reject(request.error);
+	        });
+	    } catch (err) {
+	        console.error("IndexedDB save error:", err);
+	    }
+	}
+	
+	async function loadVoiceFromDB() {
+	    try {
+	        const db = await initVoiceDB();
+	        return new Promise((resolve, reject) => {
+	            const tx = db.transaction(VOICE_STORE_NAME, 'readonly');
+	            const store = tx.objectStore(VOICE_STORE_NAME);
+	            const request = store.get(VOICE_KEY);
+	            request.onsuccess = () => resolve(request.result);
+	            request.onerror = () => reject(request.error);
+	        });
+	    } catch (err) {
+	        console.error("IndexedDB load error:", err);
+	        return null;
+	    }
+	}
+	
+	// --- Voice Setup and Dialog Rendering Logic ---
+	
+	// Helper to look up the complete Voice object from the saved name string
+	function getSelectedVoiceObject() {
+	    if (!selectedVoiceName) return null;
+	    const voices = window.speechSynthesis.getVoices();
+	    return voices.find(v => v.name === selectedVoiceName) || null;
+	}
+	
+	function populateVoiceList() {
+	    const voices = window.speechSynthesis.getVoices();
+	    const $list = $('#voiceList').empty();
+	
+	    if (voices.length === 0) {
+	        $list.html('<div style="padding:10px; text-align:center;">No voices available. Try checking back in a moment.</div>');
+	        return;
+	    }
+	    
+	    voices.forEach(voice => {
+	        const $item = $('<div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee;"></div>');
+	        
+	        // Radio input setup
+	        const $label = $('<label style="cursor: pointer; flex: 1; display: flex; align-items: center; font-size: 16px; margin: 0;"></label>');
+	        const $radio = $(`<input type="radio" name="appVoice" value="${voice.name}" style="margin-right: 10px; transform: scale(1.2);">`);
+	        
+	        if (voice.name === selectedVoiceName) {
+	            $radio.prop('checked', true);
+	        }
+	        
+	        $label.append($radio).append(`<span>${voice.name} (${voice.lang})</span>`);
+	        
+	        // Voice preview feature
+	        const $previewBtn = $('<button type="button" style="padding: 4px 10px; font-size: 14px; border-radius: 4px; cursor: pointer;">Preview</button>');
+	        $previewBtn.on('click', (e) => {
+	            e.stopPropagation(); // Avoid checking the row's radio box
+	            window.speechSynthesis.cancel();
+	            const utterance = new SpeechSynthesisUtterance("Testing this voice option.");
+	            utterance.voice = voice;
+	            window.speechSynthesis.speak(utterance);
+	        });
+	        
+	        $item.append($label).append($previewBtn);
+	        $list.append($item);
+	    });
+	}
+	
+	// --- Document Ready Initializations ---
+	$(document).ready(async function() {
+	    
+	    // 1. App Initialization: Restore voice settings from IndexedDB
+	    selectedVoiceName = await loadVoiceFromDB();
+	
+	    // 2. Handle voice load race conditions (especially important in Chrome)
+	    if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+	        speechSynthesis.onvoiceschanged = () => {
+	            if ($('#voiceDialog').is(':visible')) {
+	                populateVoiceList();
+	            }
+	        };
+	    }
+	
+	    // 3. Initialize jQuery UI voice choice dialog
+	    $('#voiceDialog').dialog({
+	        autoOpen: false,
+	        modal: true,
+	        width: 450,
+	        buttons: {
+	            "Select": async function() {
+	                const checkedVoice = $('input[name="appVoice"]:checked').val();
+	                if (checkedVoice) {
+	                    selectedVoiceName = checkedVoice;
+	                    await saveVoiceToDB(selectedVoiceName);
+	                }
+	                $(this).dialog("close");
+	            },
+	            "Cancel": function() {
+	                window.speechSynthesis.cancel();
+	                $(this).dialog("close");
+	            }
+	        }
+	    });
+	
+	    // 4. Attach click listener to your selector button
+	    $('#chooseVoiceBtn').on('click', function() {
+	        populateVoiceList();
+	        $('#voiceDialog').dialog('open');
+	    });
+	});
+
   const ALLOWED_EMAILS = [
     "pubface1@gmail.com","vshivasanjith@gmail.com",
     "madapu.prashanthi@gmail.com"
@@ -1054,8 +1194,15 @@ function reOrderLevel(node) {
   
   function promptItem(words){
     try{
+		window.speechSynthesis.cancel(); // Stop tracking ongoing configurations
+		const utterance = new SpeechSynthesisUtterance(words);
     	var synth = window.speechSynthesis;
-    	synth.speak(new SpeechSynthesisUtterance(words));
+		// Grab the voice chosen via the user dialog process
+        const storedVoice = getSelectedVoiceObject();
+		if (storedVoice) {
+          utterance.voice = storedVoice;
+        }
+    	synth.speak(utterance);
     }catch(e){
       console.log(e);
     }
@@ -1286,7 +1433,8 @@ value: ())
     //return 'data:audio/wav;base64,' + audioBase64;
     return audioBase64;
   }
-  
+
+  //DEPRECATED no where used
   function showSubMenu(submenuId){
     document.getElementById("main-menu").style.display="none";
     document.getElementById(submenuId).style.display="block";
@@ -1295,7 +1443,8 @@ value: ())
     //audio.play();
     handleMenuDisplay(submenuId);
   }
-  
+
+  //DEPRECATED no where used
   function showMainMenu(menuId){
     document.getElementById("main-menu").style.display="table";
     document.getElementById("food-menu").style.display="none";
@@ -1642,6 +1791,9 @@ document.addEventListener('DOMContentLoaded', () => {
   <div id="backButtonDiv" class="backButtonDiv" style="display:none">
 	<a id="backButton" href="#" onclick="onBackButtonClick()">Back</a>
   </div>
+  <div id="chooseVoiceDiv" class="addInteractionDiv" style="display:none">
+	<button id="chooseVoiceBtn" onclick="chooseVoice()">Choose Voice</button>
+  </div>
   <div id="record-controls" style="display:none">
     <button id="record" onclick="startRecording()">Record</button>
     <button id="stop">Stop</button>
@@ -1891,6 +2043,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
 		</fieldset>
 	</form>
+</div>
+
+<div id="voiceDialog" title="Choose Voice" style="display:none;">
+    <div id="voiceList" style="max-height: 300px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+    </div>
 </div>
 
 <div id='interactionTypes' title="Add" class="interactionTypes" style="display:none">
