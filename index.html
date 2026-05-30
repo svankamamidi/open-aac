@@ -2,7 +2,49 @@
 <link rel="manifest" href="manifest.json" />
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
 <style>
-    .keyboard {
+	/* GLOBAL DIALOG RESPONSIVENESS */
+
+/* 1. Target the main dialog container */
+.ui-dialog {
+    max-width: 95vw !important;    /* Never wider than 95% of the viewport width */
+    width: auto !important;        /* Override fixed widths from jQuery UI JS */
+    min-width: 280px !important;   /* Keep it readable on very small screens */
+    box-sizing: border-box !important;
+    
+    /* 2. Auto-center the dialog horizontally */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+	top: 11vh !important;
+
+	/* Ensure the dialog doesn't exceed the viewport height */
+    max-height: 85vh !important;
+    display: flex !important;
+    flex-direction: column;
+}
+
+/* 3. Handle the content area inside the dialog */
+.ui-dialog .ui-dialog-content {
+	flex-grow: 1;
+    width: auto !important;
+    height: auto !important;
+    max-height: 70vh !important;   /* Prevents dialog from being taller than screen */
+    overflow-y: auto !important;   /* Adds scrollbar if content is long */
+}
+
+/* 4. Ensure images or large items inside don't break the layout */
+.ui-dialog img, 
+.ui-dialog table {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Ensure the title bar and buttons don't shrink */
+.ui-dialog-titlebar, 
+.ui-dialog-buttonpane {
+    flex-shrink: 0;
+}
+
+.keyboard {
         display: flex;
         flex-direction: column;
         gap: 10px;
