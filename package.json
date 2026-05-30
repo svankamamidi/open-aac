@@ -1,0 +1,13 @@
+{
+  "name": "open-aac",
+  "version": "7.13.11",
+  "description": "Augmentative and alternative communication tooling",
+  "scripts": {
+    "build": "node build/minify.js",
+    "build:watch": "nodemon --watch '*.html' --exec 'npm run build'"
+  },
+  "devDependencies": {
+    "html-minifier-terser": "^7.2.0",
+    "glob": "^10.3.10"
+  }
+}
