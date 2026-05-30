@@ -17,6 +17,7 @@
             flex-direction: column;
             margin: 0;
             height: 100vh;
+            height: 100dvh; /* Adjusts dynamically when mobile browser toolbars appear/hide */
             overflow: hidden;
         }
         
@@ -174,6 +175,38 @@
             border-radius: 3px;
             outline: none;
             accent-color: #222;
+        }
+
+        /* --- Responsive Mobile Design Breakpoint --- */
+        @media (max-width: 650px) {
+            .control-bar {
+                flex-wrap: wrap;
+                justify-content: space-between;
+                padding: 8px 14px;
+                gap: 8px 4px;
+            }
+            
+            .divider {
+                display: none; /* Strip out dividers to preserve narrow real estate */
+            }
+
+            .dynamic-settings {
+                width: 100%;
+                order: 2; /* Safely moves tool parameters to a separate line below global buttons */
+                background: #f7f9fa;
+                padding: 6px;
+                border-radius: 20px;
+            }
+
+            .setting-group {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 6px 12px;
+            }
+
+            input[type="range"] {
+                width: 75px; /* Slightly scale back width configurations for tiny devices */
+            }
         }
     </style>
 </head>
