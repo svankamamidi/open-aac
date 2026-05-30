@@ -13,24 +13,24 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #121212;
-            display: flex;
-            flex-direction: column;
             margin: 0;
             height: 100vh;
-            height: 100dvh; /* Dynamic viewport boundary tracking */
+            height: 100dvh; 
             overflow: hidden;
+            position: relative;
         }
         
         /* --- Canvas Display Wrapper --- */
         .canvas-area {
-            flex-grow: 1;
-            flex-shrink: 1;
-            min-height: 0; /* Allows the flex layout to scale canvas down instead of destroying the toolbar */
-            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 64px; /* Default desktop toolbar offset safety zone */
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: auto; /* Allow scrolling around magnified canvas layers */
+            overflow: auto; /* Standard scrolling engine across scaled viewports */
             padding: 15px;
         }
         .canvas-container {
@@ -41,7 +41,7 @@
         }
         canvas {
             display: block;
-            touch-action: none;
+            touch-action: none; /* Stops native touch scrolling while drawing lines */
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             border-radius: 12px;
             width: 100%;
@@ -56,18 +56,21 @@
             pointer-events: none; 
         }
 
-        /* --- Ultra-Compact Single Row Control Bar --- */
+        /* --- Ultra-Compact Fixed Position Control Bar --- */
         .control-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
             background: #ffffff;
-            padding: 10px 16px;
+            padding: 0 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.4);
-            z-index: 10;
-            width: 100%;
-            flex-shrink: 0; /* Prevents the control bar from being squished to 0px height */
+            z-index: 1000;
         }
         
         .divider {
@@ -182,13 +185,18 @@
             accent-color: #222;
         }
 
-        /* --- Mobile Responsive Rules Engine --- */
+        /* --- Hardened Real-Device Mobile Responsive Breakdown --- */
         @media (max-width: 650px) {
+            .canvas-area {
+                bottom: 110px; /* Expands drawing space margin away from two-row layouts */
+            }
+
             .control-bar {
+                height: auto; 
                 flex-wrap: wrap;
                 justify-content: space-between;
-                padding: 6px 12px;
-                padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); /* Support edge-to-edge device margins */
+                padding: 8px 12px;
+                padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); /* Padding injection for bezel-less devices */
                 gap: 8px 4px;
             }
             
@@ -196,16 +204,23 @@
                 display: none; 
             }
 
-            /* Scales down sizing matrices so row 1 fits smoothly inside 320px-360px viewport frames */
+            /* Scales items elegantly so Row 1 stays perfectly single-lined without spilling over */
             .icon-btn, .file-label, .tool-btn {
-                width: 34px;
-                height: 34px;
-                font-size: 15px;
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+
+            .btn-group {
+                gap: 6px;
+            }
+            .action-group {
+                gap: 4px;
             }
 
             .dynamic-settings {
                 width: 100%;
-                order: 2; /* Safely moves tool parameters to row 2 */
+                order: 2; /* Drops color pots and slider bars safely onto line 2 */
                 background: #f7f9fa;
                 padding: 6px;
                 border-radius: 20px;
@@ -317,11 +332,12 @@
         let lastX = 0, lastY = 0;
         let sparkles = []; 
 
-        // State anchors for tracking explicit canvas transformations
+        // Footprint state trackers
         let baseDisplayWidth = 0;
         let baseDisplayHeight = 0;
         let zoomLevel = 1.0;
-        let activeUploadedImage = null; // Remembers your loaded image state during dynamic mobile resizing
+        let activeUploadedImage = null; 
+        let lastWindowWidth = window.innerWidth; // Locks out dynamic address bar resizing bugs
 
         // --- Core Setup & Geometry Fits ---
         function initCanvas() {
@@ -610,8 +626,11 @@
 
         window.onload = initCanvas;
         
-        // Tracks state to stop mobile scroll events from wiping out custom work
+        // Locks changes to actual screen width adjustments to shield progress from address bar toggles
         window.addEventListener('resize', () => {
+            if (window.innerWidth === lastWindowWidth) return; 
+            lastWindowWidth = window.innerWidth;
+
             if (activeUploadedImage) {
                 fitCanvasToContainer(activeUploadedImage);
             } else {
