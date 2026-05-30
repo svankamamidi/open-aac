@@ -308,6 +308,13 @@
     </div>
 
     <script>
+        window.onerror = function(msg, src, line, col, err) {
+            alert(
+                'ERROR\n' +
+                msg + '\n' +
+                line + ':' + col
+            );
+        };
         const canvas = document.getElementById('mainCanvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         const sCanvas = document.getElementById('sparkleCanvas');
@@ -337,7 +344,7 @@
         // --- Core Setup & Geometry Fits ---
         function initCanvas() {
             fitCanvasToContainer(null); 
-            requestAnimationFrame(animateSparkles);
+            //requestAnimationFrame(animateSparkles);
         }
 
         function fitCanvasToContainer(uploadedImg) {
