@@ -17,31 +17,35 @@
             flex-direction: column;
             margin: 0;
             height: 100vh;
-            height: 100dvh; /* Adjusts dynamically when mobile browser toolbars appear/hide */
+            height: 100dvh; /* Dynamic viewport boundary tracking */
             overflow: hidden;
         }
         
         /* --- Canvas Display Wrapper --- */
         .canvas-area {
             flex-grow: 1;
+            flex-shrink: 1;
+            min-height: 0; /* Allows the flex layout to scale canvas down instead of destroying the toolbar */
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow: auto; /* Allow scrolling around magnified canvas layers */
             padding: 15px;
         }
         .canvas-container {
             position: relative;
             display: inline-block;
+            flex-shrink: 0; 
+            transition: width 0.1s ease-out, height 0.1s ease-out;
         }
         canvas {
             display: block;
             touch-action: none;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             border-radius: 12px;
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
         }
         #sparkleCanvas {
             position: absolute;
@@ -49,7 +53,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* Ignore all interactions; pass them to main canvas */
+            pointer-events: none; 
         }
 
         /* --- Ultra-Compact Single Row Control Bar --- */
@@ -63,6 +67,7 @@
             box-shadow: 0 -5px 20px rgba(0,0,0,0.4);
             z-index: 10;
             width: 100%;
+            flex-shrink: 0; /* Prevents the control bar from being squished to 0px height */
         }
         
         .divider {
@@ -109,7 +114,7 @@
         }
         
         input[type="file"] {
-            display: none; /* Hide native file input */
+            display: none; 
         }
 
         /* Inline Tool Settings Grouping */
@@ -177,22 +182,30 @@
             accent-color: #222;
         }
 
-        /* --- Responsive Mobile Design Breakpoint --- */
+        /* --- Mobile Responsive Rules Engine --- */
         @media (max-width: 650px) {
             .control-bar {
                 flex-wrap: wrap;
                 justify-content: space-between;
-                padding: 8px 14px;
+                padding: 6px 12px;
+                padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); /* Support edge-to-edge device margins */
                 gap: 8px 4px;
             }
             
             .divider {
-                display: none; /* Strip out dividers to preserve narrow real estate */
+                display: none; 
+            }
+
+            /* Scales down sizing matrices so row 1 fits smoothly inside 320px-360px viewport frames */
+            .icon-btn, .file-label, .tool-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 15px;
             }
 
             .dynamic-settings {
                 width: 100%;
-                order: 2; /* Safely moves tool parameters to a separate line below global buttons */
+                order: 2; /* Safely moves tool parameters to row 2 */
                 background: #f7f9fa;
                 padding: 6px;
                 border-radius: 20px;
@@ -201,11 +214,20 @@
             .setting-group {
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 6px 12px;
+                gap: 6px 10px;
+            }
+
+            .color-pot-wrapper {
+                width: 28px;
+                height: 28px;
+            }
+            .color-display {
+                width: 20px;
+                height: 20px;
             }
 
             input[type="range"] {
-                width: 75px; /* Slightly scale back width configurations for tiny devices */
+                width: 65px; 
             }
         }
     </style>
@@ -213,7 +235,7 @@
 <body>
 
     <div class="canvas-area" id="canvasArea">
-        <div class="canvas-container">
+        <div class="canvas-container" id="canvasContainer">
             <canvas id="mainCanvas"></canvas>
             <canvas id="sparkleCanvas"></canvas>
         </div>
@@ -266,6 +288,8 @@
         <div class="divider"></div>
 
         <div class="action-group">
+            <button id="zoomOutBtn" class="icon-btn" title="Zoom Out">➖</button>
+            <button id="zoomInBtn" class="icon-btn" title="Zoom In">➕</button>
             <button id="undoBtn" class="icon-btn" disabled title="Undo">↩️</button>
             <button id="redoBtn" class="icon-btn" disabled title="Redo">↪️</button>
             <button id="clearBtn" class="icon-btn" title="Clear Markups">🗑️</button>
@@ -278,6 +302,7 @@
         const sCanvas = document.getElementById('sparkleCanvas');
         const sCtx = sCanvas.getContext('2d');
         const canvasArea = document.getElementById('canvasArea');
+        const canvasContainer = document.getElementById('canvasContainer');
         const imageLoader = document.getElementById('imageLoader');
 
         let activeTool = 'highlighter'; 
@@ -292,13 +317,20 @@
         let lastX = 0, lastY = 0;
         let sparkles = []; 
 
+        // State anchors for tracking explicit canvas transformations
+        let baseDisplayWidth = 0;
+        let baseDisplayHeight = 0;
+        let zoomLevel = 1.0;
+        let activeUploadedImage = null; // Remembers your loaded image state during dynamic mobile resizing
+
         // --- Core Setup & Geometry Fits ---
         function initCanvas() {
-            fitCanvasToContainer(null); // Draws sample configuration setup
+            fitCanvasToContainer(null); 
             requestAnimationFrame(animateSparkles);
         }
 
         function fitCanvasToContainer(uploadedImg) {
+            activeUploadedImage = uploadedImg;
             const padding = 30;
             const maxWidth = canvasArea.clientWidth - padding;
             const maxHeight = canvasArea.clientHeight - padding;
@@ -315,7 +347,6 @@
                 sCanvas.width = w; sCanvas.height = h;
                 ctx.drawImage(uploadedImg, 0, 0, w, h);
             } else {
-                // Fallback built-in educational toy demo graphics
                 canvas.width = w; canvas.height = h;
                 sCanvas.width = w; sCanvas.height = h;
                 drawSampleScene(w, h);
@@ -326,15 +357,25 @@
             redoStack = [];
             saveState();
             updateCursor();
+
+            baseDisplayWidth = w;
+            baseDisplayHeight = h;
+            applyZoom();
+        }
+
+        function applyZoom() {
+            const targetW = baseDisplayWidth * zoomLevel;
+            const targetH = baseDisplayHeight * zoomLevel;
+            canvasContainer.style.width = targetW + 'px';
+            canvasContainer.style.height = targetH + 'px';
         }
 
         function drawSampleScene(w, h) {
-            ctx.fillStyle = '#8B5A2B'; ctx.fillRect(0, 0, w, h); // Wooden table
+            ctx.fillStyle = '#8B5A2B'; ctx.fillRect(0, 0, w, h); 
             ctx.fillStyle = '#A0522D';
             for(let i=0; i<w; i+=40) ctx.fillRect(i, 0, 2, h); 
             ctx.lineWidth = 3; ctx.strokeStyle = '#222';
             
-            // Render interactive visual geometries
             ctx.fillStyle = '#e74c3c'; ctx.fillRect(w/2 - 120, h/2 - 60, 80, 80); ctx.strokeRect(w/2 - 120, h/2 - 60, 80, 80);
             ctx.beginPath(); ctx.arc(w/2 + 60, h/2 + 20, 45, 0, Math.PI*2); ctx.fillStyle = '#3498db'; ctx.fill(); ctx.stroke();
         }
@@ -371,7 +412,6 @@
             activeTool = 'pencil'; updateCursor();
         });
 
-        // Color Interceptors
         const highlightWrappers = document.querySelectorAll('#highlighterPots .color-pot-wrapper');
         highlightWrappers.forEach(wrapper => {
             const input = wrapper.querySelector('input');
@@ -543,6 +583,21 @@
             saveState(); ctx.putImageData(originalBaseImage, 0, 0);
         });
 
+        // --- Zoom Event Registration ---
+        document.getElementById('zoomInBtn').addEventListener('click', () => {
+            if (zoomLevel < 4.0) {
+                zoomLevel += 0.25;
+                applyZoom();
+            }
+        });
+
+        document.getElementById('zoomOutBtn').addEventListener('click', () => {
+            if (zoomLevel > 0.25) {
+                zoomLevel -= 0.25;
+                applyZoom();
+            }
+        });
+
         function updateCursor() {
             if (activeTool === 'highlighter') {
                 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20" stroke="${encodeURIComponent(activeHighlighterColor)}" stroke-width="3" stroke-linecap="round"/></svg>`;
@@ -554,7 +609,15 @@
         }
 
         window.onload = initCanvas;
-        window.addEventListener('resize', () => fitCanvasToContainer(null));
+        
+        // Tracks state to stop mobile scroll events from wiping out custom work
+        window.addEventListener('resize', () => {
+            if (activeUploadedImage) {
+                fitCanvasToContainer(activeUploadedImage);
+            } else {
+                fitCanvasToContainer(null);
+            }
+        });
     </script>
 </body>
 </html>
