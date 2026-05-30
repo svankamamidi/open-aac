@@ -1553,6 +1553,10 @@ value: ())
 		document.getElementById("exportDiv").style.display="table";
 		document.getElementById("importDiv").style.display="table";
 		document.getElementById("changeThemeDiv").style.display="table";
+		window.scrollTo({
+			top: 0,
+			behavior: 'smooth'
+		});
 	}else{
 		dragAndDropManager.disable();
 		document.getElementById("addInteractionDiv").style.display="none";
