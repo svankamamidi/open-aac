@@ -54,3 +54,28 @@ minifyHTMLFiles().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });
+
+// Add this at the end of the minifyHTMLFiles function, before console.log success
+
+async function updateServiceWorkerCache() {
+  const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+  const version = packageJson.version;
+  
+  try {
+    const swPath = 'sw.js';
+    const swContent = fs.readFileSync(swPath, 'utf-8');
+    const updated = swContent.replace(
+      /const cacheName = 'aac[\d.]+'/,
+      `const cacheName = 'aac${version}'`
+    );
+    
+    const swDistPath = path.join('dist', 'sw.js');
+    fs.writeFileSync(swDistPath, updated);
+    console.log('✓ Service Worker cache version updated');
+  } catch (error) {
+    console.error('Warning: Could not update service worker:', error.message);
+  }
+}
+
+// Call it before the success message
+await updateServiceWorkerCache();
