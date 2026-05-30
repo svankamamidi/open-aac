@@ -2,6 +2,14 @@
 <link rel="manifest" href="manifest.json" />
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
 <style>
+#word-hints {
+  /* 52px / 16px (standard base) = 3.25rem */
+  height: 3.25rem;
+  min-height: 3.25rem;
+  
+  display: flex;
+  align-items: center; /* Vertically centers the hints */
+}
 
 /* WORD PREDICTION HINTS STYLES (UPDATED FOR SINGLE STATIC ROW) */
   .word-hints-container {
@@ -99,8 +107,7 @@
         /* This prevents the whole keyboard area from 
            jittering if the user taps fast */
         touch-action: pan-x;
-	    /* Minimum 24px, preferred 5% of screen height, maximum 60px */
-        //margin-top: clamp(24px, 5vh, 60px);
+        margin-top: 0px;
     }
 
     .keyboard .key {
