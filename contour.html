@@ -13,37 +13,39 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #121212;
+            display: flex;
+            flex-direction: column;
             margin: 0;
-            height: 100vh;
-            height: 100dvh; /* Adapts dynamically to visible UI screen changes on mobile */
+            min-height: 100vh;
+            min-height: 100dvh;
             overflow: hidden;
-            position: relative;
         }
         
         /* --- Canvas Display Wrapper --- */
         .canvas-area {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 64px; /* Desktop control bar height safety cushion */
+            flex: 1;
+            min-height: 0;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow: auto;
             padding: 15px;
+            padding-bottom: 100px; /* room for fixed toolbar */
         }
         .canvas-container {
             position: relative;
             display: inline-block;
+            flex-shrink: 0; 
+            transition: width 0.1s ease-out, height 0.1s ease-out;
         }
         canvas {
             display: block;
             touch-action: none;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             border-radius: 12px;
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
         }
         #sparkleCanvas {
             position: absolute;
@@ -54,21 +56,23 @@
             pointer-events: none; 
         }
 
-        /* --- Hardened Fixed Position Control Bar --- */
+        /* --- Ultra-Compact Single Row Control Bar --- */
         .control-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 64px;
             background: #ffffff;
-            padding: 0 16px;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.4);
-            z-index: 1000; /* Keeps layout locked explicitly above canvas surfaces */
+        
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        
+            z-index: 9999;
+            width: 100%;
         }
         
         .divider {
@@ -101,7 +105,6 @@
             font-size: 18px;
             cursor: pointer;
             transition: all 0.2s;
-            flex-shrink: 0;
         }
         .icon-btn:active, .file-label:active, .tool-btn:active {
             background: #dcdfe3;
@@ -147,7 +150,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-shrink: 0;
         }
         .color-pot-wrapper.active {
             border-color: #222222;
@@ -185,45 +187,57 @@
             accent-color: #222;
         }
 
-        /* --- Smart Mobile Adaptive Viewport Rules --- */
-        @media (max-width: 600px) {
-            .canvas-area {
-                bottom: 115px; /* Clear out larger structural spacing for dual rows */
-            }
-
+        /* --- Mobile Responsive Rules Engine --- */
+        @media (max-width: 650px) {
             .control-bar {
-                height: auto; 
-                flex-wrap: wrap; /* Permits safe row wrapping on tight viewport screens */
-                padding: 10px 12px;
-                padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); /* Padding safe guard for device navigation indicators */
+                flex-wrap: wrap;
+                justify-content: space-between;
+                padding: 6px 12px;
+                padding-bottom: max(6px, env(safe-area-inset-bottom));
                 gap: 8px 4px;
+            
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
             }
             
             .divider {
-                display: none; /* Strip standard layout dividers on compressed mobile paths */
+                display: none; 
             }
 
+            /* Scales down sizing matrices so row 1 fits smoothly inside 320px-360px viewport frames */
             .icon-btn, .file-label, .tool-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 16px;
+                width: 34px;
+                height: 34px;
+                font-size: 15px;
             }
 
             .dynamic-settings {
                 width: 100%;
-                order: 2; /* Drops coloring selectors onto clear separate row line */
+                order: 2; /* Safely moves tool parameters to row 2 */
                 background: #f7f9fa;
                 padding: 6px;
                 border-radius: 20px;
-                margin-top: 2px;
             }
 
             .setting-group {
-                gap: 8px 12px;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 6px 10px;
+            }
+
+            .color-pot-wrapper {
+                width: 28px;
+                height: 28px;
+            }
+            .color-display {
+                width: 20px;
+                height: 20px;
             }
 
             input[type="range"] {
-                width: 75px; 
+                width: 65px; 
             }
         }
     </style>
@@ -231,7 +245,7 @@
 <body>
 
     <div class="canvas-area" id="canvasArea">
-        <div class="canvas-container">
+        <div class="canvas-container" id="canvasContainer">
             <canvas id="mainCanvas"></canvas>
             <canvas id="sparkleCanvas"></canvas>
         </div>
@@ -284,6 +298,8 @@
         <div class="divider"></div>
 
         <div class="action-group">
+            <button id="zoomOutBtn" class="icon-btn" title="Zoom Out">➖</button>
+            <button id="zoomInBtn" class="icon-btn" title="Zoom In">➕</button>
             <button id="undoBtn" class="icon-btn" disabled title="Undo">↩️</button>
             <button id="redoBtn" class="icon-btn" disabled title="Redo">↪️</button>
             <button id="clearBtn" class="icon-btn" title="Clear Markups">🗑️</button>
@@ -296,6 +312,7 @@
         const sCanvas = document.getElementById('sparkleCanvas');
         const sCtx = sCanvas.getContext('2d');
         const canvasArea = document.getElementById('canvasArea');
+        const canvasContainer = document.getElementById('canvasContainer');
         const imageLoader = document.getElementById('imageLoader');
 
         let activeTool = 'highlighter'; 
@@ -305,12 +322,16 @@
         let undoStack = [];
         let redoStack = [];
         let originalBaseImage = null; 
-        let currentLoadedImage = null; // Track current file across visual window transformations
         
         let isDrawing = false;
         let lastX = 0, lastY = 0;
         let sparkles = []; 
-        let lastWindowWidth = window.innerWidth;
+
+        // State anchors for tracking explicit canvas transformations
+        let baseDisplayWidth = 0;
+        let baseDisplayHeight = 0;
+        let zoomLevel = 1.0;
+        let activeUploadedImage = null; // Remembers your loaded image state during dynamic mobile resizing
 
         // --- Core Setup & Geometry Fits ---
         function initCanvas() {
@@ -319,7 +340,7 @@
         }
 
         function fitCanvasToContainer(uploadedImg) {
-            currentLoadedImage = uploadedImg;
+            activeUploadedImage = uploadedImg;
             const padding = 30;
             const maxWidth = canvasArea.clientWidth - padding;
             const maxHeight = canvasArea.clientHeight - padding;
@@ -346,6 +367,17 @@
             redoStack = [];
             saveState();
             updateCursor();
+
+            baseDisplayWidth = w;
+            baseDisplayHeight = h;
+            applyZoom();
+        }
+
+        function applyZoom() {
+            const targetW = baseDisplayWidth * zoomLevel;
+            const targetH = baseDisplayHeight * zoomLevel;
+            canvasContainer.style.width = targetW + 'px';
+            canvasContainer.style.height = targetH + 'px';
         }
 
         function drawSampleScene(w, h) {
@@ -533,7 +565,6 @@
             redoStack = []; updateButtons();
         }
 
-        // Fix logic errors where pop resets were wiping tracking matrices
         function undo() {
             if (undoStack.length > 1) {
                 redoStack.push(undoStack.pop());
@@ -562,6 +593,21 @@
             saveState(); ctx.putImageData(originalBaseImage, 0, 0);
         });
 
+        // --- Zoom Event Registration ---
+        document.getElementById('zoomInBtn').addEventListener('click', () => {
+            if (zoomLevel < 4.0) {
+                zoomLevel += 0.25;
+                applyZoom();
+            }
+        });
+
+        document.getElementById('zoomOutBtn').addEventListener('click', () => {
+            if (zoomLevel > 0.25) {
+                zoomLevel -= 0.25;
+                applyZoom();
+            }
+        });
+
         function updateCursor() {
             if (activeTool === 'highlighter') {
                 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20" stroke="${encodeURIComponent(activeHighlighterColor)}" stroke-width="3" stroke-linecap="round"/></svg>`;
@@ -573,12 +619,14 @@
         }
 
         window.onload = initCanvas;
-
-        // Shields mobile view canvas from micro-shuffles triggered by sliding address bars
+        
+        // Tracks state to stop mobile scroll events from wiping out custom work
         window.addEventListener('resize', () => {
-            if (window.innerWidth === lastWindowWidth) return;
-            lastWindowWidth = window.innerWidth;
-            fitCanvasToContainer(currentLoadedImage);
+            if (activeUploadedImage) {
+                fitCanvasToContainer(activeUploadedImage);
+            } else {
+                fitCanvasToContainer(null);
+            }
         });
     </script>
 </body>
