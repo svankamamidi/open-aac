@@ -17,14 +17,14 @@
             flex-direction: column;
             margin: 0;
             min-height: 100vh;
-            min-height: 100dvh;
-            overflow: hidden;
+            overflow: visible;
         }
         
         /* --- Canvas Display Wrapper --- */
         .canvas-area {
             flex: 1;
-            min-height: 0;
+            height: auto;
+            min-height: 300px;
             width: 100%;
             display: flex;
             justify-content: center;
@@ -629,6 +629,18 @@
                 fitCanvasToContainer(null);
             }
         });
+
+        setTimeout(() => {
+            const bar = document.querySelector('.control-bar');
+        
+            alert(
+                'window.innerHeight=' + window.innerHeight +
+                '\nbody=' + document.body.offsetHeight +
+                '\nbar top=' + bar.getBoundingClientRect().top +
+                '\nbar bottom=' + bar.getBoundingClientRect().bottom +
+                '\nbar height=' + bar.offsetHeight
+            );
+        }, 2000);
     </script>
 </body>
 </html>
