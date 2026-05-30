@@ -1880,49 +1880,100 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let isCapsLock = true; // Tracks the state of Caps Lock (defaulting to true to match HTML)
 
+    // --- WORD PREDICTION UI LOGIC ---
+    async function updateWordHints() {
+        const textarea = document.getElementById("textareaEle");
+        const text = textarea.value || "";
+        const words = text.split(/[\s\n]+/);
+        const currentWord = words[words.length - 1]; // Get the word currently being typed
+        const hintsContainer = document.getElementById("word-hints");
+
+        if (!currentWord || currentWord.length < 1) {
+            hintsContainer.style.display = 'none';
+            hintsContainer.innerHTML = '';
+            return;
+        }
+
+        const predictions = await getPredictions(currentWord);
+
+        if (predictions.length > 0) {
+            hintsContainer.style.display = 'flex';
+            hintsContainer.innerHTML = '';
+            predictions.forEach(word => {
+                const btn = document.createElement('button');
+                btn.className = 'word-hint-btn';
+                btn.textContent = word;
+                btn.onclick = () => {
+                    // 1. Replace the incomplete word with the predicted word
+                    const lastIndex = typedText.lastIndexOf(currentWord);
+                    if (lastIndex !== -1) {
+                        typedText = typedText.substring(0, lastIndex) + word + " ";
+                        document.getElementById("textareaEle").value = typedText;
+                    }
+                    // 2. Speak the completed word
+                    promptItem(word);
+                    // 3. Save it to DB to boost frequency
+                    saveWordToDB(word);
+                    // 4. Clear hints
+                    hintsContainer.style.display = 'none';
+                    hintsContainer.innerHTML = '';
+                };
+                hintsContainer.appendChild(btn);
+            });
+        } else {
+            hintsContainer.style.display = 'none';
+        }
+    }
+
+    // --- KEY CLICK LISTENER ---
     // Add event listener to each key
     document.querySelectorAll('.keyboard .key').forEach(button => {
         button.addEventListener('click', (event) => {
-			// Add a tiny haptic pulse (10ms) for mobile feel
+            // Add a tiny haptic pulse (10ms) for mobile feel
             if (navigator.vibrate) navigator.vibrate(10);
-			
+            
             // Ignore action/navigation keys so they don't type into the text area
             if (event.target.classList.contains('action-key')) return;
 
             const key = event.target.innerText;
-			let keyText = key.toLowerCase();
-			let typedStr = document.getElementById("textareaEle").value?.trim();
-			if (!typedStr){
-				typedText = '';
-			}
+            let keyText = key.toLowerCase();
+            
+            // Fix sync issue: Ensure typedText matches the textarea before appending
+            typedText = document.getElementById("textareaEle").value || '';
             
             if (keyText === "enter") {
-                console.log("Enter Key Pressed");
+                // Extract and save the last completed word before adding a newline
+                const words = typedText.split(/[\s\n]+/);
+                saveWordToDB(words[words.length - 1]);
                 typedText += "\n";
             } else if (keyText === "space") {
-                console.log("Space Bar Pressed");
+                // Extract and save the last completed word before adding a space
+                const words = typedText.split(/[\s\n]+/);
+                saveWordToDB(words[words.length - 1]);
                 typedText += " ";
             } else if (keyText === 'backspace' || keyText === '⌫') {
                 typedText = typedText.slice(0, -1);
             } else if (keyText === 'caps') {
                 isCapsLock = !isCapsLock;
-                
-                // Add a subtle background highlight to the Caps key when active
                 event.target.style.backgroundColor = isCapsLock ? 'rgba(128, 128, 128, 0.4)' : '';
-                
-                // Dynamically update the visual text of all letter keys to upper/lower case
                 document.querySelectorAll('.keyboard .key').forEach(k => {
                     if (k.innerText.length === 1 && k.innerText.match(/[a-zA-Z]/)) {
                         k.innerText = isCapsLock ? k.innerText.toUpperCase() : k.innerText.toLowerCase();
                     }
                 });
+                return; // Don't trigger word hints update on Caps Lock
             } else { 
-                typedText += key; // Grabs the exact current casing visible on the key
+                typedText += key; 
             }
             
-	        document.getElementById("textareaEle").value = typedText;
-		    promptItem(key);
-            console.log("Typed Text: " + typedText);
+            document.getElementById("textareaEle").value = typedText;
+            
+            // Trigger prediction update and read the letter
+            if (keyText !== 'backspace' && keyText !== '⌫') {
+                promptItem(key);
+            }
+            
+            updateWordHints(); 
         });
     });
 
