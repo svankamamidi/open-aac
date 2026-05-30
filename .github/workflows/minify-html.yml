@@ -24,17 +24,19 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
       - name: Install dependencies
         run: npm install --save-dev html-minifier-terser glob
 
+      - name: Create build directory
+        run: mkdir -p build dist
+
       - name: Create minify script
         run: |
-          mkdir -p build
-          cat > build/minify.js << 'EOF'
+          cat > build/minify.js << 'MINIFY_EOF'
           const minify = require('html-minifier-terser').minify;
           const fs = require('fs');
           const path = require('path');
@@ -72,50 +74,62 @@ jobs:
                 const minifiedSize = Buffer.byteLength(minified, 'utf8');
                 const reduction = ((1 - minifiedSize / originalSize) * 100).toFixed(2);
 
-                fs.mkdirSync(path.dirname(path.join('dist', file)), { recursive: true });
-                fs.writeFileSync(path.join('dist', file), minified);
+                const outputPath = path.join('dist', file);
+                fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+                fs.writeFileSync(outputPath, minified);
 
-                console.log(`✓ ${file} (${reduction}% smaller)`);
+                console.log(`✓ ${file}`);
+                console.log(`  Original: ${originalSize} bytes → Minified: ${minifiedSize} bytes (${reduction}% reduction)`);
               } catch (error) {
                 console.error(`✗ Error minifying ${file}:`, error.message);
                 process.exit(1);
               }
             }
+
+            console.log('\n✓ All HTML files minified successfully!');
           }
 
           minifyHTMLFiles().catch(error => {
             console.error('Fatal error:', error);
             process.exit(1);
           });
-          EOF
+          MINIFY_EOF
 
       - name: Minify HTML files
         run: node build/minify.js
 
       - name: Copy supporting files
         run: |
-          mkdir -p dist
           # Copy service worker
-          [ -f sw.js ] && cp sw.js dist/ || echo "sw.js not found"
+          if [ -f sw.js ]; then
+            cp sw.js dist/
+            echo "✓ Copied sw.js"
+          fi
+          
           # Copy manifest
-          [ -f manifest.json ] && cp manifest.json dist/ || echo "manifest.json not found"
+          if [ -f manifest.json ]; then
+            cp manifest.json dist/
+            echo "✓ Copied manifest.json"
+          fi
+          
           # Copy icons directory
-          [ -d icons ] && cp -r icons dist/ || echo "icons directory not found"
-          # Copy any JSON config files
+          if [ -d icons ]; then
+            cp -r icons dist/
+            echo "✓ Copied icons/"
+          fi
+          
+          # Copy any other JSON files
           find . -maxdepth 1 -name "*.json" -type f ! -path "./node_modules/*" -exec cp {} dist/ \;
-
-      - name: Verify dist contents
-        run: |
-          echo "=== Files in dist/ ==="
+          
+          echo ""
+          echo "=== Final dist/ contents ==="
           ls -lah dist/
-          echo "=== HTML files ==="
-          find dist -name "*.html" -type f
 
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v4
 
       - name: Upload artifact to Pages
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: 'dist'
 
@@ -129,4 +143,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
