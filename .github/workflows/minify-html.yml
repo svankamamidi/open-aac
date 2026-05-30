@@ -1,0 +1,66 @@
+name: Minify HTML on Push
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - search_for_picture
+    paths:
+      - '*.html'
+      - '.github/workflows/minify-html.yml'
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - '*.html'
+
+jobs:
+  minify:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install --save-dev html-minifier-terser
+
+      - name: Create dist directory
+        run: mkdir -p dist
+
+      - name: Minify HTML files
+        run: node build/minify.js
+
+      - name: Check if files changed
+        id: verify
+        run: |
+          if git diff --quiet dist/; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push minified files
+        if: steps.verify.outputs.changed == 'true' && github.event_name == 'push'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add dist/
+          git commit -m "chore: minify HTML files" || echo "No changes to commit"
+          git push
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: minified-html
+          path: dist/
+          retention-days: 30
