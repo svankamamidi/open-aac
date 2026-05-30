@@ -1904,7 +1904,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const hintsContainer = document.getElementById("word-hints");
 
         if (!currentWord || currentWord.length < 1) {
-            hintsContainer.style.display = 'none';
+            hintsContainer.style.visibility = 'hidden';
             hintsContainer.innerHTML = '';
             return;
         }
@@ -1912,7 +1912,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const predictions = await getPredictions(currentWord);
 
         if (predictions.length > 0) {
-            hintsContainer.style.display = 'flex';
+            hintsContainer.style.visibility = 'visible';
             hintsContainer.innerHTML = '';
             predictions.forEach(word => {
                 const btn = document.createElement('button');
@@ -1930,13 +1930,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     // 3. Save it to DB to boost frequency
                     saveWordToDB(word);
                     // 4. Clear hints
-                    hintsContainer.style.display = 'none';
+                    hintsContainer.style.visibility = 'hidden';
                     hintsContainer.innerHTML = '';
                 };
                 hintsContainer.appendChild(btn);
             });
         } else {
-            hintsContainer.style.display = 'none';
+            hintsContainer.style.visibility = 'hidden';
         }
     }
 
@@ -2061,7 +2061,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	<ul id="ul-level-1" class="ul-container">
 	</ul>
 	<div id="keyboard" class="keyboard" style="display:none">
-	    <div id="word-hints" class="word-hints-container" style="display:none;"></div>
+	    <div id="word-hints" class="word-hints-container" style="visibility:hidden;"></div>
 	    <!-- Original Alphabet View (ABC) -->
 	    <div id="kb-abc-view" class="kb-view">
 	        <div class="row">
