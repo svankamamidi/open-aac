@@ -2,6 +2,52 @@
 <link rel="manifest" href="manifest.json" />
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
 <style>
+
+/* WORD PREDICTION HINTS STYLES (UPDATED FOR SINGLE STATIC ROW) */
+  .word-hints-container {
+      display: flex;
+      flex-direction: row;
+      gap: 6px;
+      padding: 8px;
+      background-color: #f9f9f9;
+      border-radius: 10px 10px 0 0; 
+      min-height: 40px;
+      align-items: center;
+      width: 100%;
+      box-sizing: border-box;
+      
+      /* Prevents any horizontal scrolling */
+      overflow: hidden; 
+      justify-content: center;
+  }
+  
+  .word-hint-btn {
+      /* Forces buttons to share space equally and shrink to fit the screen */
+      flex: 1 1 0; 
+      min-width: 0; /* Crucial for text truncation inside flexbox */
+      
+      padding: 8px 4px;
+      background-color: #ffffff;
+      border: 1px solid #026ece;
+      color: #026ece;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 16px; /* Slightly smaller to accommodate more text */
+      font-weight: bold;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      
+      /* Truncate text with "..." if a word is too long */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+  }
+  
+  .word-hint-btn:active {
+      background-color: #e0e0e0;
+  }
+	
 #addMessageOrFolderDialog fieldset {
   min-width: 0;
   box-sizing: border-box;
