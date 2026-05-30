@@ -32,7 +32,7 @@
             align-items: center;
             overflow: auto;
             padding: 15px;
-            padding-bottom: 220px; /* Increased room for even larger fixed toolbar */
+            padding-bottom: 160px; /* Increased room for larger fixed toolbar */
         }
         .canvas-container {
             position: relative;
@@ -64,13 +64,13 @@
             right: 20px;
             background: rgba(255, 255, 255, 0.9);
             border: none;
-            width: 90px;
-            height: 90px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 42px;
+            font-size: 28px;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             z-index: 100;
@@ -105,7 +105,7 @@
         
         .divider {
             width: 1px;
-            height: 60px;
+            height: 38px;
             background: #e0e0e0;
         }
 
@@ -120,17 +120,17 @@
             justify-content: center;
         }
 
-        /* Round Compact Buttons - SIZE INCREASED BY 50%+ MORE */
+        /* Round Compact Buttons - SIZE INCREASED */
         .icon-btn, .file-label, .tool-btn {
             background: #f0f2f5;
             border: none;
-            width: 84px;
-            height: 84px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 26px;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -162,7 +162,7 @@
             display: flex;
         }
 
-        /* Color Pots Engine - SIZE INCREASED BY 50%+ MORE */
+        /* Color Pots Engine - SIZE INCREASED */
         .color-palette {
             display: flex;
             gap: 12px;
@@ -170,8 +170,8 @@
         }
         .color-pot-wrapper {
             position: relative;
-            width: 66px;
-            height: 66px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             border: 2px solid transparent;
             transition: transform 0.15s;
@@ -190,8 +190,8 @@
             cursor: pointer;
         }
         .color-display {
-            width: 48px;
-            height: 48px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             pointer-events: none;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
@@ -202,15 +202,15 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             color: #555;
         }
         input[type="range"] {
-            width: 160px;
-            height: 12px;
+            width: 110px;
+            height: 8px;
             background: #e0e0e0;
-            border-radius: 6px;
+            border-radius: 4px;
             outline: none;
             accent-color: #222;
         }
@@ -234,11 +234,11 @@
                 display: none; 
             }
 
-            /* Scales down sizing matrices but kept massive for easy tap targets */
+            /* Scales down sizing matrices but kept significantly larger than original */
             .icon-btn, .file-label, .tool-btn {
-                width: 75px;
-                height: 75px;
-                font-size: 34px;
+                width: 48px;
+                height: 48px;
+                font-size: 22px;
             }
 
             .dynamic-settings {
@@ -256,17 +256,16 @@
             }
 
             .color-pot-wrapper {
-                width: 56px;
-                height: 56px;
+                width: 36px;
+                height: 36px;
             }
             .color-display {
-                width: 40px;
-                height: 40px;
+                width: 26px;
+                height: 26px;
             }
 
             input[type="range"] {
-                width: 120px; 
-                height: 12px;
+                width: 80px; 
             }
         }
     </style>
