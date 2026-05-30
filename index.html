@@ -315,6 +315,9 @@
   // --- IndexedDB Configuration for Word Prediction ---
 	const DICT_DB_NAME = 'WordPredictionDB';
 	const DICT_STORE_NAME = 'dictionary';
+
+	// Add common words you want to show up immediately
+	const DEFAULT_WORDS = ["want", "eat", "drink", "play", "stop", "yes", "no", "hello", "water", "food", "help", "please", "thank", "you", "more", "done"];
 	
 	async function initDictDB() {
 	    return new Promise((resolve, reject) => {
@@ -325,6 +328,11 @@
 	                // Key is the word itself. We index by frequency to sort predictions.
 	                const store = db.createObjectStore(DICT_STORE_NAME, { keyPath: 'word' });
 	                store.createIndex('freq', 'freq', { unique: false });
+
+					// Pre-populate the database with our default words
+	                DEFAULT_WORDS.forEach(word => {
+	                    store.put({ word: word, freq: 1 });
+	                });
 	            }
 	        };
 	        request.onsuccess = (e) => resolve(e.target.result);
