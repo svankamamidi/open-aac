@@ -318,13 +318,15 @@
             </div>
 
             <div id="pencilSettings" class="setting-group">
-                <div class="color-pot-wrapper active">
-                    <div class="color-display" id="pencilColorDisplay" style="background: #FFD700;"></div>
-                    <input type="color" id="pencilColorPicker" value="#FFD700">
+                <div class="color-palette" id="pencilPots">
+                    <div class="color-pot-wrapper active"><div class="color-display" style="background: #ffe600;"></div><input type="color" value="#ffe600"></div>
+                    <div class="color-pot-wrapper"><div class="color-display" style="background: #ff3399;"></div><input type="color" value="#ff3399"></div>
+                    <div class="color-pot-wrapper"><div class="color-display" style="background: #00e5ff;"></div><input type="color" value="#00e5ff"></div>
+                    <div class="color-pot-wrapper"><div class="color-display" style="background: #33ff33;"></div><input type="color" value="#33ff33"></div>
                 </div>
                 <div class="slider-wrap">
                     <span>Size</span>
-                    <input type="range" id="pencilSize" min="2" max="25" value="8">
+                    <input type="range" id="pencilSize" min="1" max="25" value="3">
                 </div>
             </div>
             
@@ -356,11 +358,11 @@
         const canvasArea = document.getElementById('canvasArea');
         const canvasContainer = document.getElementById('canvasContainer');
         const imageLoader = document.getElementById('imageLoader');
-        const cameraLoader = document.getElementById('cameraLoader'); // Added camera loader reference
+        const cameraLoader = document.getElementById('cameraLoader'); 
 
         let activeTool = 'highlighter'; 
         let activeHighlighterColor = '#ffe600';
-        let activePencilColor = '#FFD700';
+        let activePencilColor = '#ffe600';
 
         let undoStack = [];
         let redoStack = [];
@@ -448,7 +450,7 @@
         }
 
         imageLoader.addEventListener('change', handleImageLoad);
-        cameraLoader.addEventListener('change', handleImageLoad); // Reused handling logic for the camera
+        cameraLoader.addEventListener('change', handleImageLoad);
 
         // --- Context / Tool Switching Core Logics ---
         const btnHighlight = document.getElementById('toolHighlight');
@@ -468,6 +470,7 @@
             activeTool = 'pencil'; updateCursor();
         });
 
+        // Highlighter Colors
         const highlightWrappers = document.querySelectorAll('#highlighterPots .color-pot-wrapper');
         highlightWrappers.forEach(wrapper => {
             const input = wrapper.querySelector('input');
@@ -483,11 +486,20 @@
             });
         });
 
-        const pencilInput = document.getElementById('pencilColorPicker');
-        const pencilDisplay = document.getElementById('pencilColorDisplay');
-        pencilInput.addEventListener('input', (e) => {
-            pencilDisplay.style.background = e.target.value;
-            activePencilColor = e.target.value; updateCursor();
+        // Pencil Colors
+        const pencilWrappers = document.querySelectorAll('#pencilPots .color-pot-wrapper');
+        pencilWrappers.forEach(wrapper => {
+            const input = wrapper.querySelector('input');
+            const display = wrapper.querySelector('.color-display');
+            wrapper.addEventListener('click', () => {
+                pencilWrappers.forEach(w => w.classList.remove('active'));
+                wrapper.classList.add('active');
+                activePencilColor = input.value; updateCursor();
+            });
+            input.addEventListener('input', (e) => {
+                display.style.background = e.target.value;
+                activePencilColor = e.target.value; wrapper.click();
+            });
         });
 
         // --- Interaction Coordination Engine ---
@@ -656,8 +668,8 @@
 
         function updateCursor() {
             if (activeTool === 'highlighter') {
-                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20" stroke="${encodeURIComponent(activeHighlighterColor)}" stroke-width="3" stroke-linecap="round"/></svg>`;
-                canvas.style.cursor = `url('data:image/svg+xml;utf8,${svg}') 12 12, crosshair`;
+                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><polygon points="3,3 3,20 8,15 12,22 15,21 11,14 18,14" fill="${encodeURIComponent(activeHighlighterColor)}" stroke="%23000" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+                canvas.style.cursor = `url('data:image/svg+xml;utf8,${svg}') 3 3, default`;
             } else {
                 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69z" fill="${encodeURIComponent(activePencilColor)}" stroke="%23000" stroke-width="1"/></svg>`;
                 canvas.style.cursor = `url('data:image/svg+xml;utf8,${svg}') 0 24, crosshair`;
