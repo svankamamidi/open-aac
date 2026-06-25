@@ -1789,9 +1789,9 @@ value: ())
   function fetchNRenderNextImage(){
     var image = document.getElementById('itemPhoto');
     fetch(searchResults[fileIndex].src.medium , {
-      headers: {
+      /*headers: {
           "Authorization": handle
-      }
+      }*/
     })
     .then((response) => {
       return response.blob();
