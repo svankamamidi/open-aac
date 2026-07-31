@@ -182,6 +182,10 @@
   }
   
   /* RAIN KEYBOARD STYLES */
+  #rain-space-btn {
+      display: none;
+  }
+  
   @keyframes rainFall {
       0% { top: -50px; opacity: 1; }
       100% { top: 100%; opacity: 0; }
@@ -2250,6 +2254,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	        <button class="key action-key" style="flex: 1 1 28%; min-width: 90px;" onclick="switchKbView('kb-qwerty-view')">QWERTY</button>
 	        <button class="key action-key" style="flex: 1 1 28%; min-width: 80px;" onclick="switchKbView('kb-emoji-view')">Emojis</button>
 	        <button class="key action-key" style="flex: 1 1 28%; min-width: 90px; font-size: 18px;" onclick="switchKbView('kb-settings-view')">Settings</button>
+			<button id="rain-space-btn" class="key" onclick="insertSpace()" style="flex-grow: 1.5;">Space</button>
 			<button class="key" onclick="switchKbView('kb-rain-view')" style="background-color: #e0f7fa; border-color: #026ece; color: #026ece;">Rain</button>
 	    </div>
 	</div>
@@ -2423,20 +2428,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
       rainView.appendChild(drop);
   }
+  
+  // Handles adding spaces when the Space button is clicked
+  function insertSpace() {
+	  const textarea = document.getElementById("textareaEle");
+	  if (textarea) {
+		  textarea.value = (textarea.value || '') + ' '; // Appends a space
+	  }
+	  
+	  // If your keyboard has vibration enabled
+	  if (navigator.vibrate) navigator.vibrate(10);
+	  
+	  // If you are using the global speech/prompt function
+	  if (typeof promptItem === 'function') promptItem(' ');
+  }
 
   // Wait for the entire page to finish loading before trying to intercept
   window.addEventListener('load', function() {
       if (typeof window.switchKbView !== 'undefined') {
           const originalSwitchKbView = window.switchKbView;
+          const rainSpaceBtn = document.getElementById('rain-space-btn');
           
           window.switchKbView = function(viewId) {
               originalSwitchKbView(viewId); // Run your existing view switch code
               
               if (viewId === 'kb-rain-view') {
-                  // Start spawning drops every 600ms
+                  // Show space button and start spawning drops
+                  if (rainSpaceBtn) rainSpaceBtn.style.display = 'inline-block';
                   if (!rainInterval) rainInterval = setInterval(spawnRainDrop, 600); 
               } else {
-                  // Stop raining and clear the view if user clicks ABC or QWERTY
+                  // Hide space button, stop raining, and clear view when switching away
+                  if (rainSpaceBtn) rainSpaceBtn.style.display = 'none';
                   if (rainInterval) {
                       clearInterval(rainInterval);
                       rainInterval = null;
@@ -2445,7 +2467,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   if (rainView) rainView.innerHTML = ''; 
               }
           };
-          console.log("Rain keyboard successfully connected!"); // Success message
+          console.log("Rain keyboard and conditional space button successfully configured!");
       } else {
           console.error("switchKbView is still missing. Ensure your main keyboard script is loaded properly.");
       }
