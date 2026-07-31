@@ -2424,26 +2424,30 @@ document.addEventListener('DOMContentLoaded', () => {
       rainView.appendChild(drop);
   }
 
-  // Intercept the view switch to start the rain loop
-  if (typeof window.switchKbView !== 'undefined') {
-      const originalSwitchKbView = window.switchKbView;
-      window.switchKbView = function(viewId) {
-          originalSwitchKbView(viewId); // Run your existing view switch code
+  // Wait for the entire page to finish loading before trying to intercept
+  window.addEventListener('load', function() {
+      if (typeof window.switchKbView !== 'undefined') {
+          const originalSwitchKbView = window.switchKbView;
           
-          if (viewId === 'kb-rain-view') {
-              // Start spawning drops every 600ms
-              if (!rainInterval) rainInterval = setInterval(spawnRainDrop, 600); 
-          } else {
-              // Stop raining and clear the view if user clicks ABC or QWERTY
-              if (rainInterval) {
-                  clearInterval(rainInterval);
-                  rainInterval = null;
+          window.switchKbView = function(viewId) {
+              originalSwitchKbView(viewId); // Run your existing view switch code
+              
+              if (viewId === 'kb-rain-view') {
+                  // Start spawning drops every 600ms
+                  if (!rainInterval) rainInterval = setInterval(spawnRainDrop, 600); 
+              } else {
+                  // Stop raining and clear the view if user clicks ABC or QWERTY
+                  if (rainInterval) {
+                      clearInterval(rainInterval);
+                      rainInterval = null;
+                  }
+                  const rainView = document.getElementById('kb-rain-view');
+                  if (rainView) rainView.innerHTML = ''; 
               }
-              const rainView = document.getElementById('kb-rain-view');
-              if (rainView) rainView.innerHTML = ''; 
-          }
-      };
-  } else {
-      console.error("switchKbView is not defined yet. Make sure this script is at the very bottom of the page.");
-  }
+          };
+          console.log("Rain keyboard successfully connected!"); // Success message
+      } else {
+          console.error("switchKbView is still missing. Ensure your main keyboard script is loaded properly.");
+      }
+  });
 </script>
