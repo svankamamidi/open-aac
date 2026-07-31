@@ -2044,47 +2044,53 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
   let rainInterval = null;
 
-  // Predicts the next possible letters to complete the current word
+  // Predicts the next possible letters (with safety fallbacks)
   async function getNextProbableLetters() {
-      const textarea = document.getElementById("textareaEle");
-      const text = textarea.value || "";
-      const words = text.split(/[\s\n]+/);
-      const currentWord = words[words.length - 1].toLowerCase();
-      
-      let nextLetters = [];
-      if (currentWord && currentWord.length > 0) {
-          // Utilizing the existing IndexedDB getPredictions function
-          const predictions = await window.getPredictions(currentWord, 20) || [];
-          predictions.forEach(word => {
-              // Extract the exact next letter if the word completes what the user typed
-              if (word.startsWith(currentWord) && word.length > currentWord.length) {
-                  nextLetters.push(word[currentWord.length].toUpperCase());
-              }
-          });
+      try {
+          const textarea = document.getElementById("textareaEle");
+          if (!textarea) return []; // Fail gracefully if textarea is missing
+          
+          const text = textarea.value || "";
+          const words = text.split(/[\s\n]+/);
+          const currentWord = words[words.length - 1].toLowerCase();
+          
+          let nextLetters = [];
+          
+          // Only attempt predictions if the function actually exists
+          if (currentWord && currentWord.length > 0 && typeof window.getPredictions === 'function') {
+              const predictions = await window.getPredictions(currentWord, 20) || [];
+              predictions.forEach(word => {
+                  if (word.startsWith(currentWord) && word.length > currentWord.length) {
+                      nextLetters.push(word[currentWord.length].toUpperCase());
+                  }
+              });
+          }
+          return nextLetters;
+      } catch (error) {
+          console.warn("Prediction function unavailable, using default rain.", error);
+          return []; // Return empty array so standard random letters fall
       }
-      return nextLetters;
   }
 
   // Handles spawning individual raindrops
   async function spawnRainDrop() {
       const rainView = document.getElementById('kb-rain-view');
-      if (!rainView || rainView.style.display === 'none') return;
+      if (!rainView) return;
 
-      // Base English letter frequencies to ensure all letters have a chance
+      // Base English letter frequencies
       const baseFreq = {E:12, T:9, A:8, O:8, I:7, N:7, S:6, H:6, R:6, D:4, L:4, C:3, U:3, M:2, W:2, F:2, G:2, Y:2, P:2, B:1, V:1, K:1, J:1, X:1, Q:1, Z:1};
       
-      // Calculate dynamic weights
       let nextLetters = await getNextProbableLetters();
       let weights = {...baseFreq};
       
-      // Heavily boost letters that successfully complete the predicted word
+      // Boost predicted letters
       if (nextLetters.length > 0) {
           nextLetters.forEach(l => {
               if (weights[l]) weights[l] += 150; 
           });
       }
 
-      // Weighted random letter selection
+      // Weighted random selection
       let totalWeight = Object.values(weights).reduce((a, b) => a + b, 0);
       let randomNum = Math.random() * totalWeight;
       let selectedLetter = 'A';
@@ -2101,50 +2107,52 @@ document.addEventListener('DOMContentLoaded', () => {
       drop.className = 'rain-drop';
       drop.textContent = selectedLetter;
       
-      // Calculate a random X horizontal position
+      // Calculate random X position
       const dropWidth = 48; 
-      const maxX = rainView.clientWidth > dropWidth ? rainView.clientWidth - dropWidth : 300;
+      // Ensure we don't spawn outside the container width
+      const containerWidth = rainView.clientWidth > 0 ? rainView.clientWidth : 300;
+      const maxX = containerWidth - dropWidth;
       const posX = Math.max(0, Math.random() * maxX);
+      
       drop.style.left = posX + 'px';
       
-      // Calculate slow, random fall duration (between 4s and 7s)
-      const duration = 4 + Math.random() * 3;
+      // Random fall duration (between 3s and 6s)
+      const duration = 3 + Math.random() * 3;
       drop.style.animation = `rainFall ${duration}s linear forwards`;
 
-      // Event listener for user touch/click
+      // Click event
       drop.addEventListener('click', (e) => {
           if (navigator.vibrate) navigator.vibrate(10);
           
           let char = e.target.textContent;
           let textarea = document.getElementById("textareaEle");
           
-          // Append selected letter to the textarea
-          textarea.value = (textarea.value || '') + char;
+          if(textarea) {
+              textarea.value = (textarea.value || '') + char;
+          }
           
-          // Speak the letter utilizing existing global functionality
           if (typeof promptItem === 'function') promptItem(char);
           
-          // Remove letter on touch
-          drop.remove();
+          drop.remove(); // Remove immediately when tapped
       });
 
-      // Cleanup DOM once animation goes out of bounds
+      // Cleanup when it reaches the bottom
       drop.addEventListener('animationend', () => drop.remove());
 
       rainView.appendChild(drop);
   }
 
-  // Intercept the existing switchKbView function to start/stop the spawner loop
+  // Intercept the view switch to start the rain loop
   if (typeof window.switchKbView !== 'undefined') {
       const originalSwitchKbView = window.switchKbView;
       window.switchKbView = function(viewId) {
-          originalSwitchKbView(viewId); // Execute original behavior
+          originalSwitchKbView(viewId); // Run your existing view switch code
           
           if (viewId === 'kb-rain-view') {
-              // Spawn a new raindrop every 600ms while view is active
+              // Start spawning drops every 600ms
               if (!rainInterval) rainInterval = setInterval(spawnRainDrop, 600); 
           } else {
-              // Cleanup interval & remove existing drops when switching away
+              // Stop raining and clear the view if user clicks ABC or QWERTY
               if (rainInterval) {
                   clearInterval(rainInterval);
                   rainInterval = null;
@@ -2153,6 +2161,8 @@ document.addEventListener('DOMContentLoaded', () => {
               if (rainView) rainView.innerHTML = ''; 
           }
       };
+  } else {
+      console.error("switchKbView is not defined yet. Make sure this script is at the very bottom of the page.");
   }
 </script>
 
