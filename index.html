@@ -1906,7 +1906,29 @@ value: ())
       document.getElementById("ul-level-1").style.display="none";
     }
   }
-	
+
+// Add this inside the function that activates the Rain keyboard
+function showRainKeyboard() {
+    // ... your existing code to display the rain characters ...
+    
+    // Add the class to stretch the height
+    const rainContainer = document.getElementById('kb-rain-view'); // Update ID if necessary
+    if (rainContainer) {
+        rainContainer.classList.add('expanded-rain-view');
+    }
+}
+
+// Add this inside the functions that activate any OTHER keyboard (QWERTY, Emojis, etc.)
+function showStandardKeyboard() {
+    // ... your existing code to switch back to normal keys ...
+    
+    // Remove the class so standard keyboards return to their normal height
+    const rainContainer = document.getElementById('kb-rain-view'); // Update ID if necessary
+    if (rainContainer) {
+        rainContainer.classList.remove('expanded-rain-view');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 	    const kbElement = document.getElementById('keyboard');
     
@@ -1948,27 +1970,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });*/
 
     let isCapsLock = true; // Tracks the state of Caps Lock (defaulting to true to match HTML)
-	// Add this inside the function that activates the Rain keyboard
-function showRainKeyboard() {
-    // ... your existing code to display the rain characters ...
-    
-    // Add the class to stretch the height
-    const rainContainer = document.getElementById('kb-rain-view'); // Update ID if necessary
-    if (rainContainer) {
-        rainContainer.classList.add('expanded-rain-view');
-    }
-}
-
-// Add this inside the functions that activate any OTHER keyboard (QWERTY, Emojis, etc.)
-function showStandardKeyboard() {
-    // ... your existing code to switch back to normal keys ...
-    
-    // Remove the class so standard keyboards return to their normal height
-    const rainContainer = document.getElementById('kb-rain-view'); // Update ID if necessary
-    if (rainContainer) {
-        rainContainer.classList.remove('expanded-rain-view');
-    }
-}
 
     // --- WORD PREDICTION UI LOGIC ---
     async function updateWordHints() {
