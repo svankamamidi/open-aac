@@ -2,24 +2,6 @@
 <link rel="manifest" href="manifest.json" />
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
 <style>
-  /* 1. Allow the Rain view container enough space and prevent clipping */
-	#kb-rain-view.expanded-rain-view {
-	    /* Set height to auto (or increase max-height) so all rows fit */
-	    height: auto;
-	    max-height: fit-content; 
-	    overflow: visible; /* Prevents clipping off bottom elements */
-	    padding-bottom: 12px; /* Adds extra breathing room for bottom buttons */
-	}
-	
-	/* 2. Ensure bottom action rows and buttons aren't squished or hidden */
-	#kb-rain-view .rain-action-row,
-	#kb-rain-view #rain-backspace-btn,
-	#kb-rain-view #rain-space-btn {
-	    display: inline-flex;
-	    visibility: visible !important;
-	    opacity: 1 !important;
-	    flex-shrink: 0; /* Stops flexbox from collapsing these buttons down to 0px height */
-	}
   
   .expanded-rain-view {
     /* 
