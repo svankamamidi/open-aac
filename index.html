@@ -743,12 +743,16 @@
 		 let providedGuid = prompt("Please enter your guid:");
 		 const isValid = await verifyEmailMatchesGUID(responsePayload.email, providedGuid);
 		 if (isValid){
-			 customStorage.setItem("email", responsePayload.email);
-			 document.getElementById("signInButtonDiv").style.display="none";
-			 location.reload();
+			 // Send this to GA4 as a user property
+			gtag('set', 'user_properties', {
+			  'user_license_type': "purchased"
+			});
+			customStorage.setItem("email", responsePayload.email);
+			document.getElementById("signInButtonDiv").style.display="none";
+			location.reload();
 		 }else{
-			 alert("Verification failed, try again with registered email");
-			 document.getElementById("signInButtonDiv").style.display="table";
+			alert("Verification failed, try again with registered email");
+			document.getElementById("signInButtonDiv").style.display="table";
 		 }
 	 }
   }
@@ -756,6 +760,10 @@
   window.onload = function () {
     customStorage.init().then(() => {
 	if (customStorage.getItem("email")){
+		// Send this to GA4 as a user property
+	    gtag('set', 'user_properties', {
+	      'user_license_type': "purchased"
+	    });
 		document.getElementById("signInButtonDiv").style.display="none";
 		return;
 	}
@@ -1024,6 +1032,10 @@ const dragAndDropManager = (function() {
 	aacSettings = customStorage.getItem("aacSettings") && JSON.parse(customStorage.getItem("aacSettings"));
 	email = customStorage.getItem("email");
 	if (!email){
+		// Send this to GA4 as a user property
+	    gtag('set', 'user_properties', {
+	      'user_license_type': "trial"
+	    });
 		alert(WARN_TEXT);
 		document.getElementById("signInButtonDiv").style.display="table";
 		freeUsageCount = customStorage.getItem("freeUsageCount") ? Number(customStorage.getItem("freeUsageCount")) : 0;
