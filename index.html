@@ -2056,7 +2056,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.keyboard .key').forEach(button => {
         button.addEventListener('click', (event) => {
             // Add a tiny haptic pulse (10ms) for mobile feel
-            if (aacSettings?.keyboard?.keyPressVibration && navigator.vibrate) {
+            if (aacSettings?.keyboard?.keyPressVibration === true && navigator.vibrate) {
 				navigator.vibrate(100);
 			}
             
@@ -2499,7 +2499,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Click event
       drop.addEventListener('click', (e) => {
-          if (aacSettings?.keyboard?.keyPressVibration && navigator.vibrate) {
+          if (aacSettings?.keyboard?.keyPressVibration === true && navigator.vibrate) {
 			  navigator.vibrate(100);
 		  }
           
