@@ -2056,7 +2056,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.keyboard .key').forEach(button => {
         button.addEventListener('click', (event) => {
             // Add a tiny haptic pulse (10ms) for mobile feel
-            if (navigator.vibrate) navigator.vibrate(100);
+            if (aacSettings?.keyboard?.keyPressVibration && navigator.vibrate) {
+				navigator.vibrate(100);
+			}
             
             // Ignore action/navigation keys so they don't type into the text area
             if (event.target.classList.contains('action-key')) return;
@@ -2497,7 +2499,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Click event
       drop.addEventListener('click', (e) => {
-          if (navigator.vibrate) navigator.vibrate(100);
+          if (aacSettings?.keyboard?.keyPressVibration && navigator.vibrate) {
+			  navigator.vibrate(100);
+		  }
           
           let char = e.target.textContent;
           let textarea = document.getElementById("textareaEle");
