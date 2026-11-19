@@ -388,6 +388,7 @@
 
 	// Add common words you want to show up immediately
 	const DEFAULT_WORDS = ["want", "eat", "drink", "play", "stop", "yes", "no", "hello", "water", "food", "help", "please", "thank", "you", "more", "done"];
+	const KEYBOARD_VIBRATION_DURATION = 50;
 	
 	async function initDictDB() {
 	    return new Promise((resolve, reject) => {
@@ -2057,7 +2058,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', (event) => {
             // Add a tiny haptic pulse (10ms) for mobile feel
             if (aacSettings?.keyboard?.keyPressVibration === true && navigator.vibrate) {
-				navigator.vibrate(100);
+				navigator.vibrate(KEYBOARD_VIBRATION_DURATION);
 			}
             
             // Ignore action/navigation keys so they don't type into the text area
@@ -2500,7 +2501,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Click event
       drop.addEventListener('click', (e) => {
           if (aacSettings?.keyboard?.keyPressVibration === true && navigator.vibrate) {
-			  navigator.vibrate(100);
+			  navigator.vibrate(KEYBOARD_VIBRATION_DURATION);
 		  }
           
           let char = e.target.textContent;
