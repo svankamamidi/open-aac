@@ -1,5 +1,5 @@
 // Files to cache
-const cacheName = 'aac7.5.3'
+const cacheName = 'aac7.5.4'
 const appShellFiles = [
   '/open-aac/',
   '/open-aac/index.html',
