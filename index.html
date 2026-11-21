@@ -12,6 +12,13 @@
 </script>
 <style>
   
+  /* Add inside <style> in index.html */
+  .keyboard .key.hide-letters-active {
+    background-color: #026ece !important;
+    color: #ffffff !important;
+    border-color: #024b8c !important;
+  }
+	
   .expanded-rain-view {
     /* 
        100dvh = 100% of the dynamic screen height.
@@ -2056,7 +2063,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add event listener to each key
     document.querySelectorAll('.keyboard .key').forEach(button => {
         button.addEventListener('click', (event) => {
-			if (aacSettings?.hideLetters === true && button.id !== 'hide-letters-btn') {
+			if (aacSettings?.hideLetters === true && button.id !== 'hide-letters-btn' && !aacSettings.stopHidingLetters) {
     		  button.style.visibility = 'hidden';
 			  return;
 			}
@@ -2350,7 +2357,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	        <button class="key action-key" style="flex: 1 1 28%; min-width: 90px; font-size: 18px;" onclick="switchKbView('kb-settings-view')">Settings</button>
 			<button id="rain-space-btn" class="key" onclick="insertSpace()" style="flex-grow: 1.5;">Space</button>
 			<button id="rain-backspace-btn" class="key" onclick="insertBackspace()" style="display: none;">⌫</button>
-			<button id="hide-letters-btn" class="key" onclick="startHidingLetters()">Hide Letters</button>
+			<button id="hide-letters-btn" class="key class="key action-key"" onclick="startHidingLetters()">Hide Letters</button>
 			<button class="key action-key" onclick="switchKbView('kb-rain-view'); event.stopPropagation();" style="background-color: #e0f7fa; border-color: #026ece; color: #026ece;">Rain</button>
 	    </div>
 	</div>
@@ -2538,22 +2545,17 @@ document.addEventListener('DOMContentLoaded', () => {
   function syncHideLettersButtonStyle() {
     const btn = document.getElementById('hide-letters-btn');
     if (!btn) return;
-
     const isHiding = Boolean(aacSettings?.hideLetters);
-    if (isHiding) {
-        btn.style.backgroundColor = '#026ece';
-        btn.style.color = '#ffffff';
-        btn.style.borderColor = '#024b8c';
-    } else {
-        btn.style.backgroundColor = '';
-        btn.style.color = '';
-        btn.style.borderColor = '';
-    }
+    btn.classList.toggle('hide-letters-active', isHiding);
   }
 	
   // Toggle hiding selected letters
   function startHidingLetters(){
 	aacSettings = aacSettings || {};
+	if (aacSettings.hideLetters === true && !aacSettings.stopHidingLetters){
+		aacSettings.stopHidingLetters = true;
+		return;
+	}
     aacSettings.hideLetters = !aacSettings.hideLetters;
 	syncHideLettersButtonStyle();
 	if (!aacSettings.hideLetters) {
