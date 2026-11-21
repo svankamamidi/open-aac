@@ -2056,6 +2056,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add event listener to each key
     document.querySelectorAll('.keyboard .key').forEach(button => {
         button.addEventListener('click', (event) => {
+			if (aacSettings?.hideLetters === true && button.id !== 'hide-letters-btn') {
+    		  button.style.visibility = 'hidden';
+			  return;
+			}
             // Add a tiny haptic pulse (10ms) for mobile feel
             if (aacSettings?.keyboard?.keyPressVibration === true && navigator.vibrate) {
 				navigator.vibrate(KEYBOARD_VIBRATION_DURATION);
@@ -2346,7 +2350,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	        <button class="key action-key" style="flex: 1 1 28%; min-width: 90px; font-size: 18px;" onclick="switchKbView('kb-settings-view')">Settings</button>
 			<button id="rain-space-btn" class="key" onclick="insertSpace()" style="flex-grow: 1.5;">Space</button>
 			<button id="rain-backspace-btn" class="key" onclick="insertBackspace()" style="display: none;">⌫</button>
-			<button id="rain-backspace-btn" class="key" onclick="startHidingLetters()">Hide Letters</button>
+			<button id="hide-letters-btn" class="key" onclick="startHidingLetters()">Hide Letters</button>
 			<button class="key action-key" onclick="switchKbView('kb-rain-view'); event.stopPropagation();" style="background-color: #e0f7fa; border-color: #026ece; color: #026ece;">Rain</button>
 	    </div>
 	</div>
@@ -2523,9 +2527,21 @@ document.addEventListener('DOMContentLoaded', () => {
       rainView.appendChild(drop);
   }
 
+  function unhideAllKeys() {
+    const keyboard = document.getElementById('keyboard');
+    if (!keyboard) return;
+    keyboard.querySelectorAll('.key').forEach(keyEl => {
+        keyEl.style.visibility = '';
+    });
+  }
+	
   // Toggle hiding selected letters
   function startHidingLetters(){
+	aacSettings = aacSettings || {};
     aacSettings.hideLetters = !aacSettings.hideLetters;
+	if (!aacSettings.hideLetters) {
+        unhideAllKeys();
+    }
   }
 	
   // Handles adding spaces when the Space button is clicked
