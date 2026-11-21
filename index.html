@@ -2534,11 +2534,28 @@ document.addEventListener('DOMContentLoaded', () => {
         keyEl.style.visibility = '';
     });
   }
+
+  function syncHideLettersButtonStyle() {
+    const btn = document.getElementById('hide-letters-btn');
+    if (!btn) return;
+
+    const isHiding = Boolean(aacSettings?.hideLetters);
+    if (isHiding) {
+        btn.style.backgroundColor = '#026ece';
+        btn.style.color = '#ffffff';
+        btn.style.borderColor = '#024b8c';
+    } else {
+        btn.style.backgroundColor = '';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+    }
+  }
 	
   // Toggle hiding selected letters
   function startHidingLetters(){
 	aacSettings = aacSettings || {};
     aacSettings.hideLetters = !aacSettings.hideLetters;
+	syncHideLettersButtonStyle();
 	if (!aacSettings.hideLetters) {
         unhideAllKeys();
     }
